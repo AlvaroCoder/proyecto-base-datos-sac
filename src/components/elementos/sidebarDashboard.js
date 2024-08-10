@@ -5,6 +5,8 @@ import LaptopChromebookIcon from '@mui/icons-material/LaptopChromebook';
 import BookIcon from '@mui/icons-material/Book';
 import GroupIcon from '@mui/icons-material/Group';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 
 export default function SideBarDashboard() {
     const routes=[
@@ -27,6 +29,16 @@ export default function SideBarDashboard() {
             routeName : "Proyectos",
             routePath : "/dashboard/proyectos",
             routeIcon : LightbulbIcon
+        },
+        {
+            routeName : "Trabajos",
+            routePath : "/dashboard/trabajos",
+            routeIcon :  MenuBookIcon
+        },
+        {
+            routeName : "Papers",
+            routePath : "/dashboard/papers",
+            routeIcon : InsertDriveFileIcon
         }
     ]
   return (

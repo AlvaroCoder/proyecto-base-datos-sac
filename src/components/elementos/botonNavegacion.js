@@ -1,6 +1,7 @@
 "use client"
 import React from 'react'
 import { useRouter } from 'next/navigation'
+import { handleAddCookie } from '../serverComp/addCookie';
 
 
 function validarCredenciales(credenciales) {
@@ -26,12 +27,12 @@ function validarCredenciales(credenciales) {
 
 export default function BotonNavegacion({href, valuesForm, children}) {
     const router = useRouter(); 
-    const handleClick=()=>{
+    const handleClick=async()=>{
         
         const existeError = validarCredenciales(valuesForm);
         if(!existeError.esValido) return alert(existeError.mensaje);
-
-        
+        console.log(valuesForm);
+        await handleAddCookie(valuesForm.username, valuesForm.password);
         router.push(href);
     }
   return (
