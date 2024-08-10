@@ -1,7 +1,8 @@
+
 import React from 'react'
 
 export default function Page() {
   return (
-    <div>Page</div>
+    <div>Pagina de proyectos</div>
   )
 }
