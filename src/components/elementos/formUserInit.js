@@ -56,7 +56,7 @@ export default function FormElement() {
           <label htmlFor='username' className='text-white text-xl mb-4'>Nombre Usuario</label>
           <div className=' flex flex-row items-center justify-center bg-white rounded-lg px-4 py-2'>
             <PersonIcon
-              className='text-guinda mr-2'
+              className='text-guinda mr-2 '
 
             />
             <input
