@@ -17,6 +17,9 @@ module.exports = {
       },
     },
     extend: {
+      gridTemplateColumns : {
+        'auto-fill-100':'repeat(auto-fill, minmax(200px, 1fr))'
+      },
       colors: {
         guinda : "#752B2C",
         guindaOpaco:"#915556",
@@ -53,6 +56,7 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        
       },
       borderRadius: {
         lg: "var(--radius)",

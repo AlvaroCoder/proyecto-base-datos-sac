@@ -13,10 +13,14 @@ import SaveIcon from '@mui/icons-material/Save';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import PersonIcon from '@mui/icons-material/Person';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import AddIcon from '@mui/icons-material/Add';
+
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from '../ui/dialog'
+import DropwDownMenuLibros from '@/components/elementos/Tabla/dropDownMenuLibros'
+import Link from 'next/link'
 
 function obtenerEstadosUnicos(listaObjetos) {
-    const estadosUnicos = [...new Set(listaObjetos.map(objeto => objeto.Estado))];
+    const estadosUnicos = [...new Set(listaObjetos.map(objeto => objeto.status.value))];
     return estadosUnicos;
 }
 
@@ -30,150 +34,28 @@ function obtenerUbicacionUnica(listaObjetos) {
     return estadosUnicos;
 }
 
-function DropwDownMenuLibros({Título, Autor, Estado, Ubicación, Prestadoa}) {
-    const [openDropwdown, setOpenDropwdown] = useState(false);
-    const [openDialog, setOpenDialog] = useState(false);
-    const [dataLibro, setDataLibro] = useState({
-        titulo : Título,
-        ubicacion : Ubicación,
-        autor : Autor,
-        prestadoa : Prestadoa
-    });
-    return(
-        <DropdownMenu open={openDropwdown}>
-        <DropdownMenuTrigger asChild >
-            <Button variant="ghost" onClick={()=>setOpenDropwdown(!openDropwdown)} className="h-8 w-8 p-0">
-                <MoreVertIcon className='h-4 w-4'/>
-            </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="bottom">
 
-            <DropdownMenuItem  >
-                <Dialog open={openDialog} >
-                    <DialogTrigger  >
-                        <Button
-                         variant="ghost" 
-                         className="p-2 flex flex-row items-center"
-                         onClick={()=>setOpenDialog(true)}
-                         ><EditIcon className=' mr-2'/>Editar</Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader className={"font-bold text-guinda text-2xl"}>Editar Libro</DialogHeader>
-                        <section>
-                            <div>
-                                <label>Titulo</label>
-                                <Input 
-                                    value={dataLibro.titulo}
-                                />
-                            </div>
-                            <div>
-                                <label>Autor</label>
-                                <Input  
-                                    value={dataLibro.autor}
-                                />
-                            </div>
-                            <div className='flex flex-row items-center'>
-                                <div className='w-[300px]'>
-                                    <label>Ubicacion</label>
-                                    <Input  
-                                        value={dataLibro.ubicacion}
-                                    />
-                                </div>
-                                <div className='flex-1 ml-2'>
-                                    <label>Estado</label>
-                                    <Input  />
-                                </div>
-                            </div>
-                            <div className='flex-1 border-b-2 border-b-guindaOpaco py-2 my-4'>
-                                <h1>
-                                    Datos de la persona que presto
-                                </h1>
-                            </div>
-                            <div>
-                                <label>Nombre</label>
-                                <Input/>
-                            </div>
-                            <div>
-                                <label>Apellido</label>
-                                <Input/>
-                            </div>
-                            <div className='flex flex-row items-center my-4'>
-                                 <Button 
-                                 className='flex-1 cursor-pointer mr-2 bg-guinda rounded-lg py-4  text-white text-center hover:bg-guindaOpaco  hover:font-bold border-2 border-guinda hover:border-guinda'
-                                onClick={()=>{
-                                    setOpenDialog(false);
-                                    setOpenDropwdown(!openDropwdown)
-                                }}
-                                 >
-                                   <SaveIcon/><span className='ml-2'> Guardar</span>
-                                </Button>
-                                <Button 
-                                variant="ghost"
-                                onClick={()=>{
-                                    setOpenDialog(false);
-                                    setOpenDropwdown(!openDropwdown)
-                                }}
-                                >
-                                    Cancelar
-                                </Button>
-                            </div>
-                        </section>
-                    </DialogContent>
+export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations=[]}) {
+    const newDataLibros = dataLibros.map((item,key)=>({...item, Seleccionado : false, Id : key}));
+    const [librosData, setLibrosData] = useState(newDataLibros);
 
-                </Dialog>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-                <Dialog>
-                    <DialogTrigger>
-                     <Button 
-                        variant="ghost" 
-                        className="p-2 flex flex-row items-center"
-                        
-                        ><DeleteIcon className='mr-2'/>Eliminar</Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader className={"font-bold text-guinda text-2xl "}>
-                            Eliminar Libro
-                        </DialogHeader>
-                        <div className='w-full bg-slate-100 h-[1px]'>
-
-                        </div>
-                        <section>
-                            <h1 className=' mb-2'>Estas seguro de eliminar el libro</h1>
-                            <h1 className='text-2xl font-bold  mb-4'>"{dataLibro.titulo}"</h1>
-                            <Button className="bg-guinda w-full py-2"
-                            onClick={()=>{
-                                    setOpenDropwdown(!openDropwdown)
-                                }}>Eliminar Libro </Button>
-                        </section>
-                    </DialogContent>
-                </Dialog>
-            </DropdownMenuItem>
-        </DropdownMenuContent>
-    </DropdownMenu>
-    )
-}
-
-export default function TableLibros({dataLibros=[]}) {
     const LIBROS_POR_PAGINA=10;
     const [currentPage, setCurrentPage]=useState(1);
     const [stateData, setstateData] = useState("");
     const [query, setQuery] = useState("");
 
     const onChangeInput=(e)=>{
-
         setQuery(e.target.value);
     } ;
 
-    const estadosSinRepetir=obtenerEstadosUnicos(dataLibros);
+    const estadosSinRepetir=obtenerEstadosUnicos(librosData);
     // TODO : terminar de hacer las filtraciones por Ubicacion y Prestado a
-    const prestadosNombreSinRepetir = obtenerPrestadosUnicos(dataLibros);
-    const ubicaionSinRepetir=obtenerUbicacionUnica(dataLibros);
-    
+    const prestadosNombreSinRepetir = obtenerPrestadosUnicos(librosData);
+    const ubicaionSinRepetir=obtenerUbicacionUnica(librosData);
 
 
-    const filterData = dataLibros.filter(item=>item.Título.toUpperCase().includes(query.toUpperCase()))
-    const filterChekButton=filterData.filter(item=>item.Estado.toUpperCase().includes(stateData.toUpperCase()));
+    const filterData = librosData.filter(item=>item?.title?.toUpperCase().includes(query.toUpperCase()))
+    const filterChekButton=filterData.filter(item=>item?.status?.value.toUpperCase().includes(stateData.toUpperCase()));
 
     // Paginado
     const indexOfLasBook = currentPage * LIBROS_POR_PAGINA;
@@ -181,7 +63,7 @@ export default function TableLibros({dataLibros=[]}) {
     const currentData = filterChekButton.slice(indexOfFirstBook, indexOfLasBook);
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
-    const numBooks = dataLibros.length
+    const numBooks = librosData.length
     return (
     <div className='w-full '>
         <div className='flex items-center py-4'>
@@ -189,15 +71,27 @@ export default function TableLibros({dataLibros=[]}) {
                 placeholder="Buscar Titulo ..."
                 onChange={onChangeInput}        
             />
+            <Link
+                className="bg-guinda mx-2 h-9 px-4 py-2 hover:bg-red-800 w-fit flex flex-row text-white rounded-lg  "
+                href={"/dashboard/libros/create"}
+            >
+                <AddIcon/> <span className='ml-2 flex-1' >Nuevo Libro</span>           
+             </Link>
+            {
+                librosData.filter(libro=>libro.Seleccionado).length > 0 && <Button className="border-2 mx-2 border-guinda bg-white hover:bg-red-50 text-guinda">
+                    <p className='flex flex-row items-center'><DeleteIcon/> <span>Eliminar libro</span></p>
+                </Button>
+            }
             <DropdownMenu>
-                <DropdownMenuTrigger className='mx-4'>
+                <DropdownMenuTrigger >
                     <Button variant="ghost" >
                         <span>Estado</span>
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="bottom">
                     {
-                        estadosSinRepetir.map((item, key)=><DropdownMenuCheckboxItem 
+                        estadosSinRepetir.map((item, key)=>
+                        <DropdownMenuCheckboxItem 
                         key={key} 
                         className="capitalize" 
                         checked={item==stateData}
@@ -218,7 +112,14 @@ export default function TableLibros({dataLibros=[]}) {
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead> <Checkbox/></TableHead>
+                        <TableHead> 
+                            <Checkbox
+                            checked={librosData.filter(libro=>libro.Seleccionado).length == librosData.length || (librosData.filter(libro=>libro.Seleccionado).length > 0 && "indeterminate")}
+                            onCheckedChange={(_)=>{
+                                const newListLibros = librosData.map(libro=>({...libro, Seleccionado : !libro.Seleccionado}))
+                                setLibrosData(newListLibros);
+                            }}
+                        /></TableHead>
                         <TableHead className="w-[400px]">Titulo</TableHead>
                         <TableHead
                         className="w-[350px]"
@@ -230,21 +131,46 @@ export default function TableLibros({dataLibros=[]}) {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {currentData.map((item, key)=>(
-                        <TableRow key={key} className="">
-                            <TableHead><Checkbox/></TableHead>
+                    {currentData.map((item, key)=>{
+                        return(
+                            <TableRow key={key} className={`${item?.Seleccionado && "bg-slate-200 hover:bg-slate-200"}  `}>
+                            <TableHead>
+                                <Checkbox
+                                    checked={item.Seleccionado}
+                                    onCheckedChange={(_)=>{
+                                        const newListLibros = librosData.map((libro, idx)=>{
+                                            if (key==idx && libro.Seleccionado) {
+                                                return{
+                                                    ...libro,
+                                                    Seleccionado : false
+                                                }
+                                            }
+                                            if(key==idx || libro.Seleccionado){
+                                                return{
+                                                    ...libro,
+                                                    Seleccionado : true
+                                                }
+                                            }
+                                            return{
+                                                ...libro,
+                                                Seleccionado : false
+                                            }
+                                        });
+                                        setLibrosData(newListLibros);
+                                    }}
+                                />
+                            </TableHead>
                             <TableCell
                                 className=""
-                            >{item?.Título}</TableCell>
+                            >{item?.title}</TableCell>
                             <TableCell
                                className=" grid grid-cols-[repeat( auto-fill, minmax(100px, 1fr) )] grid-flow-col    h-auto"
-                            >{typeof(item?.Autor) == "string" ? <span className='p-2 bg-slate-100 rounded-sm mr-2 w-fit'>{item.Autor}</span> 
-                            : <>{item.Autor.map((autor,key)=>{
+                            ><>{item?.author && item.author.map((autor,key)=>{
                                 if (key<2) {
                                     return <span key={key} className='p-2 bg-slate-100 rounded-sm mr-2 text-center w-fit '>{autor}</span>
                                 }
                                 return null
-                            })}{item.Autor.length>2 && <span className='flex items-center justify-center '>
+                            })}{item.author.length>2 && <span className='flex items-center justify-center cursor-pointer '>
                                 <Dialog>
                                     <DialogTrigger>
                                         <span><MoreHorizIcon/></span>
@@ -254,21 +180,20 @@ export default function TableLibros({dataLibros=[]}) {
                                             Autores
                                         </DialogHeader>
                                         <div className='w-full flex flex-col '>
-                                           
-                                           {item.Autor.map((autor, key)=><p className='text-xl ' key={key}><PersonIcon className='mr-4'/>{autor}</p>)}
-                                           
+                                           {item?.author.map((autor, key)=><p className='text-xl ' key={key}><PersonIcon className='mr-4'/>{autor}</p>)}
                                         </div>
                                     </DialogContent>
-                                </Dialog></span>}</>}
+                                </Dialog></span>}</>
                             </TableCell>
-                            <TableCell>{item?.Estado}</TableCell>
-                            <TableCell><p className='text-center w-full '>{item.Ubicación}</p></TableCell>
-                            <TableCell><p className='text-center w-full'>{item?.["Prestado a"] && item?.["Prestado a"] == "NO PRESTADO" ? "--" : item["Prestado a"]}</p></TableCell>
+                            <TableCell>{item?.status?.value}</TableCell>
+                            <TableCell><p className='text-center w-full '>{item?.location?.value}</p></TableCell>
+                            <TableCell><p className='text-center w-full'>{item?.borrow_to == "NO PRESTADO" ? "--" : item?.borrowed_to}</p></TableCell>
                             <TableCell>
-                               <DropwDownMenuLibros {...item}/>
+                               <DropwDownMenuLibros {...item} listaEstados={dataStatus} listaUbicacion={dataLocations}/>
                             </TableCell>
                         </TableRow>
-                    ))}
+                        )
+                    })}
                 </TableBody>
             </Table>
 
@@ -314,7 +239,8 @@ export default function TableLibros({dataLibros=[]}) {
                 return null
             })}
             {
-                currentPage < Math.ceil(numBooks / LIBROS_POR_PAGINA)-4 && <div>
+                currentPage < Math.ceil(numBooks / LIBROS_POR_PAGINA)-4 && 
+                <div>
                     <MoreHorizIcon/>
                     <Button
                         variant="ghost"
@@ -323,8 +249,7 @@ export default function TableLibros({dataLibros=[]}) {
                     >
                         {Math.ceil(numBooks / LIBROS_POR_PAGINA)}
                     </Button>
-
-                    </div>
+                </div>
             }
             </div>
             <Button
