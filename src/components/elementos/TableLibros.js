@@ -4,7 +4,6 @@ import { Input } from '../ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import { Checkbox } from '../ui/checkbox'
 
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Button } from '../ui/button'
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '../ui/dropdown-menu'
 import EditIcon from '@mui/icons-material/Edit';
@@ -16,7 +15,11 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AddIcon from '@mui/icons-material/Add';
 
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from '../ui/dialog'
+
 import DropwDownMenuLibros from '@/components/elementos/Tabla/dropDownMenuLibros'
+import DropDownTablaLibros from '@/components/elementos/Tabla/dropdownTablaLibros'
+import DialogEditLibro from "@/components/elementos/Tabla/dialogEditLibro";
+
 import Link from 'next/link'
 
 function obtenerEstadosUnicos(listaObjetos) {
@@ -44,6 +47,9 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
     const [stateData, setstateData] = useState("");
     const [query, setQuery] = useState("");
 
+    const [openDialogEdit, setOpenDialogEdit] = useState(false);
+    const [dataDialogEdit, setDataDialogEdit] = useState(null);
+
     const onChangeInput=(e)=>{
         setQuery(e.target.value);
     } ;
@@ -64,6 +70,12 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
     const numBooks = librosData.length
+
+    const handleChangeEditLibro=(data)=>{        
+        setOpenDialogEdit(true);
+        setDataDialogEdit(data);
+    }
+
     return (
     <div className='w-full '>
         <div className='flex items-center py-4'>
@@ -72,10 +84,10 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
                 onChange={onChangeInput}        
             />
             <Link
-                className="bg-guinda mx-2 h-9 px-4 py-2 hover:bg-red-800 w-fit flex flex-row text-white rounded-lg  "
+                className="bg-guinda mx-2 h-9 px-4 py-2 hover:bg-red-800 w-fit flex flex-row items-center text-white rounded-lg text-sm "
                 href={"/dashboard/libros/create"}
             >
-                <AddIcon/> <span className='ml-2 flex-1' >Nuevo Libro</span>           
+                <AddIcon/> <span className='ml-2 flex-1 whitespace-nowrap' >Nuevo Libro</span>           
              </Link>
             {
                 librosData.filter(libro=>libro.Seleccionado).length > 0 && <Button className="border-2 mx-2 border-guinda bg-white hover:bg-red-50 text-guinda">
@@ -134,7 +146,7 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
                     {currentData.map((item, key)=>{
                         return(
                             <TableRow key={key} className={`${item?.Seleccionado && "bg-slate-200 hover:bg-slate-200"}  `}>
-                            <TableHead>
+                            <TableCell>
                                 <Checkbox
                                     checked={item.Seleccionado}
                                     onCheckedChange={(_)=>{
@@ -159,7 +171,7 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
                                         setLibrosData(newListLibros);
                                     }}
                                 />
-                            </TableHead>
+                            </TableCell>
                             <TableCell
                                 className=""
                             >{item?.title}</TableCell>
@@ -189,7 +201,8 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
                             <TableCell><p className='text-center w-full '>{item?.location?.value}</p></TableCell>
                             <TableCell><p className='text-center w-full'>{item?.borrow_to == "NO PRESTADO" ? "--" : item?.borrowed_to}</p></TableCell>
                             <TableCell>
-                               <DropwDownMenuLibros {...item} listaEstados={dataStatus} listaUbicacion={dataLocations}/>
+                               <DropDownTablaLibros 
+                                onOpenChangeDialogEdit={()=>handleChangeEditLibro(item)} />
                             </TableCell>
                         </TableRow>
                         )
@@ -197,6 +210,15 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
                 </TableBody>
             </Table>
 
+        </div>
+        <div>
+            <DialogEditLibro 
+                openDialogEditLibro={openDialogEdit} 
+                onOpenChangeEditLibro={setOpenDialogEdit}
+                dataLibro={dataDialogEdit}
+                dataUbicacion={dataLocations}
+                dataStatus={dataStatus}
+                />
         </div>
         <div className="flex justify-center my-8">
           <nav className="relative z-0 inline-flex rounded-md  -space-x-px" aria-label="Pagination">
