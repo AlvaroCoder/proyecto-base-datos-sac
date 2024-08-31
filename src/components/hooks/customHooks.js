@@ -11,7 +11,6 @@ export  function useFetch(url) {
                 if (!response.ok) throw new Error("Something went wrong with server!")
                 
                 const jsonResponse = await response.json();
-                console.log(jsonResponse);
                 setDataResponse(jsonResponse);
             } catch (error) {
                 setError(error);

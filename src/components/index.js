@@ -9,3 +9,4 @@ export {default as TableLibros} from "./elementos/TableLibros"
 export {default as DialogTableLibros} from "./elementos/dialogTableLibros";
 
 export {default as DropdownMenuLocation} from "./elementos/dropdownLocation";
+export {default as DropdownMenuStatus} from "./elementos/dropdownStatus";

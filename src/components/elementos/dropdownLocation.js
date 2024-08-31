@@ -4,8 +4,11 @@ import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMe
 import { Button } from '../ui/button'
 import { Loader2 } from 'lucide-react'
 
-export default function dropdownLocation({data, isLoading=false}) {
-    const [dataSelected, setDataSelected] = useState(1);
+export default function dropdownLocation({data, onChangeData, isLoading=false}) {
+    const [dataSelected, setDataSelected] = useState({
+        "id": 1,
+        "value": "Oficina Ing Ipanaque"
+    });
     
   return (
     <DropdownMenu>
@@ -18,7 +21,7 @@ export default function dropdownLocation({data, isLoading=false}) {
                 <>
                     {
                         isLoading ?  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> :
-                        <span>{data[0]?.value}</span>
+                        <span>{dataSelected.value}</span>
                     }
                 </>
             </Button>
@@ -27,7 +30,16 @@ export default function dropdownLocation({data, isLoading=false}) {
             {
                 !isLoading && data?.map(location=>
                     <DropdownMenuCheckboxItem
-                        checked={location.id == dataSelected}
+                        key={location.id}
+                        className="capitalize"
+                        onCheckedChange={
+                            ()=>{
+                                const jsonSelected = data?.filter(elem=>elem.id === location.id)[0];
+                                setDataSelected(jsonSelected);
+                                onChangeData(jsonSelected.id);
+                            }
+                        }
+                        checked={location.id == dataSelected.id}
                     >
                         <span>
                             {location.value}
