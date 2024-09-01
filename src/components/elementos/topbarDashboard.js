@@ -20,7 +20,7 @@ export default function TopBarDashboard() {
         fetchCookie();
     },[])
   return (
-    <div className='h-24 w-full bg-white shadow-lg flex flex-row items-center py-4 justify-between'>
+    <div className='h-24 w-full bg-white shadow-lg flex flex-row items-center py-4 justify-between z-10'>
         <div className='ml-4 flex flex-row px-4'>
              <Image
                 src={URL_IMG_UDEP}
