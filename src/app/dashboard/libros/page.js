@@ -4,15 +4,15 @@ import { SkeletonTableLibros } from '@/components/elementos/loading';
 import { useFetch } from '@/components/hooks/customHooks';
 import React, { useState } from 'react'
 
-const URL_LIBROS = "http://127.0.0.1:8000/home/books"
-const URL_STATUS = "http://127.0.0.1:8000/home/status/book"
-const URL_LOCATIONS = "http://127.0.0.1:8000/home/locations"
 
 export default function Page() {
-  
+  const URL_LIBROS = process.env.NEXT_PUBLIC_URL_LIBROS
+  const URL_STATUS = process.env.NEXT_PUBLIC_URL_STATUS
+  const URL_LOCATIONS = process.env.NEXT_PUBLIC_URL_LOCATIONS
+
+
   const {loading : loadingDataLibros, dataResponse : dataLibros, error, errorDataLibros} = useFetch(URL_LIBROS);
   const {loading : loadingDataStatus, dataResponse : dataStatus, error:errorDataStatus} = useFetch(URL_STATUS);
-  console.log(dataStatus);
   
   const {loading : loadingDataLocations, dataResponse : dataLocations, error : errorDataLocations} = useFetch(URL_LOCATIONS)
   

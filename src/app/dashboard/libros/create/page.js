@@ -14,15 +14,15 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { useFetch } from '@/components/hooks/customHooks';
 import { DropdownMenuLocation, DropdownMenuStatus } from '@/components';
 
-const URL_STATUS = "http://127.0.0.1:8000/home/status/book"
-const URL_LOCATIONS = "http://127.0.0.1:8000/home/locations"
-const URL_CREATE_BOOK = "http://127.0.0.1:8000/create/book"
+
 export default function Page() {
+
+  const URL_STATUS = process.env.NEXT_PUBLIC_URL_STATUS
+  const URL_LOCATIONS = process.env.NEXT_PUBLIC_URL_LOCATIONS
+  const URL_CREATE_BOOK = process.env.NEXT_PUBLIC_URL_CREATE_BOOK
 
   const {dataResponse : dataLocation, loading : loadingDataLocation, error : errorDataLocation} = useFetch(URL_LOCATIONS);
   const {dataResponse : dataStatus, loading : loadingDataStatus, error : errorDataStatus} = useFetch(URL_STATUS);
-
-  console.log(dataStatus);
   
   const [inputAuthor, setInputAuthor] = useState({
     title:"",
@@ -98,8 +98,7 @@ export default function Page() {
     });
     const responseJson = await response.json();
     console.log(responseJson);
-    
-    
+      
   }
   return (
     <div className='w-full h-screen overflow-y-auto px-6 py-4 flex flex-row'>
