@@ -79,6 +79,10 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
         setLibrosData(newData)
     };
 
+    const resetDataRow=()=>{
+        setLibrosData(newDataLibros);
+    }
+
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
     const numBooks = librosData.length;
 
@@ -216,6 +220,7 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
                                     dataStatus={dataStatus}
 
                                     handleChangeInput={handleChangeRow}
+                                    resetDataDialog={resetDataRow}
                                 />
                                 </TableCell>
                             </TableRow>

@@ -15,13 +15,27 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useToast } from '@/components/ui/use-toast';
 
 
-export default function dropdownTablaLibros({dataDialog, dataStatus=[], dataLocation=[],handleChangeInput}) {
+export default function dropdownTablaLibros({dataDialog, dataStatus=[], dataLocation=[],handleChangeInput, resetDataDialog}) {
+    const initialData={
+        title : "",
+        authors_added : [],
+        authors_deleted : [],
+        location : 1,
+        status : 1,
+        borrowed_to : null,
+        amount : 1
+    }
+    const {toast} = useToast();
+    
+    const [hasChanges, setHasChanges] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
     const [showFormNewAuthor, setShowFormNewAuthor] = useState(false);
     const [showFormNewPerson, setShowFormNewPerson] = useState(false);
+    const [showAlertExit, setShowAlertExit] = useState(false);
 
     const [inputsFormPerson, setInputsFormPerson] = useState({
         nombrePersona : "",
@@ -38,15 +52,7 @@ export default function dropdownTablaLibros({dataDialog, dataStatus=[], dataLoca
         })
     };
 
-    const [dataToSend, setDataToSend] = useState({
-        title : "",
-        authors_added : [],
-        authors_deleted : [],
-        location : 1,
-        status : 1,
-        borrowed_to : null,
-        amount : 1
-    });
+    const [dataToSend, setDataToSend] = useState(initialData);
 
   return (
     <>
@@ -88,7 +94,13 @@ export default function dropdownTablaLibros({dataDialog, dataStatus=[], dataLoca
             </DropdownMenuPrimitive.Content>
         </DropdownMenuPrimitive.Portal>
     </DropdownMenuPrimitive.Root>
-    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+    <Dialog open={openDialog} onOpenChange={()=>{
+        if(hasChanges){
+            setShowAlertExit(true);
+            return;
+        }
+        setOpenDialog(false);
+    }}>
         <DialogContent>
             <DialogTitle>Edicion de Libros</DialogTitle>
             <section>
@@ -102,6 +114,7 @@ export default function dropdownTablaLibros({dataDialog, dataStatus=[], dataLoca
                                 ...dataToSend,
                                 title : evt.target.value
                             });
+                            setHasChanges(true);
                             handleChangeInput(dataDialog?.id, "title", evt.target.value)
                         }}
                     />
@@ -124,7 +137,10 @@ export default function dropdownTablaLibros({dataDialog, dataStatus=[], dataLoca
                                                 name : author
                                             }]
                                         });
-                                        handleChangeInput(dataDialog?.id,"author", updateData);               
+                                        
+                                        handleChangeInput(dataDialog?.id,"author", updateData);     
+
+                                        setHasChanges(true);          
                                     }}/></span>
                             </p>)
                         }
@@ -156,6 +172,7 @@ export default function dropdownTablaLibros({dataDialog, dataStatus=[], dataLoca
                                             // Reseteamos el valor del form author
                                             setInputsFormAuthor("");
                                             setShowFormNewAuthor(false);
+                                            setHasChanges(true);
                                         }}
                                     >  
                                         Agregar
@@ -207,7 +224,8 @@ export default function dropdownTablaLibros({dataDialog, dataStatus=[], dataLoca
                                             setDataToSend({
                                                 ...dataToSend,
                                                 location : jsonSelected.id
-                                            })
+                                            });
+                                            setHasChanges(true);
                                         }}
                                     >
                                         {item.value}
@@ -239,7 +257,8 @@ export default function dropdownTablaLibros({dataDialog, dataStatus=[], dataLoca
                                                 setDataToSend({
                                                     ...dataToSend,
                                                     status : jsonSelected.id
-                                                })
+                                                });
+                                                setHasChanges(true);
                                             }}
                                         >
                                             {item.value}
@@ -358,8 +377,14 @@ export default function dropdownTablaLibros({dataDialog, dataStatus=[], dataLoca
                 <div className='flex flex-row items-center my-4'>
                     <Button
                         className='flex-1 cursor-pointer mr-2 bg-guinda rounded-lg py-4  text-white text-center hover:bg-guindaOpaco  hover:font-bold border-2 border-guinda hover:border-guinda'
+                        disabled={!hasChanges}
                         onClick={()=>{
-                            console.log(dataToSend);
+                            setOpenDialog(!openDialog);
+                            toast({
+                                title : "Actualizado con éxito!",
+                                description : "Se actualizo con éxito la información del libro"
+                            });
+                            
                         }}
                     >
                         <SaveIcon/><span className='ml-2'>Guardar</span>
@@ -367,12 +392,42 @@ export default function dropdownTablaLibros({dataDialog, dataStatus=[], dataLoca
                     <Button
                         variant="ghost"
                         onClick={()=>{
-
+                            setOpenDialog(false);
+                            resetDataDialog();
+                            setDataToSend(initialData);
                         }}
                     >
                         Cancelar
                     </Button>
                 </div>
+            </section>
+        </DialogContent>
+    </Dialog>
+    <Dialog open={showAlertExit} onOpenChange={setShowAlertExit}>
+        <DialogContent>
+            <DialogTitle>
+                Estás seguro de salir de la pantalla de edición?
+            </DialogTitle>
+            <section className='w-full flex flex-row my-4'>
+                <Button
+                    onClick={()=>{
+                        setShowAlertExit(false);
+                    }}
+                    className='flex-1 cursor-pointer mr-2 bg-guinda rounded-lg py-4  text-white text-center hover:bg-guindaOpaco  hover:font-bold border-2 border-guinda hover:border-guinda'
+                >
+                    Quiero seguir editando
+                </Button>
+                <Button
+                    variant="ghost"
+                    onClick={()=>{
+                        resetDataDialog();
+                        setShowAlertExit(false);
+                        setOpenDialog(false);
+                        setDataToSend(initialData)
+                    }}
+                >
+                    Salir sin guardar cambios
+                </Button>
             </section>
         </DialogContent>
     </Dialog>
