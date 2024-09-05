@@ -16,6 +16,7 @@ export default function dropdownLocation({data, onChangeData, isLoading=false}) 
             asChild
         >
             <Button
+                className="border border-slate-100 shadow-sm w-60"
                 variant="ghost"
             >
                 <>

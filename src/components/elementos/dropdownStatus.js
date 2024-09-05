@@ -15,6 +15,7 @@ export default function dropdownStatus({data, onChangeData, isLoading}) {
                 asChild
             >
                 <Button
+                    className="border border-slate-100 shadow-sm w-40"
                     variant="ghost"
                 >
                     <>
