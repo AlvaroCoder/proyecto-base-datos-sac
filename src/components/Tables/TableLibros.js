@@ -35,7 +35,7 @@ function obtenerUbicacionUnica(listaObjetos) {
 
 
 export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations=[]}) {
-    const newDataLibros = dataLibros.map((item,key)=>({...item, Seleccionado : false}));
+    const newDataLibros = dataLibros.map((item)=>({...item, Seleccionado : false}));
     const [librosData, setLibrosData] = useState(newDataLibros);
 
     const LIBROS_POR_PAGINA=10;
@@ -190,12 +190,12 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
                                 >{item?.title}</TableCell>
                                 <TableCell
                                    className=" grid grid-cols-[repeat( auto-fill, minmax(100px, 1fr) )] grid-flow-col    h-auto"
-                                ><>{item?.author && item.author.map((autor,key)=>{
+                                ><>{item?.authors && item.authors.map((autor,key)=>{
                                     if (key<2) {
-                                        return <span key={key} className='p-2 bg-slate-100 rounded-sm mr-2 text-center w-fit '>{autor}</span>
+                                        return <span key={key} className='p-2 bg-slate-100 rounded-sm mr-2 text-center w-fit '>{autor.value}</span>
                                     }
                                     return null
-                                })}{item.author.length>2 && <span className='flex items-center justify-center cursor-pointer '>
+                                })}{item.authors.length>2 && <span className='flex items-center justify-center cursor-pointer '>
                                     <Dialog>
                                         <DialogTrigger>
                                             <span><MoreHorizIcon/></span>
@@ -205,7 +205,7 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
                                                 Autores
                                             </DialogHeader>
                                             <div className='w-full flex flex-col '>
-                                               {item?.author.map((autor, key)=><p className='text-xl ' key={key}><PersonIcon className='mr-4'/>{autor}</p>)}
+                                               {item?.author?.map((autor, key)=><p className='text-xl ' key={key}><PersonIcon className='mr-4'/>{autor}</p>)}
                                             </div>
                                         </DialogContent>
                                     </Dialog></span>}</>
@@ -286,7 +286,7 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
                         <Button
                             variant="ghost"
                             className={`relative inline-flex items-center px-4 py-2 border rounded-sm border-gray-300 text-sm font-medium  text-gray-700 hover:bg-gray-50 `}
-                            onClick={()=>paginate(1 )}
+                            onClick={()=>paginate(Math.ceil(numBooks / LIBROS_POR_PAGINA) )}
                         >
                             {Math.ceil(numBooks / LIBROS_POR_PAGINA)}
                         </Button>

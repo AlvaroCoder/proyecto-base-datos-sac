@@ -16,11 +16,15 @@ import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/components/ui/use-toast';
+import { Loader2 } from "lucide-react"
 
 
 export default function dropdownTablaLibros({dataDialog, dataStatus=[], dataLocation=[],handleChangeInput, resetDataDialog}) {
+    const URL_UPDATE_BOOKS = process.env.NEXT_PUBLIC_URL_EDIT_BOOK
+
     const initialData={
-        title : "",
+        id : dataDialog?.id,
+        title : dataDialog?.title,
         authors_added : [],
         authors_deleted : [],
         location : 1,
@@ -30,6 +34,7 @@ export default function dropdownTablaLibros({dataDialog, dataStatus=[], dataLoca
     }
     const {toast} = useToast();
     
+    const [loadingData, setLoadingData] = useState(false);
     const [hasChanges, setHasChanges] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
@@ -53,7 +58,34 @@ export default function dropdownTablaLibros({dataDialog, dataStatus=[], dataLoca
     };
 
     const [dataToSend, setDataToSend] = useState(initialData);
+    const saveDataToSend=async()=>{
 
+        setLoadingData(true);
+        console.log(dataToSend);
+        
+        const response = await fetch(URL_UPDATE_BOOKS,{
+            method : "PUT",
+            headers : {
+                "Content-type":"application/json"
+            },
+            body : JSON.stringify(dataToSend)
+        })
+        if (response.ok) {
+            toast({
+                title :"Cambios guardados",
+                description : `Se actualizaron los cambios con éxito, del libro ${dataToSend.title}!`
+            })
+        }
+        if (!response.ok) {
+            toast({
+                variant : "destructive",
+                title : "Algo paso",
+                description :"Hubo un problema al momento de actualizar los datos!"
+            })
+        }
+        setLoadingData(false);
+        setOpenDialog(!openDialog);        
+    }
   return (
     <>
         <DropdownMenuPrimitive.Root open={openDropdown} onOpenChange={setOpenDropdown} >
@@ -123,22 +155,32 @@ export default function dropdownTablaLibros({dataDialog, dataStatus=[], dataLoca
                     <h1>Autor</h1>
                     <div className='w-full rounded-lg grid grid-cols-auto-fill-100 auto-cols-max gap-2 items-center'>
                         {
-                            dataDialog?.author?.map((author, key)=>
+                            dataDialog?.authors?.map((author, key)=>
                             <p key={key} className='p-2 bg-slate-100 rounded-xl w-fit mt-2 text-nowrap'>
-                                <span className='mr-2'>{author}
+                                <span className='mr-2'>{author?.value}
                                     <ClearIcon 
                                     className='cursor-pointer'
                                     onClick={()=>{
-                                        const updateData = [...dataDialog?.author].filter((_, idx)=>idx!==key);
-                                        setDataToSend({
-                                            ...dataToSend,
-                                            authors_deleted : [...dataToSend.authors_deleted, {
-                                                
-                                                name : author
-                                            }]
-                                        });
+                                        const updateData = [...dataDialog?.authors].filter((_, idx)=>idx!==key);
+                                        const existAuthorInAdded = [...dataToSend.authors_added].some(autor=>autor.name ==  author?.value) 
                                         
-                                        handleChangeInput(dataDialog?.id,"author", updateData);     
+                                        if (author.id) {
+                                            setDataToSend({
+                                                ...dataToSend,
+                                                authors_deleted : [...dataToSend.authors_deleted, {
+                                                    id : author?.id,
+                                                    name : author?.value
+                                                }]
+                                            });
+                                        }
+                                        if (existAuthorInAdded) {                                            
+                                            setDataToSend({
+                                                ...dataToSend,
+                                                authors_added : [...dataToSend.authors_added].filter(item=>!item.name.toUpperCase().includes(author.value.toUpperCase()))
+                                            })
+                                        }
+                                        
+                                        handleChangeInput(dataDialog?.id,"authors", updateData);     
 
                                         setHasChanges(true);          
                                     }}/></span>
@@ -164,7 +206,9 @@ export default function dropdownTablaLibros({dataDialog, dataStatus=[], dataLoca
                                         className="bg-white text-guinda border-2 border-guinda hover:bg-red-50"                                    
                                         onClick={(evt)=>{
                                             evt.preventDefault();
-                                            handleChangeInput(dataDialog?.id, "author", [...dataDialog?.author, inputsFormAuthor]);
+                                            handleChangeInput(dataDialog?.id, "authors", [...dataDialog?.authors, {
+                                                value : inputsFormAuthor
+                                            }]);
                                             setDataToSend({
                                                 ...dataToSend,
                                                 authors_added : [...dataToSend.authors_added, {name : inputsFormAuthor}] 
@@ -377,17 +421,10 @@ export default function dropdownTablaLibros({dataDialog, dataStatus=[], dataLoca
                 <div className='flex flex-row items-center my-4'>
                     <Button
                         className='flex-1 cursor-pointer mr-2 bg-guinda rounded-lg py-4  text-white text-center hover:bg-guindaOpaco  hover:font-bold border-2 border-guinda hover:border-guinda'
-                        disabled={!hasChanges}
-                        onClick={()=>{
-                            setOpenDialog(!openDialog);
-                            toast({
-                                title : "Actualizado con éxito!",
-                                description : "Se actualizo con éxito la información del libro"
-                            });
-                            
-                        }}
+                        disabled={!hasChanges || loadingData}
+                        onClick={saveDataToSend}
                     >
-                        <SaveIcon/><span className='ml-2'>Guardar</span>
+                        {loadingData ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> :<> <SaveIcon/><span className='ml-2'>Guardar cambios</span></>}
                     </Button>
                     <Button
                         variant="ghost"

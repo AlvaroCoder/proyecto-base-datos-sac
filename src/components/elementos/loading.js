@@ -1,11 +1,16 @@
 import { Skeleton } from "../ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 
-export function SkeletonTableLibros() {
+export default function SkeletonTableLibros({headers=[]}) {
     return (
         <Table>
             <TableHeader>
                 <TableRow>
+                    {
+                        headers.map(item=>
+                            <TableHead>{item}</TableHead>
+                        )
+                    }
                     <TableHead>#</TableHead>
                     <TableHead>Titulo</TableHead>
                     <TableHead>Autor</TableHead>
@@ -16,28 +21,19 @@ export function SkeletonTableLibros() {
             </TableHeader>
             <TableBody>
                 <TableRow >
-                    <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>
-                    <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>
-                    <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>
-                    <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>
-                    <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>
-                    <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>
+                    {
+                        Array.from({length : headers.length}).map((_)=> <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>)
+                    }
                 </TableRow>
                 <TableRow >
-                    <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>
-                    <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>
-                    <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>
-                    <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>
-                    <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>
-                    <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>
+                    {
+                        Array.from({length : headers.length}).map((_)=> <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>)
+                    }
                 </TableRow>
                 <TableRow >
-                    <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>
-                    <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>
-                    <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>
-                    <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>
-                    <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>
-                    <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>
+                    {
+                        Array.from({length : headers.length}).map((_)=> <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>)
+                    }
                 </TableRow>
             </TableBody>
         </Table>
