@@ -3,7 +3,6 @@ import React from 'react'
 import { useRouter } from 'next/navigation'
 import { handleAddCookie } from '../serverComp/addCookie';
 
-
 function validarCredenciales(credenciales) {
     if (credenciales.username.trim() === '') {
         return {

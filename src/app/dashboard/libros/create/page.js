@@ -13,10 +13,15 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 import { useFetch } from '@/components/hooks/customHooks';
 import { DropdownMenuLocation, DropdownMenuStatus } from '@/components';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
+import { Loader2 } from 'lucide-react';
 
 
 export default function Page() {
-
+  const router = useRouter();
+  const {toast} = useToast()
+  const [loading, setLoading] = useState(false);
   const URL_STATUS = process.env.NEXT_PUBLIC_URL_STATUS
   const URL_LOCATIONS = process.env.NEXT_PUBLIC_URL_LOCATIONS
   const URL_CREATE_BOOK = process.env.NEXT_PUBLIC_URL_CREATE_BOOK
@@ -89,16 +94,23 @@ export default function Page() {
   }
   const handleClickSendData=async()=>{
     console.log(inputAuthor);
+    setLoading(true);
     const response = await fetch(URL_CREATE_BOOK,{
       method : 'POST',
-      body : JSON.stringify(inputAuthor),
         headers : {
           'Content-type':'application/json'
-        }
+        },
+        body : JSON.stringify(inputAuthor),
+        mode : 'no-cors'
     });
-    const responseJson = await response.json();
-    console.log(responseJson);
-      
+    
+    router.push("/dashboard/libros");
+    toast({
+      title : "Exito en la operacion",
+      description : "Se guardo correctamente el libro!"
+    })
+    setLoading(false)
+
   }
   return (
     <div className='w-full h-screen overflow-y-auto px-6 py-4 flex flex-row'>
@@ -212,8 +224,9 @@ export default function Page() {
               <Button
                 className="flex-1 bg-guinda mr-4 h-9  py-2 hover:bg-red-800 w-fit flex flex-row items-center text-white rounded-lg"
                 onClick={handleClickSendData}
+                disabled={loading}
                 >
-                Guardar Libro
+                {loading ?  <span><Loader2 className="mr-2 h-4 w-4 animate-spin"/></span> : <span>Guardar Libro</span>}
               </Button>
               <Button>
                 Cancelar
