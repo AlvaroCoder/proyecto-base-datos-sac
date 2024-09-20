@@ -11,7 +11,9 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { Button } from '../ui/button';
 
 export default function TableEquipos({dataEquipos=[], dataStatus=[], dataLocation=[]}) {
-    const newDataEquipos = dataEquipos.map((item)=>({...item, Seleccionado : false}));
+    console.log("Data equipos ", dataEquipos);
+    
+    const newDataEquipos = dataEquipos?.map((item)=>({...item, Seleccionado : false}));
     const [equiposData, setEquiposData] = useState(newDataEquipos);
 
     const EQUIPOS_POR_PAGINA=10;
@@ -24,7 +26,7 @@ export default function TableEquipos({dataEquipos=[], dataStatus=[], dataLocatio
     }
 
     const filterData = useMemo(()=>{
-        return equiposData.filter(item=>item?.Description?.toUpperCase().includes(query.toUpperCase()))
+        return equiposData.filter(item=>item?.equipment?.toUpperCase().includes(query.toUpperCase()))
     },[equiposData, query]);
 
     const indexLast = currentPage * EQUIPOS_POR_PAGINA;
@@ -56,7 +58,8 @@ export default function TableEquipos({dataEquipos=[], dataStatus=[], dataLocatio
                                 }}
                             />
                         </TableHead>
-                        <TableHead className="w-[400px]">Descripcion</TableHead>
+                        <TableHead className="w-[400px]">Equipo</TableHead>
+                        <TableHead>Comentarios</TableHead>
                         <TableHead>Tipo</TableHead>
                         <TableHead>Origen</TableHead>
                         <TableHead>Año de Adquisición</TableHead>
@@ -99,7 +102,10 @@ export default function TableEquipos({dataEquipos=[], dataStatus=[], dataLocatio
                                             />
                                         </TableCell>
                                         <TableCell>
-                                            {item?.Description}
+                                            {item?.equipment}
+                                        </TableCell>
+                                        <TableCell>
+                                            {item?.description}
                                         </TableCell>
                                         <TableCell>
                                             {item?.type}
@@ -111,10 +117,10 @@ export default function TableEquipos({dataEquipos=[], dataStatus=[], dataLocatio
                                             {item?.year}
                                         </TableCell>
                                         <TableCell>
-                                            {item?.location}
+                                            {item?.location?.value}
                                         </TableCell>
                                         <TableCell>
-                                            {item?.status}
+                                            {item?.status?.value}
                                         </TableCell>
                                     </TableRow>
                                 )

@@ -14,7 +14,6 @@ export default  function Home() {
   useEffect(()=>{
     async function fetchCookie() {
         const user = await handleExistCookie();
-        console.log(user);
     }
     fetchCookie();
   },[]) 

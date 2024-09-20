@@ -34,8 +34,9 @@ function obtenerUbicacionUnica(listaObjetos) {
 }
 
 
-export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations=[]}) {
-    const newDataLibros = dataLibros.map((item)=>({...item, Seleccionado : false}));
+export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations=[]}) {    
+    const newDataLibros = dataLibros?.map((item)=>({...item, Seleccionado : false}));
+    
     const [librosData, setLibrosData] = useState(newDataLibros);
 
     const LIBROS_POR_PAGINA=10;
@@ -56,11 +57,12 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
     const filterData =useMemo(()=>{
         return  librosData.filter(item=>item?.title?.toUpperCase().includes(query.toUpperCase()))
     },[librosData, query]);
-
+    
+    
     const filterChekButton=useMemo(()=>{
-        return filterData.filter(item=>item?.status?.value.toUpperCase().includes(stateData.toUpperCase()));
+        return filterData.filter(item=>item?.status?.value?.toUpperCase().includes(stateData.toUpperCase()));
     },[filterData, stateData])
-
+    
     // Paginado
     const indexOfLasBook = currentPage * LIBROS_POR_PAGINA;
     const indexOfFirstBook = indexOfLasBook - LIBROS_POR_PAGINA;
@@ -137,9 +139,9 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
                     <TableRow>
                         <TableHead> 
                             <Checkbox
-                            checked={librosData.filter(libro=>libro.Seleccionado).length == librosData.length || (librosData.filter(libro=>libro.Seleccionado).length > 0 && "indeterminate")}
+                            checked={librosData?.filter(libro=>libro.Seleccionado).length == librosData.length || (librosData.filter(libro=>libro.Seleccionado).length > 0 && "indeterminate")}
                             onCheckedChange={(_)=>{
-                                const newListLibros = librosData.map(libro=>({...libro, Seleccionado : !libro.Seleccionado}))
+                                const newListLibros = librosData?.map(libro=>({...libro, Seleccionado : !libro.Seleccionado}))
                                 setLibrosData(newListLibros);
                             }}
                         /></TableHead>

@@ -8,36 +8,22 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 import { BotonFormularioIngreso } from '..';
-
-function validarCredenciales(credenciales) {
-  if (credenciales.username.trim() === '') {
-      return {
-          esValido: false,
-          mensaje: "El nombre de usuario no puede estar vacío."
-      };
-  }
-
-  if (credenciales.password.trim() === '') {
-      return {
-          esValido: false,
-          mensaje: "La contraseña no puede estar vacía."
-      };
-  }
-
-  return {
-      esValido: true,
-      mensaje: "Las credenciales son válidas."
-  };
-}
+import { validarCredenciales } from '@/app/utils/checkFormData';
+import { login } from '@/authentication/lib';
+import { useToast } from '../ui/use-toast';
+import { useRouter } from 'next/navigation';
 
 export default function FormElement() {
-
+  const {toast} = useToast();
+  const router = useRouter();
   const [visibilityPassword, setVisibilityPassword] = useState(false);
-
+  
   const [valuesForm, setValuesForm] = useState({
     username : "",
     password : ""
   });
+  const [loading, setLoading] = useState(false);
+
   const handleChangeInput=(e)=>{
     const target=e.target;
     setValuesForm({
@@ -49,9 +35,31 @@ export default function FormElement() {
   const handleChangeVisibilityPassword=()=>{
     setVisibilityPassword(!visibilityPassword);
   }
+  const handleSubmit=async (evt)=>{
+    evt.preventDefault();
+    setLoading(true)
+
+
+    const response = await login(valuesForm);
+    if (response.error) {
+      toast({
+        title : "Error",
+        variant : "destructive",
+        description : response?.message
+      });
+      setLoading(false)
+      return
+    }
+    toast({
+      title : "Exito",
+      description : "Ingreso"
+    });
+    router.push("/dashboard/libros")
+    setLoading(false)
+  }
   return (
     <div className='p-8 rounded-xl max-w-[450px] w-full bg-guindaOpaco'>
-      <form >
+      <form onSubmit={handleSubmit} >
         <section className='mt-6'>
           <label htmlFor='username' className='text-white text-xl mb-4'>Nombre Usuario</label>
           <div className=' flex flex-row items-center justify-center bg-white rounded-lg px-4 py-2'>
@@ -85,12 +93,15 @@ export default function FormElement() {
             }
           </div>
         </section>
-        <BotonFormularioIngreso 
+          <div className='flex-1 flex flex-row justify-center'>
+          <BotonFormularioIngreso 
           href={"/dashboard/libros"}
           valuesForm={valuesForm}
+          loading={loading}
         >
           Ingresar
         </BotonFormularioIngreso>
+          </div>
       </form>
     </div>
   )

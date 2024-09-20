@@ -1,16 +1,31 @@
 'use client'
+import { getSession } from "@/authentication/lib";
 import { useEffect, useState } from "react";
 export  function useFetch(url) {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null);
     const [dataResponse, setDataResponse] = useState(null);
+    const [sessionUser, setSessionUser] = useState(null);
     useEffect(()=>{
         async function fetchData() {
             try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error("Something went wrong with server!")
+                const session = await getSession();
                 
-                const jsonResponse = await response.json();
+                setSessionUser(session);
+                const response = session ? await fetch(url, {headers : {
+                    'Content-Type' : 'application/json',
+                    'Authorization' : `Bearer ${session?.user?.access_token}`,
+                    
+                }, mode : 'cors'})  :  await fetch(url);
+                
+                if (!response.ok) {
+                    const jsonResponse = await response.json();
+                    setError(jsonResponse?.detail);
+                    return;
+                };
+                
+                const jsonResponse = await response.json();          
+                      
                 setDataResponse(jsonResponse);
             } catch (error) {
                 setError(error);
@@ -20,5 +35,5 @@ export  function useFetch(url) {
         }
         fetchData();
     },[url])
-    return { dataResponse, loading, error }
+    return { dataResponse, loading, error, sessionUser}
 }
