@@ -2,10 +2,14 @@
 import React, { useMemo, useState } from 'react'
 import TableLayout from './Layout/TableLayout';
 
+function DialogPapers() {
+    
+}
+
 export default function TablePapers({dataPapers=[]}) {
     const titlesData=[
         {name : "Titulo", className: "w-[300px]"},
-        {name : "Miembros", className: ""},
+        {name : "Miembros", className: "w-[500px] px-2"},
         {name : "Año", className: ""},
         {name : "Link", className : ""}
     ]
@@ -16,7 +20,6 @@ export default function TablePapers({dataPapers=[]}) {
         "year",
         "link"
     ]
-
 
     const newDataPapers = dataPapers?.map((item)=>({...item, Seleccionado : false}));
     const [papersData, setPapersData] = useState(newDataPapers);

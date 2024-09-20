@@ -9,14 +9,13 @@ export default function Page() {
 
   const URL_PAPERS = process.env.NEXT_PUBLIC_URL_PAPERS; 
 
-  const {loading : loadingDataPapers, dataResponse : dataPapers, error : errorDataPapers} = useFetch(URL_PAPERS);
+  const {loading : loadingDataPapers, dataResponse : dataPapers, error : errorDataPapers, sessionUser : sessionUserPapers} = useFetch(URL_PAPERS);
   const headerPapers = [
     "Titulo",
     "Miembros",
     "Año",
     "Link"
   ]
-
   return (
     <div className='w-full max-h-screen overflow-y-auto px-6 py-4 '>
         <h1 className='text-guinda font-bold text-2xl'>

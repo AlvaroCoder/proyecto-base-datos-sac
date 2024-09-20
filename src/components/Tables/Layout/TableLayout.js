@@ -4,8 +4,13 @@ import { Input } from '../../ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table'
 import { Checkbox } from '../../ui/checkbox'
 import { Button } from '@/components/ui/button'
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import AddIcon from '@mui/icons-material/Add';
+
+import Link from 'next/link'
+import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components/ui/dialog'
+import { DropdownUiTable } from '../ui'
 
 export default function TableLayout({
     currentData=[],
@@ -17,9 +22,15 @@ export default function TableLayout({
     currentPage=1,
     handlePaginate,
     dataPerPage=10,
-    numData
+    numData,
+    filtersComponents=[],
+    hrefCreateButton="/"
 }) 
 {   
+    const handleClickEdit=()=>{
+        console.log("Hola");
+        
+    }
   return (
     <div className='w-full'>
         <div className='flex items-center py-4'>
@@ -27,6 +38,22 @@ export default function TableLayout({
                 placeholder="Buscar ..."
                 onChange={handleChangeInput}
             />
+            <Link
+                className="bg-guinda mx-2 h-9 px-4 py-2 hover:bg-red-800 w-fit flex flex-row items-center text-white rounded-lg text-sm "
+                href={hrefCreateButton}
+            >
+                <span className='ml-2 flex-1 whitespace-nowrap'>Crear entidad</span><AddIcon/>
+            </Link>
+            {
+                filtersComponents.length > 0 &&
+                <div>
+                    {
+                        filtersComponents.map((item, idx)=>(
+                            <React.Fragment key={idx}>{item}</React.Fragment>
+                        ))
+                    }
+                </div>
+            }
         </div>
         <div className='rounded-md border mb-4'>
             <Table>
@@ -45,6 +72,7 @@ export default function TableLayout({
                                 )
                             })
                         }
+                        <TableHead></TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -66,16 +94,32 @@ export default function TableLayout({
                                                 if (Array.isArray(currentValue)) {
                                                     return (
                                                         <TableCell key={idx}>
-                                                            {
-                                                                currentValue.map((val)=>{
-                                                                    return <p className='p-2 bg-slate-100 rounded-sm w-fit'>{ Object.values(val).filter(i=>!Number.isInteger(i)).map(v=><span>{v}</span>)}</p>
-                                                                })
-                                                            }
+                                                            <div className="flex flex-wrap gap-x-4 gap-y-2">
+                                                                {
+                                                                    currentValue.map((val, idx)=>{
+                                                                        return idx < 3 && <p className='px-4 py-2 bg-slate-100 rounded-sm w-fit shadow-sm'>{ Object.values(val).filter(i=>!Number.isInteger(i)).map(v=><span>{v}</span>)}</p>
+                                                                    })
+                                                                }
+                                                                {
+                                                                    currentValue?.length > 3 &&
+                                                                    <MoreHorizIcon/>
+                                                                }
+                                                            </div>
                                                         </TableCell>
                                                     )
                                                 }
                                                 if (currentValue !== null && typeof currentValue === 'object' && !Array.isArray(currentValue)) {
                                                     return <TableCell><p>{currentValue?.value}</p></TableCell>
+                                                }
+                                                if (keysData[idx] == "link") {
+                                                    return <TableCell >
+                                                        <a
+                                                            href={currentValue}
+                                                            target='_blank'
+                                                        >
+                                                            <h1 className='cursor-pointer underline text-guinda'>Ver archivo</h1>
+                                                        </a>
+                                                    </TableCell>
                                                 }
                                                 return (
                                                     <TableCell key={idx}>
@@ -84,6 +128,11 @@ export default function TableLayout({
                                                 )
                                             })
                                         }
+                                        <TableCell>
+                                            <DropdownUiTable
+                                                handleClickEdit={handleClickEdit}
+                                            />
+                                        </TableCell>
                                     </TableRow>
                                 )
                             })

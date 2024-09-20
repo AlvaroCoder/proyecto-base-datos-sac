@@ -1,17 +1,9 @@
 
 "use client"
 import React, { useMemo, useState } from 'react'
-import { Input } from '../ui/input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
-import { Checkbox } from '../ui/checkbox';
-
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-
-import { Button } from '../ui/button';
 import TableLayout from './Layout/TableLayout';
 
-export default function TableEquipos({dataEquipos=[], dataStatus=[], dataLocation=[]}) {
+export default function TableEquipos({dataEquipos=[]}) {
     const titlesData=[
         {name:"Equipo", className:"w-[400px]"},
         {name:"Comentarios", className:""},
@@ -92,6 +84,7 @@ export default function TableEquipos({dataEquipos=[], dataStatus=[], dataLocatio
         handleChangeChecked={handleChangeChecked}
         handleChangeInput={onChangeInput}
         handlePaginate={paginate}
+        hrefCreateButton='/dashboard/equipos/create'
     />
   )
 }

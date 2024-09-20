@@ -78,6 +78,7 @@ export default function TableProyectos({dataProyectos = []}) {
       handleCheckedRow={handleChangeRow}
       handleChangeInput={handleChangeInput}
       handlePaginate={handlePaginate}
+      hrefCreateButton='/dashboard/proyectos/create'
     />
   )
 }

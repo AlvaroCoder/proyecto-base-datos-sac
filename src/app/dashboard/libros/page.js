@@ -16,8 +16,7 @@ export default function Page() {
 
   const {loading : loadingDataLibros, dataResponse : dataLibros, error : errorDataLibros, sessionUser : sessionUserLibros} = useFetch(URL_LIBROS);
   const {loading : loadingDataStatus, dataResponse : dataStatus, error:errorDataStatus} = useFetch(URL_STATUS);
-  
-  const {loading : loadingDataLocations, dataResponse : dataLocations, error : errorDataLocations} = useFetch(URL_LOCATIONS)
+  const {loading : loadingDataLocations, dataResponse : dataLocations, error : errorDataLocations} = useFetch(URL_LOCATIONS);
   const headersLibros = [
     "#",
     "Titulo",
