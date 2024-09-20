@@ -1,8 +1,11 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import { Input } from '../../ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table'
 import { Checkbox } from '../../ui/checkbox'
+import { Button } from '@/components/ui/button'
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+
 
 export default function TableLayout({
     currentData=[],
@@ -10,9 +13,13 @@ export default function TableLayout({
     handleChangeInput,
     handleChangeChecked,
     handleCheckedRow,
-    keysData=[]
+    keysData=[],
+    currentPage=1,
+    handlePaginate,
+    dataPerPage=10,
+    numData
 }) 
-{
+{   
   return (
     <div className='w-full'>
         <div className='flex items-center py-4'>
@@ -67,6 +74,9 @@ export default function TableLayout({
                                                         </TableCell>
                                                     )
                                                 }
+                                                if (currentValue !== null && typeof currentValue === 'object' && !Array.isArray(currentValue)) {
+                                                    return <TableCell><p>{currentValue?.value}</p></TableCell>
+                                                }
                                                 return (
                                                     <TableCell key={idx}>
                                                         {currentValue}
@@ -86,6 +96,74 @@ export default function TableLayout({
                     }
                 </TableBody>
             </Table>
+        </div>
+        <div className='flex justify-center my-8'>
+            {
+                currentData.length > 0 &&
+                <nav className="relative z-0 inline-flex rounded-md  -space-x-px" aria-label="Pagination">
+                    <Button
+                        onClick={()=>handlePaginate(currentPage-1)}
+                        disabled={currentPage == 1}
+                        variant="ghost"
+                    >
+                        <span>Anterior</span>
+                    </Button>
+                    <div className='mx-4 px-4 flex flex-row'>
+                        {
+                            currentPage > 3 &&
+                            <div>
+                                <Button
+                                    className={`relative inline-flex items-center px-4 py-2 border rounded-sm border-gray-300 text-sm font-medium  text-gray-700 hover:bg-gray-50 `}
+                                    variant="ghost"
+                                    onClick={()=>handlePaginate(1)}
+                                >
+                                    1
+                                </Button>
+                                <MoreHorizIcon/>
+                            </div>
+                        }
+                        {
+                            Array.from({length : Math.ceil(numData / dataPerPage)}).map((_, idx)=>{
+                                if (idx < currentPage + 3) {
+                                    return (
+                                        <Button
+                                            key={idx + 1}
+                                            variant="ghost"
+                                            onClick={()=>handlePaginate(idx + 1)}
+                                            className={`relative inline-flex items-center px-4 py-2 border rounded-sm border-gray-300 text-sm font-medium ${
+                                                currentPage === idx + 1 ? 'bg-gray-300' : 'bg-white'
+                                            } text-gray-700 hover:bg-gray-50 ${currentPage-3 > idx && 'hidden'}`}
+                                        >
+                                            <span>{idx + 1}</span>
+                                        </Button>
+                                    )
+                                }
+                                return null;
+                            })
+                        }
+                        {
+                            currentPage < Math.ceil(numData / dataPerPage)-4 &&
+                            <div>
+                                <MoreHorizIcon/>
+                                <Button
+                                    variant="ghost"
+                                    className={`relative inline-flex items-center px-4 py-2 border rounded-sm border-gray-300 text-sm font-medium  text-gray-700 hover:bg-gray-50 `}
+                                    onClick={()=>handlePaginate(Math.ceil(numData/dataPerPage))}
+                                >
+                                    {Math.ceil(numData/dataPerPage)}
+                                </Button>
+                            </div>
+                        }
+                    </div>
+                    <Button
+                        onClick={()=>handlePaginate(currentPage + 1)}
+                        disabled={currentPage == Math.ceil(numData / dataPerPage)}
+                        variant="ghost"
+                    >
+                        <span>Siguiente</span>
+                    </Button>
+                </nav>
+            }
         </div>
     </div>
   )
