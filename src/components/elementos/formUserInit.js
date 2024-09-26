@@ -54,7 +54,7 @@ export default function FormElement() {
       title : "Exito",
       description : "Ingreso"
     });
-    router.push("/dashboard/libros")
+    router.push("/")
     setLoading(false)
   }
   return (

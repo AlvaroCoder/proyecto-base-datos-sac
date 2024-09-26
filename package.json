@@ -32,6 +32,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@xpd/tailwind-3dtransforms": "^1.0.3",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "postcss": "^8",

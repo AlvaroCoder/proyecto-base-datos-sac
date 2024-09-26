@@ -1,24 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession, updateSession } from "./authentication/lib";
-const protectedRoutes = ['/dashboard'];
-const publicRoutes = ['/'];
+import { getSession } from "./authentication/lib";
 
 export default async function middleware(request=NextRequest) {
-    const path = request.nextUrl.pathname;
-    const isProtectedRoute = protectedRoutes.includes(path);
-    const isPublicRoute = publicRoutes.includes(path);
-
-    const session = await getSession()
-    if (isProtectedRoute && !session?.userId) {
-        return NextResponse.redirect(new URL('/', request.nextUrl));
-    }
-
-    if (
-        isPublicRoute &&
-        session?.userId &&
-        !request.nextUrl.pathname.startsWith('/dashboard')
-      ) {
-        return NextResponse.redirect(new URL('/dashboard', request.nextUrl));
-      }
-    return NextResponse.next();
+  const session = await getSession();
+  console.log(session);
+  
+  if (!session) {
+    return NextResponse.redirect(
+      new URL("/login",request.url)
+    )
+  }
+  
+  
+  return NextResponse.next()
+  
+}
+export const config={
+  matcher : ["/dashboard/:path*"]
 }
