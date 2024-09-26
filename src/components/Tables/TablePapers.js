@@ -1,6 +1,8 @@
 "use client"
 import React, { useMemo, useState } from 'react'
 import TableLayout from './Layout/TableLayout';
+import { extraerDataSinRepetir } from '../commons/tableFunctions';
+import { DropdownFiltersComponent } from './ui';
 
 function DialogPapers() {
     
@@ -25,11 +27,17 @@ export default function TablePapers({dataPapers=[]}) {
     const [papersData, setPapersData] = useState(newDataPapers);
     const [currentPage, setCurrentPage] = useState(1);
     const [query, setQuery] = useState("");
+    const [yearData, setYearData] = useState("");
 
     const PAPERS_POR_PAGINA = 10
     const indexLast = currentPage * PAPERS_POR_PAGINA;
     const indexFirst = indexLast - PAPERS_POR_PAGINA;
 
+    const yearSinRepetir = extraerDataSinRepetir(papersData,"year");
+    const listFilterComponents = [
+        <DropdownFiltersComponent data={yearSinRepetir} titleButton='Año' titleData={yearData}/>
+    ]
+    
     const filterData=useMemo(()=>{
         return papersData.filter(item=>item?.title?.toUpperCase().includes(query.toUpperCase()))
     }, [papersData, query])
@@ -78,6 +86,7 @@ export default function TablePapers({dataPapers=[]}) {
             keysData={keysData}
             numData={numPapers}
             currentPage={currentPage}
+            filtersComponents={listFilterComponents}
             handleCheckedRow={handleChangeRow}
             handleChangeChecked={handleChangeChecked}
             handleChangeInput={handleChangeInput}

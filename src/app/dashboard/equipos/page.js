@@ -1,17 +1,13 @@
 "use client"
 import { SkeletonTable, TableEquipos } from '@/components';
 import { useFetch } from '@/components/hooks/customHooks';
-import { useToast } from '@/components/ui/use-toast';
-import { useRouter } from 'next/navigation';
 import React from 'react'
 
 export default function Page() {
   const  URL_EQUIPOS = process.env.NEXT_PUBLIC_URL_EQUIPOS;
   const {loading : loadingDataEquipos, dataResponse : dataEquipos, error : errorDataEquipos, sessionUser : sessionUserEquipos} = useFetch(URL_EQUIPOS)
   
-  
-  const router = useRouter();
-  const headersEquipos = [
+    const headersEquipos = [
     "Descripcion",
     "Tipo",
     "Origen",

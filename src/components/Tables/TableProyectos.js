@@ -1,12 +1,16 @@
 'use client'
 import React, { useMemo, useState } from 'react'
 import TableLayout from './Layout/TableLayout';
+import { DropdownFiltersComponent } from './ui';
+import { extraerDataSinRepetir } from '../commons/tableFunctions';
 
 export default function TableProyectos({dataProyectos = []}) {
   const newDataProyectos = dataProyectos?.map((item)=>({...item, Seleccionado : false}));  
   const [proyectosData, setProyectosData] = useState(newDataProyectos);
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState("");
+  const [statusData, setStatusData] = useState("");
+  const [coordinatorData, setCoordinatorData] = useState("");
 
   const PROYECTOS_POR_PAGINA = 10;
   const indexLast = currentPage * PROYECTOS_POR_PAGINA;
@@ -38,6 +42,15 @@ export default function TableProyectos({dataProyectos = []}) {
     "status",
     "year_start",
     "year_end"
+  ]
+  console.log(proyectosData);
+  
+  const estadosSinRepetir = extraerDataSinRepetir(proyectosData, "status");
+  const coordinadorSinRepetir = extraerDataSinRepetir(proyectosData, "coordinator");
+  
+  const listFilterComponents=[
+    <DropdownFiltersComponent data={estadosSinRepetir} titleButton='Estados' titleData={statusData} />,
+    <DropdownFiltersComponent data={coordinadorSinRepetir} titleButton='Coordinador' titleData={coordinatorData} />
   ]
   const handleChangeChecked=(_)=>{
     const newListProyectos = proyectosData.map(proyecto=>({...proyecto, Seleccionado : !proyecto.Seleccionado}))
@@ -74,6 +87,7 @@ export default function TableProyectos({dataProyectos = []}) {
       keysData={keysData}
       numData={numProyectos}
       currentPage={currentPage}
+      filtersComponents={listFilterComponents}
       handleChangeChecked={handleChangeChecked}
       handleCheckedRow={handleChangeRow}
       handleChangeInput={handleChangeInput}

@@ -1,18 +1,14 @@
 "use client"
 import { TableLibros, SkeletonTable } from '@/components';
 import { useFetch } from '@/components/hooks/customHooks';
-import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 
 
 export default function Page() {
 
-  const router = useRouter();
-
   const URL_LIBROS = process.env.NEXT_PUBLIC_URL_LIBROS
   const URL_STATUS = process.env.NEXT_PUBLIC_URL_STATUS
   const URL_LOCATIONS = process.env.NEXT_PUBLIC_URL_LOCATIONS
-
 
   const {loading : loadingDataLibros, dataResponse : dataLibros, error : errorDataLibros, sessionUser : sessionUserLibros} = useFetch(URL_LIBROS);
   const {loading : loadingDataStatus, dataResponse : dataStatus, error:errorDataStatus} = useFetch(URL_STATUS);

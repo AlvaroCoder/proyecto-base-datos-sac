@@ -46,7 +46,7 @@ export async function login(dataUser) {
     }
     const responseJson = await response.json();
 
-    const expires = new Date(Date.now() + 10 * 60 * 1000); 
+    const expires = new Date(Date.now() + 5 * 60 * 1000); 
     const user = {username : formData.get("username"), access_token : responseJson?.access_token, refresh_token : responseJson?.refresh_token, token_type : responseJson?.token_type};
     const session = await encrypt({user, expires});
     cookies().set("session",session, {expires, httpOnly : true});

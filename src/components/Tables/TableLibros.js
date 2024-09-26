@@ -11,21 +11,9 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AddIcon from '@mui/icons-material/Add';
 
 import TableLayout from './Layout/TableLayout'
+import { DropdownFiltersComponent } from './ui'
+import { extraerDataSinRepetir } from '../commons/tableFunctions'
 
-function obtenerEstadosUnicos(listaObjetos) {
-    const estadosUnicos = [...new Set(listaObjetos.map(objeto => objeto.status.value))];
-    return estadosUnicos;
-}
-
-function obtenerPrestadosUnicos(listaObjetos) {
-    const estadosUnicos = [...new Set(listaObjetos.map(objeto => objeto.Prestadoa))];
-    return estadosUnicos;
-}
-
-function obtenerUbicacionUnica(listaObjetos) {
-    const estadosUnicos = [...new Set(listaObjetos.map(objeto => objeto.Ubicacion))];
-    return estadosUnicos;
-}
 
 function DialogLibros() {
     return(
@@ -335,32 +323,6 @@ function DialogLibros() {
     )
 }
 
-function FilterComponentStatus({
-    dataEstados=[],
-    nombreEstado,
-    handleCheckedChange
-}) {
-    return (
-        <DropdownMenu>
-                <DropdownMenuTrigger >
-                    <Button variant="ghost" >
-                        <span>Estados</span>
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="bottom">
-                    {
-                        dataEstados.map((item, key)=>
-                        <DropdownMenuCheckboxItem 
-                        key={key} 
-                        className="capitalize" 
-                        checked={item==nombreEstado}
-                        onCheckedChange={()=>handleCheckedChange(item)}
-                        >{item}</DropdownMenuCheckboxItem>)
-                    }
-                </DropdownMenuContent>
-            </DropdownMenu>
-    )
-}
 
 export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations=[]}) {    
     const titlesData=[
@@ -380,38 +342,43 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
 
 
     const newDataLibros = dataLibros?.map((item)=>({...item, Seleccionado : false}));
+
     const [librosData, setLibrosData] = useState(newDataLibros);
 
     const LIBROS_POR_PAGINA=10;
     const [currentPage, setCurrentPage]=useState(1);
     const [stateData, setstateData] = useState("");
+    const [locationData, setLocationData] = useState("");
     const [query, setQuery] = useState("");        
 
     const onChangeInput=(e)=>{
         setQuery(e.target.value);
     } ;
 
-    const estadosSinRepetir=obtenerEstadosUnicos(librosData);
+    const estadosSinRepetir=extraerDataSinRepetir(librosData,"status");
     // TODO : terminar de hacer las filtraciones por Ubicacion y Prestado a
-    const prestadosNombreSinRepetir = obtenerPrestadosUnicos(librosData);
-    const ubicaionSinRepetir=obtenerUbicacionUnica(librosData);
+    const ubicaionSinRepetir=extraerDataSinRepetir(librosData, "location");
 
 
     const filterData =useMemo(()=>{
         return  librosData.filter(item=>item?.title?.toUpperCase().includes(query.toUpperCase()))
     },[librosData, query]);
     
+    const filterButtonLocation=useMemo(()=>{
+        return filterData.filter(item=>item?.location[0].value.toUpperCase().includes(locationData.toUpperCase()))
+    },[filterData, locationData])
     
-    const filterChekButton=useMemo(()=>{
-        return filterData.filter(item=>item?.status?.value?.toUpperCase().includes(stateData.toUpperCase()));
-    },[filterData, stateData])
+    const filterButtonStatus=useMemo(()=>{
+        return filterButtonLocation.filter(item=>item?.status?.value?.toUpperCase().includes(stateData.toUpperCase()));
+    },[filterButtonLocation, stateData])
     
+
     // Paginado
     const indexOfLasBook = currentPage * LIBROS_POR_PAGINA;
     const indexOfFirstBook = indexOfLasBook - LIBROS_POR_PAGINA;
     const currentData = useMemo(() => {
-        return filterChekButton.slice(indexOfFirstBook, indexOfLasBook);
-    }, [filterChekButton, indexOfFirstBook, indexOfLasBook]);
+        return filterButtonStatus.slice(indexOfFirstBook, indexOfLasBook);
+    }, [filterButtonStatus, indexOfFirstBook, indexOfLasBook]);
     
     const handleChangeRow=(idx, field, value)=>{
         const updateData = [...librosData];
@@ -430,13 +397,21 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
     const numBooks = librosData.length;
-    const handleCheckedDropdown=(item)=>{
+    const handleChckedDropdownStatus=(item)=>{
         setQuery("");
         if(item==stateData){
             setstateData("")
             return;
         }
         setstateData(item)
+    }
+    const handleCheckedDropdownLocation=(item)=>{
+        setQuery("");
+        if (item==locationData) {
+            setLocationData("")
+            return;
+        }
+        setLocationData(item)
     }
     const handleChangeChecked=(_)=>{
         const newListBooks = librosData?.map(libro=>({...libro, Seleccionado : !libro.Seleccionado}));
@@ -464,7 +439,8 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
         setLibrosData(newListBooks);
     }
     const filterComponents=[
-        <FilterComponentStatus dataEstados={estadosSinRepetir} nombreEstado={stateData} handleCheckedChange={handleCheckedDropdown}/>,
+        <DropdownFiltersComponent data={estadosSinRepetir} titleData={stateData} titleButton='Estados' handleCheckedChange={handleChckedDropdownStatus}/>,
+        <DropdownFiltersComponent data={ubicaionSinRepetir} titleData={locationData} titleButton='Ubicación' handleCheckedChange={handleCheckedDropdownLocation} />,
     ]
     return (
     <TableLayout

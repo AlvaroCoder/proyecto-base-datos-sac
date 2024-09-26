@@ -1,12 +1,9 @@
 "use client"
 import { SkeletonTable, TablePapers } from '@/components';
 import { useFetch } from '@/components/hooks/customHooks'
-import { useRouter } from 'next/navigation';
 import React from 'react'
 
 export default function Page() {
-  const router = useRouter();
-
   const URL_PAPERS = process.env.NEXT_PUBLIC_URL_PAPERS; 
 
   const {loading : loadingDataPapers, dataResponse : dataPapers, error : errorDataPapers, sessionUser : sessionUserPapers} = useFetch(URL_PAPERS);

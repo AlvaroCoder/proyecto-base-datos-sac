@@ -54,7 +54,7 @@ export default  function Home() {
           <p className="text-center text-lg w-[600px] my-8 z-20">Plataforma centrada en gestionar y monitorear la información interna del laboratorio de SAC de la Universidad de Piura. </p>
           <Link
             className="bg-guinda mt-4  h-9 p-6 px-6 hover:bg-red-800 w-fit flex flex-row items-center text-white rounded-lg text-lg "
-            href={"/dashoard"}
+            href={"/dashboard"}
               >
             Ver Dashboard
           </Link>
@@ -76,7 +76,7 @@ export default  function Home() {
           <p>Principales características de la plataforma</p>
           <div className="w-[600px] p-4 mt-4 flex flex-row  flex-wrap gap-x-8 gap-y-20 items-center">
             {
-              principalFeatures.map(({title, icon : IconFeature})=>(<div className="w-40 flex flex-col items-center justify-center">
+              principalFeatures.map(({title, icon : IconFeature})=>(<div key={title} className="w-40 flex flex-col items-center justify-center">
                 <div className="p-2 shadow-sm rounded-lg flex justify-center items-center text-6xl w-24">
                   <IconFeature className=" text-guinda" fontSize="20px"/>
                 </div>

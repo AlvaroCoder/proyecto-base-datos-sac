@@ -2,6 +2,8 @@
 "use client"
 import React, { useMemo, useState } from 'react'
 import TableLayout from './Layout/TableLayout';
+import { DropdownFiltersComponent } from './ui';
+import { extraerDataSinRepetir } from '../commons/tableFunctions';
 
 export default function TableEquipos({dataEquipos=[]}) {
     const titlesData=[
@@ -25,7 +27,10 @@ export default function TableEquipos({dataEquipos=[]}) {
     ]
 
     const newDataEquipos = dataEquipos?.map((item)=>({...item, Seleccionado : false}));
+    
     const [equiposData, setEquiposData] = useState(newDataEquipos);
+    const [locationData, setLocationData] = useState("");
+    const [statusData, setStatusData] = useState("");
     const [currentPage, setCurrentPage]=useState(1);
     const [query, setQuery] = useState("");       
 
@@ -33,6 +38,8 @@ export default function TableEquipos({dataEquipos=[]}) {
     const indexLast = currentPage * EQUIPOS_POR_PAGINA;
     const indexFirst = indexLast - EQUIPOS_POR_PAGINA;
 
+    const ubicacionSinRepetir = extraerDataSinRepetir(equiposData, "location");
+    const estadosSinRepetir = extraerDataSinRepetir(equiposData, "status")
     const filterData = useMemo(()=>{
         return equiposData.filter(item=>item?.equipment?.toUpperCase().includes(query.toUpperCase()))
     },[equiposData, query]);
@@ -41,6 +48,10 @@ export default function TableEquipos({dataEquipos=[]}) {
         return filterData.slice(indexFirst, indexLast)
     },[filterData, indexFirst, indexLast]);
 
+    const listFiltersEquipos=[
+        <DropdownFiltersComponent data={ubicacionSinRepetir} titleData={locationData} titleButton='Ubicacion'/>,
+        <DropdownFiltersComponent data={estadosSinRepetir} titleButton='Estado' titleData={statusData} />
+    ]
 
     const onChangeInput=(e)=>{
         setQuery(e.target.value);
@@ -80,6 +91,7 @@ export default function TableEquipos({dataEquipos=[]}) {
         keysData={keysData}
         numData={numEquipos}
         currentPage={currentPage}
+        filtersComponents={listFiltersEquipos}
         handleCheckedRow={handleChangeRow}
         handleChangeChecked={handleChangeChecked}
         handleChangeInput={onChangeInput}

@@ -9,7 +9,6 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import AddIcon from '@mui/icons-material/Add';
 
 import Link from 'next/link'
-import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components/ui/dialog'
 import { DropdownUiTable } from '../ui'
 
 export default function TableLayout({
@@ -46,7 +45,7 @@ export default function TableLayout({
             </Link>
             {
                 filtersComponents.length > 0 &&
-                <div>
+                <div className='flex flex-row items-center px-4'>
                     {
                         filtersComponents.map((item, idx)=>(
                             <React.Fragment key={idx}>{item}</React.Fragment>
