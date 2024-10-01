@@ -1,4 +1,10 @@
 export function validarCredenciales(credenciales) {
+    if (credenciales.username?.trim() === '' && credenciales.password.trim() === '') {
+        return {
+            esValido : false,
+            mensaje : "Completa los campos vacíos."
+        }
+    }
     if (credenciales.username.trim() === '') {
         return {
             esValido: false,

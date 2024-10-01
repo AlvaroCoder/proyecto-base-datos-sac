@@ -43,15 +43,19 @@ export default function TableEquipos({dataEquipos=[]}) {
     const filterData = useMemo(()=>{
         return equiposData.filter(item=>item?.equipment?.toUpperCase().includes(query.toUpperCase()))
     },[equiposData, query]);
-
+    
+    const filterDataStatus=useMemo(()=>{
+        return filterData.filter(item=>item?.status?.value.toUpperCase().includes(statusData.toUpperCase()))
+    },[filterData, statusData]);
+        
+    const filterDataLocation=useMemo(()=>{
+        return filterDataStatus.filter(item=>item?.location?.value.toUpperCase().includes(locationData.toUpperCase()))  
+    })
     const currentData = useMemo(()=>{
-        return filterData.slice(indexFirst, indexLast)
-    },[filterData, indexFirst, indexLast]);
+        return filterDataLocation.slice(indexFirst, indexLast)
+    },[filterDataLocation, indexFirst, indexLast]);
 
-    const listFiltersEquipos=[
-        <DropdownFiltersComponent data={ubicacionSinRepetir} titleData={locationData} titleButton='Ubicacion'/>,
-        <DropdownFiltersComponent data={estadosSinRepetir} titleButton='Estado' titleData={statusData} />
-    ]
+
 
     const onChangeInput=(e)=>{
         setQuery(e.target.value);
@@ -81,9 +85,29 @@ export default function TableEquipos({dataEquipos=[]}) {
         const newListEquipments= equiposData?.map(equipo=>({...equipo, Seleccionado : !equipo.Seleccionado}))
         setEquiposData(newListEquipments)
     }
-    
+    const handleCheckedDropwdownStatus=(item)=>{
+        setQuery("");
+        if (item===statusData) {
+            setStatusData("");
+            return;
+        }
+        setStatusData(item)
+    }
+    const handleCheckedDropdownLocation=(item)=>{
+        setQuery("");
+        if (item===locationData) {
+            setLocationData("");
+            return;
+        }
+        setLocationData(item)
+    }
     const paginate=(pageNumber) => setCurrentPage(pageNumber);
     const numEquipos = equiposData.length;
+
+    const listFiltersEquipos=[
+        <DropdownFiltersComponent data={ubicacionSinRepetir} titleData={locationData} titleButton='Ubicacion' handleCheckedChange={handleCheckedDropdownLocation}/>,
+        <DropdownFiltersComponent data={estadosSinRepetir} titleButton='Estado' titleData={statusData} handleCheckedChange={handleCheckedDropwdownStatus} />
+    ]
   return (
     <TableLayout
         titlesData={titlesData}

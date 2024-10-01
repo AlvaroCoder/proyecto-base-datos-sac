@@ -39,7 +39,16 @@ export default function FormElement() {
     evt.preventDefault();
     setLoading(true)
 
-
+    const dataValidaCredenciales = validarCredenciales(valuesForm);
+    if (!dataValidaCredenciales.esValido) {
+      setLoading(false)
+      toast({
+        title : "Error",
+        variant : "destructive",
+        description : dataValidaCredenciales.mensaje
+      });
+      return;
+    }
     const response = await login(valuesForm);
     if (response.error) {
       toast({

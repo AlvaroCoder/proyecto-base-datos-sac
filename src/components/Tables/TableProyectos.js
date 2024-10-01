@@ -20,16 +20,24 @@ export default function TableProyectos({dataProyectos = []}) {
     return proyectosData.filter(item=>item?.project?.toUpperCase().includes(query.toUpperCase()))
   },[proyectosData, query]);
 
+  const filterDataButtonStatus=useMemo(()=>{
+    return filterData.filter(item=>item?.status?.toUpperCase().includes(statusData.toUpperCase()))
+  },[filterData, statusData]);
+
+  const filterDataButtonCoordinator=useMemo(()=>{
+    return filterDataButtonStatus.filter(item=>item?.coordinator?.toUpperCase().includes(coordinatorData.toUpperCase()))
+  },[filterDataButtonStatus, coordinatorData]);
+
   const currentData = useMemo(()=>{
-    return filterData.slice(indexFirst, indexLast);
-  },[filterData, indexFirst, indexLast]);
+    return filterDataButtonCoordinator.slice(indexFirst, indexLast);
+  },[filterDataButtonCoordinator, indexFirst, indexLast]);
 
   const handlePaginate=(pageNumber)=>setCurrentPage(pageNumber);
   const numProyectos = proyectosData.length;
 
   const titlesData=[
-    {name:"Proyecto", className:"w-[300px]"},
-    {name:"Coordinador", className:""},
+    {name:"Proyecto", className:"w-[300px] mr-8"},
+    {name:"Coordinador", className:"px-4"},
     {name:"Investigadores", className:""},
     {name:"Estado", className:""},
     {name:"Inicio", className:""},
@@ -43,15 +51,11 @@ export default function TableProyectos({dataProyectos = []}) {
     "year_start",
     "year_end"
   ]
-  console.log(proyectosData);
   
   const estadosSinRepetir = extraerDataSinRepetir(proyectosData, "status");
   const coordinadorSinRepetir = extraerDataSinRepetir(proyectosData, "coordinator");
   
-  const listFilterComponents=[
-    <DropdownFiltersComponent data={estadosSinRepetir} titleButton='Estados' titleData={statusData} />,
-    <DropdownFiltersComponent data={coordinadorSinRepetir} titleButton='Coordinador' titleData={coordinatorData} />
-  ]
+
   const handleChangeChecked=(_)=>{
     const newListProyectos = proyectosData.map(proyecto=>({...proyecto, Seleccionado : !proyecto.Seleccionado}))
     setProyectosData(newListProyectos);
@@ -80,6 +84,26 @@ export default function TableProyectos({dataProyectos = []}) {
   const handleChangeInput=(e)=>{
     setQuery(e.target.value);
   }
+  const handleCheckedDropddownStatus=(item)=>{
+    setQuery("");
+    if (item===statusData) {
+      setStatusData("");
+      return
+    }
+    setStatusData(item);
+  }
+  const handleCheckedDropdownCoordinate=(item)=>{
+    setQuery("");
+    if (item===coordinatorData) {
+      setCoordinatorData("");
+      return;
+    }
+    setCoordinatorData(item);
+  }
+  const listFilterComponents=[
+    <DropdownFiltersComponent data={estadosSinRepetir} titleButton='Estados' titleData={statusData} handleCheckedChange={handleCheckedDropddownStatus} />,
+    <DropdownFiltersComponent data={coordinadorSinRepetir} titleButton='Coordinador' titleData={coordinatorData} handleCheckedChange={handleCheckedDropdownCoordinate} />
+  ]
   return (
     <TableLayout
       titlesData={titlesData}

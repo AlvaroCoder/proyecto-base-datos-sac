@@ -34,17 +34,19 @@ export default function TablePapers({dataPapers=[]}) {
     const indexFirst = indexLast - PAPERS_POR_PAGINA;
 
     const yearSinRepetir = extraerDataSinRepetir(papersData,"year");
-    const listFilterComponents = [
-        <DropdownFiltersComponent data={yearSinRepetir} titleButton='Año' titleData={yearData}/>
-    ]
-    
+
+
     const filterData=useMemo(()=>{
         return papersData.filter(item=>item?.title?.toUpperCase().includes(query.toUpperCase()))
-    }, [papersData, query])
-
+    }, [papersData, query]);
+    console.log(filterData);
+    
+    const filterDataYear=useMemo(()=>{
+        return filterData.filter(item=>String(item?.year).toUpperCase().includes(String(yearData).toUpperCase()))
+    },[filterData, yearData]);
     const currentData=useMemo(()=>{
-        return filterData.slice(indexFirst, indexLast)
-    },[filterData, indexFirst, indexLast]);
+        return filterDataYear.slice(indexFirst, indexLast)
+    },[filterDataYear, indexFirst, indexLast]);
 
     const handleChangeRow=(key)=>{
         const newListPapers = papersData.map((paper, idx)=>{
@@ -75,9 +77,20 @@ export default function TablePapers({dataPapers=[]}) {
     const handleChangeInput=(e)=>{
         setQuery(e.target.value);
     }
-
+    const handleCheckedDropdownYear=(item)=>{
+        setQuery("")
+        if (item===yearData) {
+            setYearData("");
+            return;
+        }
+        setYearData(item);
+    }
     const handlePaginate=(pageNumber)=>setCurrentPage(pageNumber);
     const numPapers = papersData.length;
+
+    const listFilterComponents = [
+        <DropdownFiltersComponent data={yearSinRepetir} titleButton='Año' titleData={yearData} handleCheckedChange={handleCheckedDropdownYear}/>,
+    ]
   return (
     <>
         <TableLayout

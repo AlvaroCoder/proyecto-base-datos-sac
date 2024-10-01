@@ -18,34 +18,56 @@ export default function SideBarDashboard() {
         {
             routeName : "Libros",
             routePath : "/dashboard/libros",
-            routeIcon : BookIcon
+            routeIcon : BookIcon,
+            selected : true
         },
         {
             routeName : "Equipos",
             routePath : "/dashboard/equipos",
-            routeIcon : LaptopChromebookIcon
+            routeIcon : LaptopChromebookIcon,
+            selected : false
         },
         {
-            routeName : "Miembros",
+            routeName : "Usuarios",
             routePath : "/dashboard/miembros",
-            routeIcon : GroupIcon
+            routeIcon : GroupIcon,
+            selected : false
         },
         {
             routeName : "Proyectos",
             routePath : "/dashboard/proyectos",
-            routeIcon : LightbulbIcon
+            routeIcon : LightbulbIcon,
+            selected : false
         },
         {
             routeName : "Trabajos",
             routePath : "/dashboard/trabajos",
-            routeIcon :  MenuBookIcon
+            routeIcon :  MenuBookIcon,
+            selected : false
         },
         {
             routeName : "Papers",
             routePath : "/dashboard/papers",
-            routeIcon : InsertDriveFileIcon
+            routeIcon : InsertDriveFileIcon,
+            selected : false
         }
     ]
+    const [dataRoutes, setDataRoutes] = useState(routes)
+    const handleClick = (index)=>{
+        const newDataRoutes = dataRoutes.map((item, idx)=>{
+            if (index === idx) {
+                return {
+                    ...item,
+                    selected : true
+                }
+            }
+            return {
+                ...item,
+                selected : false
+            }
+        })
+        setDataRoutes(newDataRoutes)
+    }
   return (
     <div  className={`${openSidebar ? 'w-48' : 'w-20'} bg-guinda h-screen flex flex-col justify-between relative z-50 duration-300`}>
        {
@@ -61,13 +83,15 @@ export default function SideBarDashboard() {
         <div className='mt-12'>
             <ul className='block mt-6'>
                 {
-                    routes.map((item,idx)=>{
+                    dataRoutes.map((item,idx)=>{
                         const Icon = item.routeIcon;
                         return (
                             <Link 
                             key={idx} 
                             href={item.routePath}>
-                            <li className={`list-none text-white cursor-pointer p-4 hover:bg-guindaOpaco w-full flex flex-row items-center ${!openSidebar && 'justify-center'}`} >
+                            <li 
+                            onClick={()=>handleClick(idx)}
+                            className={`${item.selected && "bg-guindaOpaco"} list-none text-white cursor-pointer p-4 hover:bg-guindaOpaco w-full flex flex-row items-center ${!openSidebar && 'justify-center'}`} >
                                 <Icon/>
                                {
                                 openSidebar &&  <p className='ml-2'>{item.routeName}</p> 

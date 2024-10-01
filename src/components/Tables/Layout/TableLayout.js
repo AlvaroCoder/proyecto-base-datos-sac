@@ -9,7 +9,8 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import AddIcon from '@mui/icons-material/Add';
 
 import Link from 'next/link'
-import { DropdownUiTable } from '../ui'
+import { DialogDeleteUi, DialogEditUi, DropdownUiTable } from '../ui'
+
 
 export default function TableLayout({
     currentData=[],
@@ -23,12 +24,38 @@ export default function TableLayout({
     dataPerPage=10,
     numData,
     filtersComponents=[],
-    hrefCreateButton="/"
+    hrefCreateButton="/",
+    DialogEditComponent=React.Component,
+    DialogDeleteComponent=React.Component,
+    dialogTitleEdit="Editar",
+    dataStatusDialog=[],
+    dataLocationDialog=[],
+    dataPeopleBorrowTo=[]
 }) 
-{   
-    const handleClickEdit=()=>{
-        console.log("Hola");
-        
+{   const [openDropddown, setOpenDropddown] = useState(false);
+    const [openDialogEdit, setOpenDialogEdit] = useState(false);
+    const [openDialogDelete, setOpenDialogDelete] = useState(false);
+    const [hasChangesEditDialog, setHasChangesEditDialog] = useState(false);
+    
+    const handleClickOpenDropdown=()=>{
+        setOpenDropddown(!openDropddown);
+    }
+
+    const handleClickOpenDialogEdit=()=>{
+        setOpenDialogEdit(!openDialogEdit);       
+    }
+    
+    const handleClickOpenDialogDelete=()=>{
+        setOpenDialogDelete(!openDialogDelete)
+        setOpenDialogEdit(false)
+    }
+
+    const handleClickDelete=()=>{
+
+        setOpenDialogDelete(!openDialogDelete)
+    }    
+    const handleClickCancel=()=>{
+        setOpenDialogDelete(!openDialogDelete)
     }
   return (
     <div className='w-full'>
@@ -78,7 +105,7 @@ export default function TableLayout({
                     {
                         currentData.length > 0 ?
                         (
-                            currentData.map((item, key)=>{
+                            currentData.map((item, key)=>{                                                                
                                 return(
                                     <TableRow key={key} className={`${item?.Seleccionado && "bg-slate-200 hover:bg-slate-200"}  `}>
                                         <TableCell>
@@ -108,7 +135,7 @@ export default function TableLayout({
                                                     )
                                                 }
                                                 if (currentValue !== null && typeof currentValue === 'object' && !Array.isArray(currentValue)) {
-                                                    return <TableCell><p>{currentValue?.value}</p></TableCell>
+                                                    return <TableCell><p >{currentValue?.value}</p></TableCell>
                                                 }
                                                 if (keysData[idx] == "link") {
                                                     return <TableCell >
@@ -122,15 +149,29 @@ export default function TableLayout({
                                                 }
                                                 return (
                                                     <TableCell key={idx}>
-                                                        {currentValue}
+                                                        <p className='text-justify'> {currentValue}</p>
                                                     </TableCell>
                                                 )
                                             })
                                         }
                                         <TableCell>
                                             <DropdownUiTable
-                                                handleClickEdit={handleClickEdit}
+                                                DialogEditComponent={
+                                                <DialogEditUi
+                                                    dataDialog={item}
+                                                    dataStatus={dataStatusDialog}
+                                                    dataLocation={dataLocationDialog}
+                                                    dataPeopleBorrowTo={dataPeopleBorrowTo}
+                                                    dialogTitle={dialogTitleEdit}
+                                                    DialogBody={DialogEditComponent}
+                                                />}
+                                                DialogDeleteComponente={
+                                                <DialogDeleteUi
+                                                >
+                                                   <p >Elemento a eliminar: <span className='ml-2 font-bold'>{item?.title || item?.project}</span></p>
+                                                </DialogDeleteUi>}
                                             />
+
                                         </TableCell>
                                     </TableRow>
                                 )
@@ -147,7 +188,7 @@ export default function TableLayout({
         </div>
         <div className='flex justify-center my-8'>
             {
-                currentData.length > 0 &&
+                currentData.length > 9 &&
                 <nav className="relative z-0 inline-flex rounded-md  -space-x-px" aria-label="Pagination">
                     <Button
                         onClick={()=>handlePaginate(currentPage-1)}
