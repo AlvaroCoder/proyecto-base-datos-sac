@@ -13,16 +13,12 @@ export default function DialogLibros({
   dataStatus=[],
   dataPeopleBorrowTo=[],
   handleChangeExistChanges,
+  setDataDialog : setDataDialogLibros,
   handleChangeNotExistChanges
 }) {
 
   const refInputNameAuthor=useRef(null);
 
-  const [dataDialogLibros, setDataDialogLibros] = useState({
-    ...dataDialog,
-    authors_added : [],
-    authors_deleted : []
-  });
   const [showFormNewAuthor, setShowFormNewAuthor] = useState(false);
   const [showFormNewPerson, setShowFormNewPerson] = useState(false);
   const [inputDataNewPersona, setInputDataNewPersona] = useState({
@@ -47,10 +43,10 @@ export default function DialogLibros({
       return;
     }
     const authorData = refInputNameAuthor.current.value;
-    const newDataAuthors = [...dataDialogLibros?.authors, {value : authorData}]
-    const newDataAdded = [...dataDialogLibros?.authors_added, {name : authorData}]
+    const newDataAuthors = [...dataDialog?.authors, {value : authorData}]
+    const newDataAdded = [...dataDialog?.authors_added, {name : authorData}]
     setDataDialogLibros({
-      ...dataDialogLibros,
+      ...dataDialog,
       authors : newDataAuthors,
       authors_added : newDataAdded
     });
@@ -60,10 +56,7 @@ export default function DialogLibros({
   }
   const handleClickAddPerson=(evt)=>{
     evt.preventDefault();
-    setDataDialogLibros({
-      ...dataDialogLibros,
-      
-    })
+
   }
   const handleClickCancelPerson=(evt)=>{
     evt.preventDefault();
@@ -76,10 +69,10 @@ export default function DialogLibros({
     refInputNameAuthor.current.value=null;
   }
   const handleChangeCheckedDopdown=(id, keyValue)=>{
-    const jsonSelected = keyValue == "location" ? dataLocation?.filter(elem=>elem?.id === id) : dataStatus?.filter(elem=>elem?.id === id);
+    const jsonSelected = keyValue == "location" ? dataLocation?.filter(elem=>elem?.id === id) : dataStatus?.filter(elem=>elem?.id === id)[0];
     setDataDialogLibros({
-      ...dataDialogLibros,
-      location : jsonSelected
+      ...dataDialog,
+      [keyValue] : jsonSelected
     });
     handleChangeExistChanges(); 
   }
@@ -98,22 +91,18 @@ export default function DialogLibros({
     if (inputValue !== dataDialog.title) {
       handleChangeExistChanges()
     }
-    if (inputValue === dataDialog.title) {
-      handleChangeNotExistChanges()
-    }
     setDataDialogLibros({
-      ...dataDialogLibros,
+      ...dataDialog,
       title : inputValue
     });
   }
-
   return (
     <section>
       <div className='my-2'>
         <h1>Titulo</h1>
         <Input
           name="title"
-          value={dataDialogLibros.title}
+          value={dataDialog.title}
           onChange={handleChangeTitleDialog}
         />
       </div>
@@ -121,7 +110,7 @@ export default function DialogLibros({
         <h1>Autor</h1>
         <div className='w-full rounded-lg flex flex-wrap gap-x-4 gap-y-2 items-center'>
           {
-            dataDialogLibros?.authors?.map((author, key)=>{
+            dataDialog?.authors?.map((author, key)=>{
               return (
                 <p key={key} className='p-2 bg-slate-100 rounded-xl w-fit mt-2 text-nowrap'>
                   <span className='mr-2'>
@@ -185,14 +174,14 @@ export default function DialogLibros({
                 variant="ghot"
                 className="w-full border-gray-100 border-[1px] shadow-sm"
               >
-                <span>{dataDialogLibros?.location[0]?.value}</span>
+                <span>{dataDialog?.location[0]?.value}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               {
                 dataLocation?.map(item=>
                   <DropdownMenuCheckboxItem
-                    checked={item?.id === dataDialogLibros?.location[0]?.id}
+                    checked={item?.id === dataDialog?.location[0]?.id}
                     className="capitalize"
                     onCheckedChange={()=>handleChangeCheckedDopdown(item.id, "location")}
                   >
@@ -211,14 +200,14 @@ export default function DialogLibros({
                 variant="ghost"
                 className="w-full border-gray-100 border-[1px] shadow-sm"
               >
-                <span>{dataDialogLibros?.status?.value}</span>
+                <span>{dataDialog?.status?.value}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               {
                 dataStatus?.map(item=>
                   <DropdownMenuCheckboxItem
-                    checked={item.id === dataDialogLibros?.status?.id}
+                    checked={item.id === dataDialog?.status?.id}
                     onCheckedChange={()=>handleChangeCheckedDopdown(item.id,"status")}
                   >
                     {item.value}
@@ -315,6 +304,7 @@ export default function DialogLibros({
           </Button>
         }
       </div>
+
     </section>
   )
 }

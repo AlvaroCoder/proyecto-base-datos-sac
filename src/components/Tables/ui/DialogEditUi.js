@@ -20,12 +20,19 @@ export default function DialogEditUi({
     const [openDialog, setOpenDialog] = useState(false);
     const [loadingData, setLoadingData] = useState(false);
     const [hasChanges, setHasChanges] = useState(false);
+    const [dataDialogComponent, setDataDialogComponent] = useState({
+        ...dataDialog,
+        authors_added : [],
+        authors_deleted : []
+    });
     const handleClickSaveData=()=>{
         setOpenDialog(false);
-        handleClickSave()
+        console.log(dataDialogComponent);
+        
     }
     const handleCliclCancelSave=()=>{
         setOpenDialog(false);
+
     }
     const handleChangeExistChanges=()=>{
         setHasChanges(true)
@@ -49,14 +56,15 @@ export default function DialogEditUi({
                 </DialogTitle>
                 <section>
                     <DialogBody
-                        dataDialog={dataDialog}
+                        dataDialog={dataDialogComponent}
                         dataStatus={dataStatus}
                         dataLocation={dataLocation}
+                        setDataDialog={setDataDialogComponent}
                         dataPeopleBorrowTo={dataPeopleBorrowTo}
                         handleChangeExistChanges={handleChangeExistChanges}
                         handleChangeNotExistChanges={handleChangeNotExistChanges}
                     />
-                    <div className='flex flex-roiw items-center my-4'>
+                    <div className='flex flex-row items-center my-4'>
                         <Button
                             className='flex-1 cursor-pointer mr-2 bg-guinda rounded-lg py-4  text-white text-center hover:bg-guindaOpaco  hover:font-bold border-2 border-guinda hover:border-guinda'
                             disabled={!hasChanges || loadingData}
