@@ -30,33 +30,11 @@ export default function TableLayout({
     dialogTitleEdit="Editar",
     dataStatusDialog=[],
     dataLocationDialog=[],
-    dataPeopleBorrowTo=[]
+    dataOriginDialog=[],
+    dataPeopleBorrowTo=[],
+    dataTypeDialog=[]
 }) 
-{   const [openDropddown, setOpenDropddown] = useState(false);
-    const [openDialogEdit, setOpenDialogEdit] = useState(false);
-    const [openDialogDelete, setOpenDialogDelete] = useState(false);
-    const [hasChangesEditDialog, setHasChangesEditDialog] = useState(false);
-    
-    const handleClickOpenDropdown=()=>{
-        setOpenDropddown(!openDropddown);
-    }
-
-    const handleClickOpenDialogEdit=()=>{
-        setOpenDialogEdit(!openDialogEdit);       
-    }
-    
-    const handleClickOpenDialogDelete=()=>{
-        setOpenDialogDelete(!openDialogDelete)
-        setOpenDialogEdit(false)
-    }
-
-    const handleClickDelete=()=>{
-
-        setOpenDialogDelete(!openDialogDelete)
-    }    
-    const handleClickCancel=()=>{
-        setOpenDialogDelete(!openDialogDelete)
-    }
+{   
   return (
     <div className='w-full'>
         <div className='flex items-center py-4'>
@@ -162,6 +140,8 @@ export default function TableLayout({
                                                     dataStatus={dataStatusDialog}
                                                     dataLocation={dataLocationDialog}
                                                     dataPeopleBorrowTo={dataPeopleBorrowTo}
+                                                    dataType={dataTypeDialog}
+                                                    dataOrigin={dataOriginDialog}
                                                     dialogTitle={dialogTitleEdit}
                                                     DialogBody={DialogEditComponent}
                                                 />}

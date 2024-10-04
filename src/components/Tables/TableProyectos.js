@@ -3,6 +3,7 @@ import React, { useMemo, useState } from 'react'
 import TableLayout from './Layout/TableLayout';
 import { DropdownFiltersComponent } from './ui';
 import { extraerDataSinRepetir } from '../commons/tableFunctions';
+import { DialogProyectos } from '../Dialogs';
 
 export default function TableProyectos({dataProyectos = []}) {
   const newDataProyectos = dataProyectos?.map((item)=>({...item, Seleccionado : false}));  
@@ -117,6 +118,7 @@ export default function TableProyectos({dataProyectos = []}) {
       handleChangeInput={handleChangeInput}
       handlePaginate={handlePaginate}
       hrefCreateButton='/dashboard/proyectos/create'
+      DialogEditComponent={DialogProyectos}
     />
   )
 }

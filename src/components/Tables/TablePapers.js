@@ -3,10 +3,7 @@ import React, { useMemo, useState } from 'react'
 import TableLayout from './Layout/TableLayout';
 import { extraerDataSinRepetir } from '../commons/tableFunctions';
 import { DropdownFiltersComponent } from './ui';
-
-function DialogPapers() {
-    
-}
+import { DialogPapers } from '../Dialogs';
 
 export default function TablePapers({dataPapers=[]}) {
     const titlesData=[
@@ -39,7 +36,6 @@ export default function TablePapers({dataPapers=[]}) {
     const filterData=useMemo(()=>{
         return papersData.filter(item=>item?.title?.toUpperCase().includes(query.toUpperCase()))
     }, [papersData, query]);
-    console.log(filterData);
     
     const filterDataYear=useMemo(()=>{
         return filterData.filter(item=>String(item?.year).toUpperCase().includes(String(yearData).toUpperCase()))
@@ -104,6 +100,8 @@ export default function TablePapers({dataPapers=[]}) {
             handleChangeChecked={handleChangeChecked}
             handleChangeInput={handleChangeInput}
             handlePaginate={handlePaginate}
+
+            DialogEditComponent={DialogPapers}
         />
     </>
   )

@@ -15,7 +15,9 @@ export default function DropdownFiltersComponents({
                     <span>{titleButton}</span>
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent
+                className="overflow-y-auto"
+            >
                 {
                     data.map((item,key)=>
                     <DropdownMenuCheckboxItem

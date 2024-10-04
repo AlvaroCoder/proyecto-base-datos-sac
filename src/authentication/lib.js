@@ -7,12 +7,13 @@ const secretKey=process.env.SECRET_TOKEN;
 const URL_REGISTER_USER=process.env.REGISTER_USER;
 const URL_LOGIN_USER="http://127.0.0.1:8000/login";
 
-const key=new TextEncoder().encode(secretKey)
+const key=new TextEncoder().encode(secretKey);
+const timeExpiration =  30 * 60 * 1000;
 export async function encrypt(payload) {
     return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime(new Date(Date.now() + 10 * 60 * 1000))
+    .setExpirationTime(new Date(Date.now() + timeExpiration))
     .sign(key);
 }
 
@@ -46,7 +47,7 @@ export async function login(dataUser) {
     }
     const responseJson = await response.json();
 
-    const expires = new Date(Date.now() + 5 * 60 * 1000); 
+    const expires = new Date(Date.now() + timeExpiration); 
     const user = {username : formData.get("username"), access_token : responseJson?.access_token, refresh_token : responseJson?.refresh_token, token_type : responseJson?.token_type};
     const session = await encrypt({user, expires});
     cookies().set("session",session, {expires, httpOnly : true});

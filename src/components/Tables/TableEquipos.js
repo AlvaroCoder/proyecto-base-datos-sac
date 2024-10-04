@@ -4,6 +4,7 @@ import React, { useMemo, useState } from 'react'
 import TableLayout from './Layout/TableLayout';
 import { DropdownFiltersComponent } from './ui';
 import { extraerDataSinRepetir } from '../commons/tableFunctions';
+import { DialogEquipos } from '../Dialogs';
 
 export default function TableEquipos({dataEquipos=[]}) {
     const titlesData=[
@@ -31,6 +32,7 @@ export default function TableEquipos({dataEquipos=[]}) {
     const [equiposData, setEquiposData] = useState(newDataEquipos);
     const [locationData, setLocationData] = useState("");
     const [statusData, setStatusData] = useState("");
+    const [typeData, setTypeData] = useState("");
     const [currentPage, setCurrentPage]=useState(1);
     const [query, setQuery] = useState("");       
 
@@ -39,7 +41,10 @@ export default function TableEquipos({dataEquipos=[]}) {
     const indexFirst = indexLast - EQUIPOS_POR_PAGINA;
 
     const ubicacionSinRepetir = extraerDataSinRepetir(equiposData, "location");
-    const estadosSinRepetir = extraerDataSinRepetir(equiposData, "status")
+    const estadosSinRepetir = extraerDataSinRepetir(equiposData, "status");
+    const tiposSinRepetir = extraerDataSinRepetir(equiposData,"type");
+    const origenSinRepetir = extraerDataSinRepetir(equiposData, "origin");
+
     const filterData = useMemo(()=>{
         return equiposData.filter(item=>item?.equipment?.toUpperCase().includes(query.toUpperCase()))
     },[equiposData, query]);
@@ -47,15 +52,18 @@ export default function TableEquipos({dataEquipos=[]}) {
     const filterDataStatus=useMemo(()=>{
         return filterData.filter(item=>item?.status?.value.toUpperCase().includes(statusData.toUpperCase()))
     },[filterData, statusData]);
-        
+
     const filterDataLocation=useMemo(()=>{
         return filterDataStatus.filter(item=>item?.location?.value.toUpperCase().includes(locationData.toUpperCase()))  
-    })
+    },[filterDataStatus, locationData])
+
+    const filterDataType=useMemo(()=>{
+        return filterDataLocation.filter(item=>item?.type.toUpperCase().includes(typeData.toUpperCase()))
+    },[filterDataLocation, typeData])
+
     const currentData = useMemo(()=>{
-        return filterDataLocation.slice(indexFirst, indexLast)
-    },[filterDataLocation, indexFirst, indexLast]);
-
-
+        return filterDataType.slice(indexFirst, indexLast)
+    },[filterDataType, indexFirst, indexLast]);
 
     const onChangeInput=(e)=>{
         setQuery(e.target.value);
@@ -101,12 +109,20 @@ export default function TableEquipos({dataEquipos=[]}) {
         }
         setLocationData(item)
     }
+    const handleCheckedDropdownType=(item)=>{
+        setQuery("");
+        if (item===typeData) {
+            setTypeData("");
+            return
+        }
+        setTypeData(item)
+    }
     const paginate=(pageNumber) => setCurrentPage(pageNumber);
     const numEquipos = equiposData.length;
 
     const listFiltersEquipos=[
         <DropdownFiltersComponent data={ubicacionSinRepetir} titleData={locationData} titleButton='Ubicacion' handleCheckedChange={handleCheckedDropdownLocation}/>,
-        <DropdownFiltersComponent data={estadosSinRepetir} titleButton='Estado' titleData={statusData} handleCheckedChange={handleCheckedDropwdownStatus} />
+        <DropdownFiltersComponent data={estadosSinRepetir} titleButton='Estado' titleData={statusData} handleCheckedChange={handleCheckedDropwdownStatus} />,
     ]
   return (
     <TableLayout
@@ -115,12 +131,17 @@ export default function TableEquipos({dataEquipos=[]}) {
         keysData={keysData}
         numData={numEquipos}
         currentPage={currentPage}
+        dataLocationDialog={ubicacionSinRepetir}
+        dataStatusDialog={estadosSinRepetir}
+        dataTypeDialog={tiposSinRepetir}
+        dataOriginDialog={origenSinRepetir}
         filtersComponents={listFiltersEquipos}
         handleCheckedRow={handleChangeRow}
         handleChangeChecked={handleChangeChecked}
         handleChangeInput={onChangeInput}
         handlePaginate={paginate}
         hrefCreateButton='/dashboard/equipos/create'
+        DialogEditComponent={DialogEquipos}
     />
   )
 }

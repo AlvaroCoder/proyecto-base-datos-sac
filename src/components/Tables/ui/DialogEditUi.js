@@ -11,7 +11,9 @@ export default function DialogEditUi({
     dataStatus=[],
     dataLocation=[],
     dataPeopleBorrowTo=[],
+    dataType=[],
     dialogTitle="Edición",
+    dataOrigin=[],
     handleClickSave,
     handleClickCancel,
     DialogBody=React.Component
@@ -20,11 +22,12 @@ export default function DialogEditUi({
     const [openDialog, setOpenDialog] = useState(false);
     const [loadingData, setLoadingData] = useState(false);
     const [hasChanges, setHasChanges] = useState(false);
-    const [dataDialogComponent, setDataDialogComponent] = useState({
+    const initialData = {
         ...dataDialog,
         authors_added : [],
         authors_deleted : []
-    });
+    }
+    const [dataDialogComponent, setDataDialogComponent] = useState(initialData);
     const handleClickSaveData=()=>{
         setOpenDialog(false);
         console.log(dataDialogComponent);
@@ -59,10 +62,14 @@ export default function DialogEditUi({
                         dataDialog={dataDialogComponent}
                         dataStatus={dataStatus}
                         dataLocation={dataLocation}
+                        initialDataDialog={initialData}
+                        dataType={dataType}
+                        dataOrigin={dataOrigin}
                         setDataDialog={setDataDialogComponent}
                         dataPeopleBorrowTo={dataPeopleBorrowTo}
                         handleChangeExistChanges={handleChangeExistChanges}
                         handleChangeNotExistChanges={handleChangeNotExistChanges}
+
                     />
                     <div className='flex flex-row items-center my-4'>
                         <Button

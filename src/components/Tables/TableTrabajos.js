@@ -3,6 +3,7 @@ import React, { useMemo, useState } from 'react'
 import TableLayout from './Layout/TableLayout';
 import { DropdownFiltersComponent } from './ui';
 import { extraerDataSinRepetir } from '../commons/tableFunctions';
+import { DialogTrabajos } from '../Dialogs';
 
 export default function TableTrabajos({dataTrabajos=[]}) {
     const titlesData = [
@@ -32,8 +33,7 @@ export default function TableTrabajos({dataTrabajos=[]}) {
     const indexLast = currentPage * TRABAJOS_POR_PAGINA;
     const indexFirst = indexLast - TRABAJOS_POR_PAGINA;
 
-    const cursoSinRepetir = extraerDataSinRepetir(trabajosData,"course");
-    
+    const cursoSinRepetir = extraerDataSinRepetir(trabajosData,"course");    
     const filterData = useMemo(()=>{
         return trabajosData.filter(item=>item?.title?.toUpperCase().includes(query.toUpperCase()))
     },[trabajosData, query]);
@@ -105,6 +105,7 @@ export default function TableTrabajos({dataTrabajos=[]}) {
             handleChangeInput={onChangeInput}
             handlePaginate={paginate}
             hrefCreateButton='/dashboard/trabajos/create'
+            DialogEditComponent={DialogTrabajos}
         />
     </>
   )
