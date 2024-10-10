@@ -112,6 +112,7 @@ export default function TableProyectos({dataProyectos = []}) {
       keysData={keysData}
       numData={numProyectos}
       currentPage={currentPage}
+      dataCoordinator={coordinadorSinRepetir}
       filtersComponents={listFilterComponents}
       handleChangeChecked={handleChangeChecked}
       handleCheckedRow={handleChangeRow}

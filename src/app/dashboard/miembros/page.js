@@ -4,7 +4,7 @@ import { useFetch } from '@/components/hooks/customHooks';
 import React from 'react'
 
 export default function Page() {
-  const URL_MIEMBROS = process.env.NEXT_PUBLIC_URL_MIEMBROS;
+  const URL_MIEMBROS = process.env.NEXT_PUBLIC_URL_USUARIOS;
   const {loading : loadingDataMiembros, dataResponse : dataResponseMiembros, error : errorDataMiembros} = useFetch(URL_MIEMBROS)
   
   return (
@@ -15,7 +15,7 @@ export default function Page() {
         {
           loadingDataMiembros ? <p>Cargando datos ...</p> :
           <TableMiembros
-            dataMiembros={dataResponseMiembros}
+            dataMiembros={dataResponseMiembros?.users}
           />
         }
     </div>

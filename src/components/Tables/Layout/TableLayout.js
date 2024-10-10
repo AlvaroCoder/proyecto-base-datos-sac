@@ -32,7 +32,9 @@ export default function TableLayout({
     dataLocationDialog=[],
     dataOriginDialog=[],
     dataPeopleBorrowTo=[],
-    dataTypeDialog=[]
+    dataTypeDialog=[],
+    dataCoordinator=[],
+    setDataTable,
 }) 
 {   
   return (
@@ -137,6 +139,7 @@ export default function TableLayout({
                                                 DialogEditComponent={
                                                 <DialogEditUi
                                                     dataDialog={item}
+                                                    dataCoordinator={dataCoordinator}
                                                     dataStatus={dataStatusDialog}
                                                     dataLocation={dataLocationDialog}
                                                     dataPeopleBorrowTo={dataPeopleBorrowTo}
@@ -144,6 +147,7 @@ export default function TableLayout({
                                                     dataOrigin={dataOriginDialog}
                                                     dialogTitle={dialogTitleEdit}
                                                     DialogBody={DialogEditComponent}
+                                                    setDataTable={setDataTable}
                                                 />}
                                                 DialogDeleteComponente={
                                                 <DialogDeleteUi

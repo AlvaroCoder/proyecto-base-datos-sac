@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import { Input } from '../ui/input'
 import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 
 export default function DialogEquipos({
     initialDataDialog,
@@ -12,9 +12,10 @@ export default function DialogEquipos({
     dataType=[],
     dataOrigin=[],
     dataLocation=[],
-    dataStatus=[]
+    dataStatus=[],
 }) {    
-    
+
+
     const [mostrarComentarios, seTmostrarComentarios] = useState(false);
     const [mostrarDropdownInputType, setMostrarDropdownInputType] = useState(false);
     const [mostrarDropdownInputOrigin, setMostrarDropdownInputOrigin] = useState(false);
@@ -39,8 +40,13 @@ export default function DialogEquipos({
     const handleChangeImage=(evt)=>{
         const file = evt.target.files[0];
         if (file) {
-            setImagenSeleccionada(URL.createObjectURL(file))
+            setImagenSeleccionada(URL.createObjectURL(file));
+            setDataDialogEquipos({
+                ...dataDialog,
+                evidence : file
+            })
         }
+        handleChangeExistChanges();
     }
     const handleDrop=(evt)=>{
         evt.preventDefault();
@@ -48,12 +54,48 @@ export default function DialogEquipos({
         if (file) {
             setImagenSeleccionada(URL.createObjectURL(file));
         }
+        handleChangeExistChanges();
     }
     const handleDragOver=(evt)=>{
-        evt.preventDefault();
+        evt.preventDefault();   
+    }
+    const handleCheckedChangeLocation=(item)=>{
+        if (item===dataDialog?.location?.value) {
+            setDataDialogEquipos({
+                ...dataDialog,
+                location : {value : ""} 
+            });
+            return;
+        }
+        setDataDialogEquipos({
+            ...dataDialog,
+            location : {value : item}
+        });
+        handleChangeExistChanges();
+    }
+    const handleCheckedChangeStatus=(item)=>{
+        if (item === dataDialog?.status?.value) {
+            setDataDialogEquipos({
+                ...dataDialog,
+                status : {value : ""}
+            })
+            return;
+        }
+        setDataDialogEquipos({
+            ...dataDialog,
+            status : {value : item}
+        });
+        handleChangeExistChanges();
+    }
+    const handleChangeDescription=(evt)=>{
+        setDataDialogEquipos({
+            ...dataDialog,
+            description : evt.target.value
+        });
+        handleChangeExistChanges();
     }
   return (
-    <section className='max-h-[500px] h-full overflow-auto'>
+    <section className='max-h-[400px] h-full overflow-auto py-2 px-2'>
         <div className='my-2'>
             <h1>Equipo</h1>
             <Input
@@ -77,7 +119,7 @@ export default function DialogEquipos({
             />
             {
                 (mostrarDropdownInputType && filterSearchType.length > 0) &&
-                <div className='absolute mt-2 shadow-lg rounded-lg p-2 bg-white w-full'>
+                <div className='absolute mt-2 z-10 shadow-lg rounded-lg p-2 bg-white w-full'>
                     {
                         filterSearchType.map((item, idx)=>{
                             if (idx < 4) {
@@ -114,7 +156,7 @@ export default function DialogEquipos({
             />
             {
                 (mostrarDropdownInputOrigin && filterSearchOrigin.length > 0) &&
-                <div className='absolute mt-2 shadow-lg rounded-lg p-2 bg-white w-full'>
+                <div className='absolute mt-2 z-10 shadow-lg rounded-lg p-2 bg-white w-full'>
                     {
                         filterSearchOrigin.map((item,idx)=>{
                             if (idx < 4) {
@@ -141,7 +183,7 @@ export default function DialogEquipos({
             <h1>Año de adquisición</h1>
             <Input
                 name="year"
-
+                value={dataDialog?.year}
             />
         </div>
 
@@ -159,7 +201,15 @@ export default function DialogEquipos({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="p-2">
                         {
-                            dataLocation?.map((item, idx)=><DropdownMenuItem key={idx}><p>{item}</p></DropdownMenuItem>)
+                            dataLocation?.map((item, idx)=>
+                            <DropdownMenuCheckboxItem 
+                                key={idx} 
+                                className="capitalize"
+                                checked={item===dataDialog?.location?.value}
+                                onCheckedChange={()=>handleCheckedChangeLocation(item)}
+                            >
+                                <p>{item}</p>
+                            </DropdownMenuCheckboxItem>)
                         }
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -177,7 +227,15 @@ export default function DialogEquipos({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="p-2">
                         {
-                            dataStatus?.map((item, idx)=><DropdownMenuItem key={idx} ><p>{item}</p></DropdownMenuItem>)
+                            dataStatus?.map((item, idx)=>
+                            <DropdownMenuCheckboxItem 
+                                key={idx} 
+                                className="capitalize"
+                                checked={item==dataDialog?.status?.value}
+                                onCheckedChange={()=>handleCheckedChangeStatus(item)}
+                                >
+                                <p>{item}</p>
+                            </DropdownMenuCheckboxItem>)
                         }
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -185,16 +243,18 @@ export default function DialogEquipos({
         </div>
         {
                 mostrarComentarios ? 
-                <div className='my-2'>
+                <div className='my-2 border-t-slate-50 border-t-2 mt-4 pt-4'>
                 <h1>Comentarios</h1>
                 <Textarea
                     placeholder ="Ingresa un comentario"
+                    value={dataDialog?.description}
+                    onChange={handleChangeDescription}
                 />
                 <h1>Evidencia</h1>
                 <div 
                 onDrop={handleDrop}
                 onDrag={handleDragOver}
-                className="mt-5 w-full p-4 border-2 border-dashed border-blue-400 bg-blue-50 text-center rounded-lg">
+                className="mt-5 w-full p-4 border-2 border-dashed border-guindaOpaco bg-slate-50 text-center rounded-lg">
                     <input
                         type='file'
                         accept='image/*'

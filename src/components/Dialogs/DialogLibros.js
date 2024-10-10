@@ -29,6 +29,17 @@ export default function DialogLibros({
   const handleClickClearData=()=>{
     const updateData=[...dataDialog?.authors].filter((_,idx)=>idx!==key);
     const existAuthorInAdded = []
+
+  }
+  const handleClickClearAuthor=(key)=>{
+    const newDataAuthors = [...dataDialog?.authors].filter((_, idx)=>idx!==key);
+    const newDataLibros = {
+      ...dataDialog,
+      authors : newDataAuthors,
+      authors_deleted : [...dataDialog?.authors_deleted, dataDialog?.authors.filter((_,idx)=>idx==key)[0]]
+    }
+    setDataDialogLibros(newDataLibros);
+    handleChangeExistChanges()    
   }
   const handleClickShowFormNewAuthor=()=>{
     setShowFormNewAuthor(!showFormNewAuthor);
@@ -117,7 +128,7 @@ export default function DialogLibros({
                     {author?.value}
                     <ClearIcon
                       className='cursor-pointer'
-                      onClick={handleClickClearData}
+                      onClick={()=>handleClickClearAuthor(key)}
                     />
                   </span>
                 </p>

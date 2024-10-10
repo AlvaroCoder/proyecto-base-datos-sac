@@ -10,17 +10,20 @@ export default function DialogEditUi({
     dataDialog,
     dataStatus=[],
     dataLocation=[],
+    dataCoordinator=[],
     dataPeopleBorrowTo=[],
     dataType=[],
     dialogTitle="Edición",
     dataOrigin=[],
     handleClickSave,
     handleClickCancel,
+    setDataTable,
     DialogBody=React.Component
 }) {
     
     const [openDialog, setOpenDialog] = useState(false);
     const [loadingData, setLoadingData] = useState(false);
+    const [openDialogAlert, setOpenDialogAlert] = useState(false);
     const [hasChanges, setHasChanges] = useState(false);
     const initialData = {
         ...dataDialog,
@@ -28,14 +31,20 @@ export default function DialogEditUi({
         authors_deleted : []
     }
     const [dataDialogComponent, setDataDialogComponent] = useState(initialData);
-    const handleClickSaveData=()=>{
+    const handleClickSaveData=async()=>{
+        setLoadingData(true);
+        await setDataTable(dataDialogComponent);
+        setLoadingData(false);
         setOpenDialog(false);
-        console.log(dataDialogComponent);
-        
+        setHasChanges(false);        
     }
     const handleCliclCancelSave=()=>{
+        if (hasChanges) {
+            setOpenDialogAlert(true);
+            return;
+        }
         setOpenDialog(false);
-
+        setHasChanges(false);
     }
     const handleChangeExistChanges=()=>{
         setHasChanges(true)
@@ -43,8 +52,18 @@ export default function DialogEditUi({
     const handleChangeNotExistChanges=()=>{
         setHasChanges(false)
     }
+    const resetData=()=>{
+        setDataDialogComponent(initialData);
+    }
     return (
-        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <>
+        <Dialog open={openDialog} onOpenChange={()=>{
+            if (hasChanges) {
+                setOpenDialogAlert(true);
+                return;
+            }
+            setOpenDialog(!openDialog);
+        }}>
             <DialogTrigger >
                 <Button 
                     className="w-full"
@@ -62,6 +81,7 @@ export default function DialogEditUi({
                         dataDialog={dataDialogComponent}
                         dataStatus={dataStatus}
                         dataLocation={dataLocation}
+                        dataCoordinator={dataCoordinator}
                         initialDataDialog={initialData}
                         dataType={dataType}
                         dataOrigin={dataOrigin}
@@ -89,5 +109,34 @@ export default function DialogEditUi({
                 </section>
             </DialogContent>
         </Dialog>
+        <Dialog open={openDialogAlert} onOpenChange={setOpenDialogAlert} >
+            <DialogContent>
+                <DialogTitle>Estas seguro de salir sin Guardar</DialogTitle>
+                
+            <div>
+                <p className='mb-8'>Si continuas, no se guardaron los cambios</p>
+            <section>
+                    <Button
+                        onClick={()=>{
+                            resetData();
+                            setOpenDialogAlert(false);
+                            setOpenDialog()
+                        }}
+                        variant="ghost"
+                        className="shadow-sm mr-4"
+                    >
+                        Continuar 
+                    </Button>
+                    <Button
+                        onClick={()=>setOpenDialogAlert(false)}
+                        className="bg-guindaOpaco cursor-pointer p-2 text-white font-bold hover:bg-guindaOpaco"
+                    >   
+                        Seguir editando
+                    </Button>
+                </section>
+            </div>
+            </DialogContent>
+        </Dialog>
+        </>
   )
 };

@@ -7,6 +7,8 @@ import TableLayout from './Layout/TableLayout'
 import { DropdownFiltersComponent } from './ui'
 import { extraerDataSinRepetir } from '../commons/tableFunctions'
 import { DialogLibros } from '../Dialogs'
+import { UPDATE_BOOKS } from '../commons/apiConnection';
+import { useToast } from '../ui/use-toast';
 
 
 
@@ -25,19 +27,10 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
         "location",
         "borrow_to",
     ]
-    const initialDataDialogLibros={
-        title : "",
-        authors_added:[],
-        authors_deleted:[],
-        location : 0,
-        status : 0,
-        borrowed_to : null,
-        amount : null
-    }
+    const {toast} = useToast();
     const newDataLibros = dataLibros?.map((item)=>({...item, Seleccionado : false}));
 
     const [librosData, setLibrosData] = useState(newDataLibros);
-    const [dataDialogLibros, setDataDialogLibros] = useState(initialDataDialogLibros);
 
     const LIBROS_POR_PAGINA=10;
     const [currentPage, setCurrentPage]=useState(1);
@@ -132,6 +125,48 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
         });
         setLibrosData(newListBooks);
     }
+    const handleAddNewDataToTable=async(dataDialogComponent)=>{
+        const idDialog = dataDialogComponent?.id;
+        const newDataJSONToSend = {
+            id :dataDialogComponent?.id,
+            title : dataDialogComponent?.title,
+            authors_added : dataDialogComponent?.authors_added,
+            authors_deleted : dataDialogComponent?.authors_deleted,
+            location : dataDialogComponent?.location[0]?.id,
+            status : dataDialogComponent?.status?.id,
+            borrowed_to : null,
+            amount : null
+        }
+        console.log(newDataJSONToSend);
+        
+        const newDataTable = librosData.map(item=>{
+            if (item.id == idDialog) {
+                return dataDialogComponent
+            }
+            return {
+                ...item
+            }
+        });
+
+        setLibrosData(newDataTable);
+
+        try {
+            
+            const response = await UPDATE_BOOKS(newDataJSONToSend);
+            if (response.ok) {
+                toast({
+                    title : "Exito",
+                    description : "Libro actualizado con exito!"
+                });
+                console.log(await response.json());
+                
+                return
+            }            
+        } catch (error) {
+            console.log(error);
+            
+        }        
+    }
     const filterComponents=[
         <DropdownFiltersComponent data={estadosSinRepetir} titleData={stateData} titleButton='Estados' handleCheckedChange={handleChckedDropdownStatus}/>,
         <DropdownFiltersComponent data={ubicaionSinRepetir} titleData={locationData} titleButton='Ubicación' handleCheckedChange={handleCheckedDropdownLocation} />,
@@ -145,7 +180,7 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
         numData={numBooks}
         dataStatusDialog={dataStatus}
         dataLocationDialog={dataLocations}
-        
+        setDataTable={handleAddNewDataToTable}
         filtersComponents={filterComponents}
         handleChangeInput={onChangeInput}
         handleChangeChecked={handleChangeChecked}
