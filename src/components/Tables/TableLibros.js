@@ -7,7 +7,7 @@ import TableLayout from './Layout/TableLayout'
 import { DropdownFiltersComponent } from './ui'
 import { extraerDataSinRepetir } from '../commons/tableFunctions'
 import { DialogLibros } from '../Dialogs'
-import { UPDATE_BOOKS } from '../commons/apiConnection';
+import { DELETE_BOOK, UPDATE_BOOKS } from '../commons/apiConnection';
 import { useToast } from '../ui/use-toast';
 
 
@@ -167,6 +167,25 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
             
         }        
     }
+    const handleDeleteBook=async(idBook)=>{
+        
+        const response = await DELETE_BOOK(idBook);
+        if (!response.ok) {
+            toast({
+                variant: "destructive",
+                title : "Error",
+                description : "Algo salio mal!"
+            });
+            return
+        }
+        toast({
+            title:"Exito",
+            description : "Se elimino el libro correctamente!"
+        })
+        const newDataLibros = librosData.filter(item=>item?.id!==idBook);
+        console.log(newDataLibros);
+        
+    }
     const filterComponents=[
         <DropdownFiltersComponent data={estadosSinRepetir} titleData={stateData} titleButton='Estados' handleCheckedChange={handleChckedDropdownStatus}/>,
         <DropdownFiltersComponent data={ubicaionSinRepetir} titleData={locationData} titleButton='Ubicación' handleCheckedChange={handleCheckedDropdownLocation} />,
@@ -187,7 +206,7 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
         handleCheckedRow={handleChangeCheckedRow}
         handlePaginate={paginate}
         hrefCreateButton='/dashboard/libros/create'
-        
+        deleteElementFunction={handleDeleteBook}
         dialogTitleEdit='Editar Libro'
         DialogEditComponent={DialogLibros}
     />

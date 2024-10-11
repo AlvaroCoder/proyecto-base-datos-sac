@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/
 import React, { useState } from 'react'
 
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Loader2 } from 'lucide-react';
 
 /**
  * 
@@ -15,12 +16,18 @@ import DeleteIcon from '@mui/icons-material/Delete';
  */
 
 export default function DialogDeleteUi({
-    
+    idDeleteData,
     handleClickDelete,
     handleClickCancel,
     children
 }) {
     const [openDialog, setOpenDialog] = useState(false);
+    const [loadingData, setloadingData] = useState(false)
+    const clickDeleteButton=async()=>{
+        setloadingData(true);
+        await handleClickDelete(idDeleteData);
+        setloadingData(false);
+    }
   return (
     <Dialog 
         open={openDialog} onOpenChange={setOpenDialog}
@@ -44,10 +51,11 @@ export default function DialogDeleteUi({
                 {children}
                 <div className='flex flex-row w-full py-2'>
                     <Button
-                        onClick={handleClickDelete}
-                        className="bg-guinda mx-2 h-9 px-4 py-2 hover:bg-red-800 w-fit flex flex-row items-center text-white rounded-lg text-sm "
+                        disabled={loadingData}
+                        onClick={clickDeleteButton}
+                        className="bg-guinda mx-2 h-9 flex-1 py-2 hover:bg-red-800 w-fit flex flex-row items-center text-white rounded-lg text-sm "
                     >
-                        Eliminar
+                        {loadingData ? <Loader2 className='mr-2 h-4 w-4 animate-spin' /> : <p><DeleteIcon className='mr-2' />  Eliminar</p>}
                     </Button>
                     <Button
                         onClick={handleClickCancel}

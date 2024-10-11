@@ -16,6 +16,7 @@ import { DropdownMenuLocation, DropdownMenuStatus } from '@/components';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
 import { Loader2 } from 'lucide-react';
+import { CREATE_BOOK } from '@/components/commons/apiConnection';
 
 
 export default function Page() {
@@ -31,7 +32,7 @@ export default function Page() {
   
   const [inputAuthor, setInputAuthor] = useState({
     title:"",
-    author : [],
+    authors : [],
     location : 1,
     status : 1,
     borrowed_to : null,
@@ -61,7 +62,7 @@ export default function Page() {
     if(nameAuthor=="")return alert("Complete el campo");
     setInputAuthor((prevState)=>({
       ...prevState,
-      author : [...prevState.author, {name : nameAuthor}]
+      authors : [...prevState.authors, {name : nameAuthor}]
     }))
     setNameAuthor("");
   }
@@ -86,23 +87,17 @@ export default function Page() {
 
   }
   const handleDeleteAuthor=(idAuthor)=>{
-    const newListAuthor = inputAuthor.author.filter((_, idx)=>idx !== idAuthor);
+    const newListAuthor = inputAuthor.authors.filter((_, idx)=>idx !== idAuthor);
     setInputAuthor({
       ...inputAuthor,
-      author : newListAuthor
+      authors : newListAuthor
     })
   }
   const handleClickSendData=async()=>{
     console.log(inputAuthor);
     setLoading(true);
-    const response = await fetch(URL_CREATE_BOOK,{
-      method : 'POST',
-        headers : {
-          'Content-type':'application/json'
-        },
-        body : JSON.stringify(inputAuthor),
-        mode : 'no-cors'
-    });
+    const response = await CREATE_BOOK(inputAuthor);
+    console.log(await response.json());
     
     router.push("/dashboard/libros");
     toast({
@@ -144,7 +139,7 @@ export default function Page() {
             </div>
             <div className='my-4'>
               {
-                inputAuthor.author.length > 0 &&
+                inputAuthor.authors.length > 0 &&
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -158,8 +153,8 @@ export default function Page() {
                   </TableHeader>
                   <TableBody>
                     {
-                      inputAuthor.author.map((author, key)=>
-                      <TableRow>
+                      inputAuthor.authors.map((author, key)=>
+                      <TableRow key={key}>
                         <TableCell>
                           {
                             author?.name
@@ -241,8 +236,8 @@ export default function Page() {
             <h1 className='text-xl font-bold'>"{inputAuthor.title}"</h1>
             <div className='my-6'>
               {
-                inputAuthor.author.map(author=>
-                  <p><PersonIcon/> {author?.name}</p>
+                inputAuthor.authors.map((author, key)=>
+                  <p key={key}><PersonIcon/> {author?.name}</p>
                 )
               }
             </div>

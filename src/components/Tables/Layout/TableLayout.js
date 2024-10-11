@@ -6,6 +6,7 @@ import { Checkbox } from '../../ui/checkbox'
 import { Button } from '@/components/ui/button'
 
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import PersonIcon from '@mui/icons-material/Person';
 import AddIcon from '@mui/icons-material/Add';
 
 import Link from 'next/link'
@@ -35,6 +36,7 @@ export default function TableLayout({
     dataTypeDialog=[],
     dataCoordinator=[],
     setDataTable,
+    deleteElementFunction
 }) 
 {   
   return (
@@ -151,8 +153,23 @@ export default function TableLayout({
                                                 />}
                                                 DialogDeleteComponente={
                                                 <DialogDeleteUi
+                                                    idDeleteData={item?.id}
+                                                    handleClickDelete={deleteElementFunction}
                                                 >
-                                                   <p >Elemento a eliminar: <span className='ml-2 font-bold'>{item?.title || item?.project}</span></p>
+                                                   <div className='w-full  px-8 my-4'>
+                                                    <h1 className='flex flex-row' ><b>Titulo: </b><span className='ml-4'>{item?.title}</span></h1>
+                                                    <h1 className='flex flex-row'><b>Ubicacion: </b><span className='ml-4'>{item?.location[0]?.value}</span></h1>
+                                                    <h1 className='flex flex-row'><b>Estado :</b><span className='ml-4'>{item?.status?.value}</span></h1>
+                                                    <section className='flex flex-col  mt-4 border-t-2 border-t-slate-50'>
+                                                        <h1><b>Autores</b> </h1>
+                                                        <div className='mt-4' >
+                                                            {
+                                                                item?.authors?.map(author=><p key={author.id} className='flex flex-row'><PersonIcon /> <span className='ml-4'>{author?.value}</span></p>) 
+                                                            }
+                                                        </div>
+                                                    </section>
+                                                    
+                                                   </div>
                                                 </DialogDeleteUi>}
                                             />
 
