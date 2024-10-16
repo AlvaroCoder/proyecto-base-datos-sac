@@ -25,6 +25,7 @@ export default function Page() {
           loadingDataEquipos ? <SkeletonTable headers={headersEquipos}/> : 
           <TableEquipos
             dataEquipos={dataEquipos}
+            
           />
         }
 

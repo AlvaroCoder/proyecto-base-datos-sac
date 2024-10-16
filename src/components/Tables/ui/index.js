@@ -3,3 +3,4 @@ export {default as DropdownFiltersComponent} from "./DropdownFilters"
 
 export {default as DialogEditUi} from "./DialogEditUi";
 export {default as DialogDeleteUi} from "./DialogDeleteUi";
+export {default as DialogCreateUi} from "./DialogCreateUi";

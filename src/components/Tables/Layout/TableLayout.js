@@ -10,7 +10,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import AddIcon from '@mui/icons-material/Add';
 
 import Link from 'next/link'
-import { DialogDeleteUi, DialogEditUi, DropdownUiTable } from '../ui'
+import { DialogCreateUi, DialogDeleteUi, DialogEditUi, DropdownUiTable } from '../ui'
 
 
 export default function TableLayout({
@@ -28,6 +28,7 @@ export default function TableLayout({
     hrefCreateButton="/",
     DialogEditComponent=React.Component,
     DialogDeleteComponent=React.Component,
+    DialogCreateComponent=React.Component,
     dialogTitleEdit="Editar",
     dataStatusDialog=[],
     dataLocationDialog=[],
@@ -36,7 +37,8 @@ export default function TableLayout({
     dataTypeDialog=[],
     dataCoordinator=[],
     setDataTable,
-    deleteElementFunction
+    deleteElementFunction,
+    handleClickSaveRegister
 }) 
 {   
   return (
@@ -46,12 +48,16 @@ export default function TableLayout({
                 placeholder="Buscar ..."
                 onChange={handleChangeInput}
             />
-            <Link
-                className="bg-guinda mx-2 h-9 px-4 py-2 hover:bg-red-800 w-fit flex flex-row items-center text-white rounded-lg text-sm "
-                href={hrefCreateButton}
-            >
-                <span className='ml-2 flex-1 whitespace-nowrap'>Crear entidad</span><AddIcon/>
-            </Link>
+            <DialogCreateUi
+                DialogBody={
+                <DialogCreateComponent
+                    dataStatus={dataStatusDialog}
+                    dataLocation={dataLocationDialog}
+                    dataPeopleBorrowTo={dataPeopleBorrowTo}
+                    handleClickSaveRegister={handleClickSaveRegister}
+                />}  
+
+            />
             {
                 filtersComponents.length > 0 &&
                 <div className='flex flex-row items-center px-4'>
@@ -158,7 +164,7 @@ export default function TableLayout({
                                                 >
                                                    <div className='w-full  px-8 my-4'>
                                                     <h1 className='flex flex-row' ><b>Titulo: </b><span className='ml-4'>{item?.title}</span></h1>
-                                                    <h1 className='flex flex-row'><b>Ubicacion: </b><span className='ml-4'>{item?.location[0]?.value}</span></h1>
+                                                    {item?.location && <h1 className='flex flex-row'><b>Ubicacion: </b><span className='ml-4'>{item?.location[0]?.value}</span></h1>}
                                                     <h1 className='flex flex-row'><b>Estado :</b><span className='ml-4'>{item?.status?.value}</span></h1>
                                                     <section className='flex flex-col  mt-4 border-t-2 border-t-slate-50'>
                                                         <h1><b>Autores</b> </h1>

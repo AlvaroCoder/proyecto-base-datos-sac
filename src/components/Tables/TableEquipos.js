@@ -5,6 +5,7 @@ import TableLayout from './Layout/TableLayout';
 import { DropdownFiltersComponent } from './ui';
 import { extraerDataSinRepetir } from '../commons/tableFunctions';
 import { DialogEquipos } from '../Dialogs';
+import DialogCreateEquipos from '../Dialogs/DialogCreateEquipos';
 
 export default function TableEquipos({dataEquipos=[]}) {
     const titlesData=[
@@ -142,6 +143,7 @@ export default function TableEquipos({dataEquipos=[]}) {
         handlePaginate={paginate}
         hrefCreateButton='/dashboard/equipos/create'
         DialogEditComponent={DialogEquipos}
+        DialogCreateComponent={DialogCreateEquipos}
     />
   )
 }

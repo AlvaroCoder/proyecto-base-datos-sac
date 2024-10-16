@@ -5,15 +5,7 @@ import React, { useState } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Loader2 } from 'lucide-react';
 
-/**
- * 
- *               <Button
-                variant="ghost"
-                onClick={handleClickDelete}
-              >
-                <DeleteIcon className='mr-2'/> <span>Eliminar</span>
-              </Button>
- */
+
 
 export default function DialogDeleteUi({
     idDeleteData,

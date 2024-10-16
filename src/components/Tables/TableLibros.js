@@ -6,11 +6,9 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import TableLayout from './Layout/TableLayout'
 import { DropdownFiltersComponent } from './ui'
 import { extraerDataSinRepetir } from '../commons/tableFunctions'
-import { DialogLibros } from '../Dialogs'
+import { DialogCreateLibros, DialogLibros } from '../Dialogs'
 import { DELETE_BOOK, UPDATE_BOOKS } from '../commons/apiConnection';
 import { useToast } from '../ui/use-toast';
-
-
 
 export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations=[]}) {    
     const titlesData=[
@@ -186,6 +184,12 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
         console.log(newDataLibros);
         
     }
+    const handleClickSaveRegister=(data)=>{
+        setLibrosData([
+            data,
+            ...librosData,
+        ])
+    }
     const filterComponents=[
         <DropdownFiltersComponent data={estadosSinRepetir} titleData={stateData} titleButton='Estados' handleCheckedChange={handleChckedDropdownStatus}/>,
         <DropdownFiltersComponent data={ubicaionSinRepetir} titleData={locationData} titleButton='Ubicación' handleCheckedChange={handleCheckedDropdownLocation} />,
@@ -209,6 +213,8 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
         deleteElementFunction={handleDeleteBook}
         dialogTitleEdit='Editar Libro'
         DialogEditComponent={DialogLibros}
+        DialogCreateComponent={DialogCreateLibros}  
+        handleClickSaveRegister={handleClickSaveRegister}
     />
   )
 }
