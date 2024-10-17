@@ -39,3 +39,15 @@ export async function DELETE_BOOK(idBook) {
         mode : 'cors'
     })
 }
+export async function CREATE_PAPER(data) {
+    const session = await getSession();
+    return await fetch(BASE_URL+`create/paper`,{
+        method : 'POST',
+        headers : {
+            'Content-Type' : 'application/json',
+            'Authorization':`Bearer ${session?.user?.access_token}`
+        },
+        body : JSON.stringify(data),
+        mode : 'cors'
+    })
+}

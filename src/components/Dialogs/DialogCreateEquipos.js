@@ -1,16 +1,22 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Input } from '../ui/input'
 import { DropdownMenu, DropdownMenuTrigger } from '../ui/dropdown-menu'
 import { Button } from '../ui/button'
 
 export default function DialogCreateEquipos({
-  dataDialog,
-  
+
 }) {
+  const [dataDialog, setDataDialog] = useState({
+    name : ''
+  });
+  const handleChangeInput=(evt)=>{
+    const target = evt.target;
+
+  }
   return (
     <div className='max-h-[400px] h-full overflow-auto py-2 px-2'>
       <div className='my-2'>
-        <h1>Nombre Equipo</h1>
+        <h1>Equipo</h1>
         <Input
           name="equipment"
           required

@@ -8,6 +8,7 @@ import { Loader2 } from 'lucide-react';
 import SaveIcon from '@mui/icons-material/Save';
 import { CREATE_BOOK } from '../commons/apiConnection';
 import { useToast } from '../ui/use-toast';
+import { DialogClose, DialogFooter } from '../ui/dialog';
 export default function DialogCreateLibros({
   dataStatus=[],
   dataLocation=[],
@@ -238,21 +239,17 @@ export default function DialogCreateLibros({
     <div className='w-full mb-4'>
             
     </div>
-    <div className='flex flex-row items-center my-4'>
+    <DialogFooter className='flex flex-row items-center my-4'>
+      <DialogClose asChild>
       <Button
           className='flex-1 cursor-pointer mr-2 bg-guinda rounded-lg py-4  text-white text-center hover:bg-guindaOpaco  hover:font-bold border-2 border-guinda hover:border-guinda'
           onClick={handleClickSave}
-          
       >
           {loadingData ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <><SaveIcon/><span className='ml-2'>Guardar Registro</span></>}
       </Button>
-      <Button
-          variant="ghost"
-          onClick={handleClickCancelSave}
-      >
-          <p>Cancelar</p>
-      </Button>
-    </div>
+
+      </DialogClose>
+    </DialogFooter>
    </section>
   )
 };

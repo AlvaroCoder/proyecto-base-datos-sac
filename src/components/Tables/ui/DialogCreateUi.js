@@ -2,9 +2,6 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import React, { useState } from 'react'
 import AddIcon from '@mui/icons-material/Add';
-import { Loader2 } from 'lucide-react';
-
-import SaveIcon from '@mui/icons-material/Save';
 
 export default function DialogCreateUi({
     dialogTitle="Crear Registro",
@@ -13,16 +10,8 @@ export default function DialogCreateUi({
     dataDialog,
 
 }) {
-  
-    const [loadingData, setLoadingData] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
     
-    const handleClickCancelSave=()=>{
-
-    }
-    const handleChangeOpen=()=>{
-        setOpenDialog(false)
-    }
   return (
     <>
         <Dialog
@@ -43,7 +32,6 @@ export default function DialogCreateUi({
                 </DialogTitle>
                 <section>
                     {DialogBody}
-
                 </section>
             </DialogContent>
         </Dialog>

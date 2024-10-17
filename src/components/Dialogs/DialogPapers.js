@@ -115,7 +115,7 @@ export default function DialogPapers({
                     <Button
                     variant="ghost"
                     className="text-guinda underline hover:bg-white hover:text-guinda"
-                    onClick={handleClickShowFormNewMember}
+                    onClick={handleClickDeleteMember}
                     >
                         Agregar Miembro
                     </Button>
