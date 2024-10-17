@@ -35,6 +35,7 @@ export default function TableLayout({
     dataOriginDialog=[],
     dataPeopleBorrowTo=[],
     dataTypeDialog=[],
+    dataCourse=[],
     dataCoordinator=[],
     setDataTable,
     deleteElementFunction,
@@ -53,6 +54,7 @@ export default function TableLayout({
                 <DialogCreateComponent
                     dataStatus={dataStatusDialog}
                     dataLocation={dataLocationDialog}
+                    dataCourse={dataCourse}
                     dataPeopleBorrowTo={dataPeopleBorrowTo}
                     handleClickSaveRegister={handleClickSaveRegister}
                 />}  

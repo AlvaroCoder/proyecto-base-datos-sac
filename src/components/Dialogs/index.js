@@ -7,3 +7,6 @@ export {default as DialogPapers} from "./DialogPapers";
 export {default as DialogCreateEquipos} from "./DialogCreateEquipos";
 export {default as DialogCreateLibros} from "./DialogCreateLibros"; 
 export {default as DialogCreatePapers} from "./DialogCreatePapers";
+export {default as DialogCreateTrabajo} from "./DialogCreateTrabajo";
+export {default as DialogCreateProyectos} from "./DialogCreateProyectos";
+export {default as DialogCreateUsuario} from "./DialogCreateUsuario";

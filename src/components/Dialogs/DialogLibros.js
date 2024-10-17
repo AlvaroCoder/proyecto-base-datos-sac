@@ -192,6 +192,7 @@ export default function DialogLibros({
               {
                 dataLocation?.map(item=>
                   <DropdownMenuCheckboxItem
+                    key={item.id}
                     checked={item?.id === dataDialog?.location[0]?.id}
                     className="capitalize"
                     onCheckedChange={()=>handleChangeCheckedDopdown(item.id, "location")}
@@ -218,6 +219,7 @@ export default function DialogLibros({
               {
                 dataStatus?.map(item=>
                   <DropdownMenuCheckboxItem
+                    key={item.id}
                     checked={item.id === dataDialog?.status?.id}
                     onCheckedChange={()=>handleChangeCheckedDopdown(item.id,"status")}
                   >

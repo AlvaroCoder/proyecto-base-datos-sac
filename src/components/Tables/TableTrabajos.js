@@ -3,9 +3,12 @@ import React, { useMemo, useState } from 'react'
 import TableLayout from './Layout/TableLayout';
 import { DropdownFiltersComponent } from './ui';
 import { extraerDataSinRepetir } from '../commons/tableFunctions';
-import { DialogTrabajos } from '../Dialogs';
+import { DialogCreateTrabajo, DialogTrabajos } from '../Dialogs';
 
-export default function TableTrabajos({dataTrabajos=[]}) {
+export default function TableTrabajos({
+    dataTrabajos=[],
+    dataCourses=[],
+}) {
     const titlesData = [
         {name : "Titulo", className:"w-[400px]"},
         {name: "Curso", className:""},
@@ -76,7 +79,12 @@ export default function TableTrabajos({dataTrabajos=[]}) {
         const newListTrabajos = trabajosData?.map(trabajo=>({...trabajo, Seleccionado : !trabajo.Seleccionado}))
         setTrabajosData(newListTrabajos)
     }
-
+    const handleClickSaveRegister=(data)=>{
+        setTrabajosData([
+            data,
+            ...trabajosData
+        ])
+    }
     const handleCheckedDropdownCourse=(item)=>{
         setQuery("");
         if (item===courseData) {
@@ -106,6 +114,9 @@ export default function TableTrabajos({dataTrabajos=[]}) {
             handlePaginate={paginate}
             hrefCreateButton='/dashboard/trabajos/create'
             DialogEditComponent={DialogTrabajos}
+            DialogCreateComponent={DialogCreateTrabajo}
+            dataCourse={dataCourses}
+            handleClickSaveRegister={handleClickSaveRegister}
         />
     </>
   )

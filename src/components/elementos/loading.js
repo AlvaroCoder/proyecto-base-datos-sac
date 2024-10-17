@@ -8,7 +8,7 @@ export default function SkeletonTableLibros({headers=[]}) {
                 <TableRow>
                     {
                         headers.map(item=>
-                            <TableHead>{item}</TableHead>
+                            <TableHead key={item}>{item}</TableHead>
                         )
                     }
                     <TableHead>#</TableHead>
@@ -22,17 +22,17 @@ export default function SkeletonTableLibros({headers=[]}) {
             <TableBody>
                 <TableRow >
                     {
-                        Array.from({length : headers.length}).map((_)=> <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>)
+                        Array.from({length : headers.length}).map((_, idx)=> <TableCell key={idx}><Skeleton className={"h-4 w-[150px]"}/></TableCell>)
                     }
                 </TableRow>
                 <TableRow >
                     {
-                        Array.from({length : headers.length}).map((_)=> <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>)
+                        Array.from({length : headers.length}).map((_, idx)=> <TableCell key={idx}><Skeleton className={"h-4 w-[150px]"}/></TableCell>)
                     }
                 </TableRow>
                 <TableRow >
                     {
-                        Array.from({length : headers.length}).map((_)=> <TableCell><Skeleton className={"h-4 w-[150px]"}/></TableCell>)
+                        Array.from({length : headers.length}).map((_, idx)=> <TableCell key={idx}><Skeleton className={"h-4 w-[150px]"}/></TableCell>)
                     }
                 </TableRow>
             </TableBody>

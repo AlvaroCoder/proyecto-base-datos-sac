@@ -51,3 +51,16 @@ export async function CREATE_PAPER(data) {
         mode : 'cors'
     })
 }
+
+export async function CREATE_TRABAJOS(data) {
+    const session = await getSession();
+    return await fetch(BASE_URL+`create/trabajo`,{
+        method : 'POST',
+        headers : {
+            'Content-Type':'application/json',
+            'Authorization' : `Bearer ${session?.user?.access_token}`
+        },
+        mode : 'cors',
+        body : JSON.stringify(data)
+    })
+}
