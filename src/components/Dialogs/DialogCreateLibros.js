@@ -12,7 +12,6 @@ import { DialogClose, DialogFooter } from '../ui/dialog';
 export default function DialogCreateLibros({
   dataStatus=[],
   dataLocation=[],
-  dataPeopleBorrowTo=[],
   handleClickSaveRegister,
   
 }) {

@@ -3,7 +3,7 @@ import React, { useMemo, useState } from 'react'
 import TableLayout from './Layout/TableLayout';
 import { DropdownFiltersComponent } from './ui';
 import { extraerDataSinRepetir } from '../commons/tableFunctions';
-import { DialogProyectos } from '../Dialogs';
+import { DialogCreateProyectos, DialogProyectos } from '../Dialogs';
 
 export default function TableProyectos({dataProyectos = []}) {
   const newDataProyectos = dataProyectos?.map((item)=>({...item, Seleccionado : false}));  
@@ -55,8 +55,7 @@ export default function TableProyectos({dataProyectos = []}) {
   
   const estadosSinRepetir = extraerDataSinRepetir(proyectosData, "status");
   const coordinadorSinRepetir = extraerDataSinRepetir(proyectosData, "coordinator");
-  
-
+    
   const handleChangeChecked=(_)=>{
     const newListProyectos = proyectosData.map(proyecto=>({...proyecto, Seleccionado : !proyecto.Seleccionado}))
     setProyectosData(newListProyectos);
@@ -120,6 +119,7 @@ export default function TableProyectos({dataProyectos = []}) {
       handlePaginate={handlePaginate}
       hrefCreateButton='/dashboard/proyectos/create'
       DialogEditComponent={DialogProyectos}
+      DialogCreateComponent={DialogCreateProyectos}
     />
   )
 }

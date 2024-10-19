@@ -5,6 +5,9 @@ import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 
 import { Input } from '../ui/input';
+import { Button } from '../ui/button';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { DialogCreateUsuario } from '../Dialogs';
 
 function CardUser({first_name, last_name, email, phone, category}) {
     return(
@@ -46,11 +49,26 @@ export default function TableMiembros({dataMiembros=[]}) {
     }
   return (
     <div className='w-full'>
-        <section className='my-4'>
+        <section className='my-4 flex flex-row justify-center'>
             <Input
                 placeholder="Buscar miembro ..."
                 onChange={onChangeInput}
             />
+            <Dialog>
+                <DialogTrigger asChild>
+                        <Button
+                        className="mx-4 w-fit px-4 cursor-pointer bg-guinda rounded-lg  text-white text-center hover:bg-guindaOpaco  border-2 border-guinda hover:border-guinda'"
+                        >
+                        <span>Agregar Usuario</span>
+                    </Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogTitle>
+                        <h1 className='font-bold'>Nuevo Miembro</h1>
+                    </DialogTitle>
+                    <DialogCreateUsuario></DialogCreateUsuario>
+                </DialogContent>
+            </Dialog>
         </section>
         <section className='w-full grid grid-cols-3 gap-4 px-2'>
             {

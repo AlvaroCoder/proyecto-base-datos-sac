@@ -30,7 +30,6 @@ export default function TableLayout({
     DialogDeleteComponent=React.Component,
     DialogCreateComponent=React.Component,
     dialogTitleEdit="Editar",
-    dataStatusDialog=[],
     dataLocationDialog=[],
     dataOriginDialog=[],
     dataPeopleBorrowTo=[],
@@ -39,7 +38,8 @@ export default function TableLayout({
     dataCoordinator=[],
     setDataTable,
     deleteElementFunction,
-    handleClickSaveRegister
+    handleClickSaveRegister,
+    dataStatusDialog
 }) 
 {   
   return (
