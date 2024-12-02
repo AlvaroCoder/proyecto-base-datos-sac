@@ -63,7 +63,7 @@ export default function FormElement() {
       title : "Exito",
       description : "Ingreso"
     });
-    router.push("/")
+    router.push("/dashboard");
     setLoading(false)
   }
   return (

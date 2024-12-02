@@ -21,7 +21,7 @@ export default function DialogCreateUi({
             <DialogTrigger>
                 <Button
                     variant="ghost"
-                    className="bg-guinda mx-2 h-9 px-4 py-2 hover:bg-red-800 w-fit flex flex-row items-center text-white rounded-lg text-sm "
+                    className="bg-guinda mx-2 h-9 px-4 py-2 hover:bg-red-800 hover:text-white w-fit flex flex-row items-center text-white rounded-lg text-sm "
                 >
                     <AddIcon/> <span>{textButtonCreate}</span>
                 </Button>
