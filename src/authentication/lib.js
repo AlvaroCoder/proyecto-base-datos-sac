@@ -1,6 +1,7 @@
 "use server"
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 
 const secretKey=process.env.SECRET_TOKEN;
@@ -59,6 +60,7 @@ export async function login(dataUser) {
 }
 export async function logout() {
     cookies().set("session", "", {expires:new Date(0)})
+    redirect('/login');
 }
 export async function getSession() {
     const session = cookies().get("session")?.value;

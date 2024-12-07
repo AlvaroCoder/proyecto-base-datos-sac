@@ -11,8 +11,13 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import { Button } from '../ui/button';
+import { logout } from '@/authentication/lib';
+import { usePathname } from 'next/navigation';
 
 export default function SideBarDashboard() {
+    const pathname = usePathname();
+    
     const [openSidebar, setOpenSidebar] = useState(true);
     const routes=[
         {
@@ -28,7 +33,7 @@ export default function SideBarDashboard() {
             selected : false
         },
         {
-            routeName : "Usuarios",
+            routeName : "Miembros",
             routePath : "/dashboard/miembros",
             routeIcon : GroupIcon,
             selected : false
@@ -51,7 +56,19 @@ export default function SideBarDashboard() {
             routeIcon : InsertDriveFileIcon,
             selected : false
         }
-    ]
+    ].map(item=>{
+        if (item.routePath == pathname) {
+            return {
+                ...item,
+                selected : true
+            }
+        }
+        return {
+            ...item,
+            selected : false
+        }
+    });
+
     const [dataRoutes, setDataRoutes] = useState(routes)
     const handleClick = (index)=>{
         const newDataRoutes = dataRoutes.map((item, idx)=>{
@@ -67,6 +84,9 @@ export default function SideBarDashboard() {
             }
         })
         setDataRoutes(newDataRoutes)
+    }
+    const handleCLickSignOut=async()=>{
+        await logout();        
     }
   return (
     <div  className={`${openSidebar ? 'w-48' : 'w-20'} bg-guinda h-screen flex flex-col justify-between relative z-50 duration-300`}>
@@ -103,11 +123,17 @@ export default function SideBarDashboard() {
                 }
             </ul>
         </div>
-        <div className='w-full h-12 py-8 flex items-center justify-center text-white'>
-            <PowerSettingsNewIcon/>
+        <div className='w-full h-fit py-4 flex items-center justify-center  text-white'>
+           <Button
+           className="py-6"
+            variant="ghost"
+            onClick={handleCLickSignOut}
+           >
+           <PowerSettingsNewIcon/>
             {
                 openSidebar && <p className='ml-2'>Cerrar Sesión</p>
             }
+           </Button>
         </div>
     </div>
   )

@@ -14,8 +14,7 @@ export default function DialogEquipos({
     dataLocation=[],
     dataStatus=[],
 }) {    
-
-
+    
     const [mostrarComentarios, seTmostrarComentarios] = useState(false);
     const [mostrarDropdownInputType, setMostrarDropdownInputType] = useState(false);
     const [mostrarDropdownInputOrigin, setMostrarDropdownInputOrigin] = useState(false);

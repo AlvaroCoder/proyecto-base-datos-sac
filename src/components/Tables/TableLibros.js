@@ -6,7 +6,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import TableLayout from './Layout/TableLayout'
 import { DropdownFiltersComponent } from './ui'
 import { extraerDataSinRepetir } from '../commons/tableFunctions'
-import { DialogCreateLibros, DialogLibros } from '../Dialogs'
+import { DialogCreateLibros, DialogDeleteLibros, DialogLibros } from '../Dialogs'
 import { DELETE_BOOK, UPDATE_BOOKS } from '../commons/apiConnection';
 import { useToast } from '../ui/use-toast';
 
@@ -212,6 +212,7 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
         hrefCreateButton='/dashboard/libros/create'
         deleteElementFunction={handleDeleteBook}
         dialogTitleEdit='Editar Libro'
+        DialogDeleteComponent={DialogDeleteLibros}
         DialogEditComponent={DialogLibros}
         DialogCreateComponent={DialogCreateLibros}  
         handleClickSaveRegister={handleClickSaveRegister}

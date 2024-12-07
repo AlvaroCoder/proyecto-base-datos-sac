@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import React, { useState } from 'react'
 import EditIcon from '@mui/icons-material/Edit';
 import { Loader2 } from 'lucide-react';
@@ -20,6 +20,7 @@ export default function DialogEditUi({
     setDataTable,
     DialogBody=React.Component
 }) {
+    console.log(dataDialog);
     
     const [openDialog, setOpenDialog] = useState(false);
     const [loadingData, setLoadingData] = useState(false);
@@ -76,6 +77,9 @@ export default function DialogEditUi({
                 <DialogTitle>
                     {dialogTitle}
                 </DialogTitle>
+                <DialogDescription>
+                    Ventana para editar los datos del elemento
+                </DialogDescription>
                 <section>
                     <DialogBody
                         dataDialog={dataDialogComponent}

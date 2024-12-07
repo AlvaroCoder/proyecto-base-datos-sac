@@ -4,6 +4,7 @@ import TableLayout from './Layout/TableLayout';
 import { DropdownFiltersComponent } from './ui';
 import { extraerDataSinRepetir } from '../commons/tableFunctions';
 import { DialogCreateProyectos, DialogProyectos } from '../Dialogs';
+import DialogDeleteProyectos from '../Dialogs/Deletes/DialogDeleteProyectos';
 
 export default function TableProyectos({dataProyectos = []}) {
   const newDataProyectos = dataProyectos?.map((item)=>({...item, Seleccionado : false}));  
@@ -112,6 +113,7 @@ export default function TableProyectos({dataProyectos = []}) {
       numData={numProyectos}
       currentPage={currentPage}
       dataCoordinator={coordinadorSinRepetir}
+      dataStatusDialog={estadosSinRepetir}
       filtersComponents={listFilterComponents}
       handleChangeChecked={handleChangeChecked}
       handleCheckedRow={handleChangeRow}
@@ -119,7 +121,9 @@ export default function TableProyectos({dataProyectos = []}) {
       handlePaginate={handlePaginate}
       hrefCreateButton='/dashboard/proyectos/create'
       DialogEditComponent={DialogProyectos}
+      DialogDeleteComponent={DialogDeleteProyectos}
       DialogCreateComponent={DialogCreateProyectos}
+      dialogTitleEdit='Editar Proyecto'
     />
   )
 }

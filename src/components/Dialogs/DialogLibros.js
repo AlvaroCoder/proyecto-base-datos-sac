@@ -14,7 +14,6 @@ export default function DialogLibros({
   dataPeopleBorrowTo=[],
   handleChangeExistChanges,
   setDataDialog : setDataDialogLibros,
-  handleChangeNotExistChanges
 }) {
 
   const refInputNameAuthor=useRef(null);
@@ -110,7 +109,7 @@ export default function DialogLibros({
   return (
     <section>
       <div className='my-2'>
-        <h1>Titulo</h1>
+        <h1 className='font-semibold'>Titulo</h1>
         <Input
           name="title"
           value={dataDialog.title}
@@ -118,12 +117,16 @@ export default function DialogLibros({
         />
       </div>
       <div className='my-2'>
-        <h1>Autor</h1>
-        <div className='w-full rounded-lg flex flex-wrap gap-x-4 gap-y-2 items-center'>
+        <h1 className='font-semibold'>Autor</h1>
+        <div 
+        className='w-full rounded-lg flex flex-wrap gap-x-4 gap-y-2 items-center'>
           {
             dataDialog?.authors?.map((author, key)=>{
               return (
-                <p key={key} className='p-2 bg-slate-100 rounded-xl w-fit mt-2 text-nowrap'>
+                <p 
+                key={key} 
+                className='p-2 bg-slate-100 rounded-xl w-fit mt-2 text-nowrap'
+                >
                   <span className='mr-2'>
                     {author?.value}
                     <ClearIcon
@@ -178,7 +181,7 @@ export default function DialogLibros({
       </div>
       <div className='my-2 flex flex-row items-center'>
         <div className='w-[300px] flex flex-col'>
-          <h1 className='font-bold'>Ubicacion</h1>
+          <h1 className='font-semibold'>Ubicacion</h1>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -232,7 +235,7 @@ export default function DialogLibros({
         </div>
       </div>
       <div className='flex-1 border-b-2 border-b-guindaOpaco py-2 my-4'>
-        <h1 className='font-bold'>
+        <h1 className='font-semibold'>
           Prestado a
         </h1>
       </div>

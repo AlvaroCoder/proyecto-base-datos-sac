@@ -87,7 +87,7 @@ export default  function Home() {
         </div>
       </section>
       <footer className="h-32 flex items-center justify-center bg-guinda w-full mt-32">
-            <p className="text-gray-300">@ Derechos reservados a DevMates</p>
+            <p className="text-gray-300">@ Derechos reservados a COSAI</p>
       </footer>
     </main>
   );

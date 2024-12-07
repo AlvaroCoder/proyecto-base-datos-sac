@@ -5,12 +5,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { Checkbox } from '../../ui/checkbox'
 import { Button } from '@/components/ui/button'
 
+import Link from 'next/link'
+import { DialogCreateUi, DialogDeleteUi, DialogEditUi, DropdownUiTable } from '../ui'
+
+{/** Iconos */}
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import PersonIcon from '@mui/icons-material/Person';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { DialogDeleteMultiplesElements } from '@/components/Dialogs'
 
-import Link from 'next/link'
-import { DialogCreateUi, DialogDeleteUi, DialogEditUi, DropdownUiTable } from '../ui'
+
 
 
 export default function TableLayout({
@@ -42,6 +47,7 @@ export default function TableLayout({
     dataStatusDialog
 }) 
 {   
+    const elementsSelected = currentData?.filter(data=>data.Seleccionado);
   return (
     <div className='w-full'>
         <div className='flex items-center py-4'>
@@ -49,6 +55,7 @@ export default function TableLayout({
                 placeholder="Buscar ..."
                 onChange={handleChangeInput}
             />
+
             <DialogCreateUi
                 DialogBody={
                 <DialogCreateComponent
@@ -58,8 +65,11 @@ export default function TableLayout({
                     dataPeopleBorrowTo={dataPeopleBorrowTo}
                     handleClickSaveRegister={handleClickSaveRegister}
                 />}  
-
             />
+            {
+                elementsSelected.length > 0 && 
+                <DialogDeleteMultiplesElements elements={elementsSelected} />
+            }
             {
                 filtersComponents.length > 0 &&
                 <div className='flex flex-row items-center px-4'>
@@ -113,7 +123,7 @@ export default function TableLayout({
                                                             <div className="flex flex-wrap gap-x-4 gap-y-2">
                                                                 {
                                                                     currentValue.map((val, idx)=>{
-                                                                        return idx < 3 && <p className='px-4 py-2 bg-slate-100 rounded-sm w-fit shadow-sm'>{ Object.values(val).filter(i=>!Number.isInteger(i)).map(v=><span>{v}</span>)}</p>
+                                                                        return idx < 3 && <p key={idx} className='px-4 py-2 bg-slate-100 rounded-sm w-fit shadow-sm'>{ Object.values(val).filter(i=>!Number.isInteger(i)).map((v, idx)=><span key={idx}>{v}</span>)}</p>
                                                                     })
                                                                 }
                                                                 {
@@ -164,20 +174,7 @@ export default function TableLayout({
                                                     idDeleteData={item?.id}
                                                     handleClickDelete={deleteElementFunction}
                                                 >
-                                                   <div className='w-full  px-8 my-4'>
-                                                    <h1 className='flex flex-row' ><b>Titulo: </b><span className='ml-4'>{item?.title}</span></h1>
-                                                    {item?.location && <h1 className='flex flex-row'><b>Ubicacion: </b><span className='ml-4'>{item?.location[0]?.value}</span></h1>}
-                                                    <h1 className='flex flex-row'><b>Estado :</b><span className='ml-4'>{item?.status?.value}</span></h1>
-                                                    <section className='flex flex-col  mt-4 border-t-2 border-t-slate-50'>
-                                                        <h1><b>Autores</b> </h1>
-                                                        <div className='mt-4' >
-                                                            {
-                                                                item?.authors?.map(author=><p key={author.id} className='flex flex-row'><PersonIcon /> <span className='ml-4'>{author?.value}</span></p>) 
-                                                            }
-                                                        </div>
-                                                    </section>
-                                                    
-                                                   </div>
+                                                  <DialogDeleteComponent {...item} />
                                                 </DialogDeleteUi>}
                                             />
 

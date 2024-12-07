@@ -10,6 +10,8 @@ export default function DialogPapers({
     setDataDialog : setDataDialogPaper,
     handleChangeExistChanges
 }) {
+    console.log(dataDialog);
+    
     const [showFormNewMember, setShowFormNewMember] = useState(false);
     const [inputValueMember, setInputValueMember] = useState({
         first_name : "",
@@ -121,6 +123,22 @@ export default function DialogPapers({
                     </Button>
                 }
             </div>
+        </div>
+        <div className='my-2'>
+            <h1 className='font-semibold'>Año</h1>
+            <Input
+                type="number"
+                name="year"
+                value={dataDialog?.year}
+            />
+        </div>
+        <div className='my-2'>
+            <h1 className='font-semibold'>Link</h1>
+            <Input
+                type="text"
+                name="link"
+                value={dataDialog?.link}
+            />
         </div>
     </section>
   )

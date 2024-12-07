@@ -4,7 +4,7 @@ import React, { useMemo, useState } from 'react'
 import TableLayout from './Layout/TableLayout';
 import { DropdownFiltersComponent } from './ui';
 import { extraerDataSinRepetir } from '../commons/tableFunctions';
-import { DialogEquipos } from '../Dialogs';
+import { DialogDeleteEquipos, DialogEquipos } from '../Dialogs';
 import DialogCreateEquipos from '../Dialogs/DialogCreateEquipos';
 
 export default function TableEquipos({dataEquipos=[]}) {
@@ -144,6 +144,7 @@ export default function TableEquipos({dataEquipos=[]}) {
         hrefCreateButton='/dashboard/equipos/create'
         DialogEditComponent={DialogEquipos}
         DialogCreateComponent={DialogCreateEquipos}
+        DialogDeleteComponent={DialogDeleteEquipos}
     />
   )
 }

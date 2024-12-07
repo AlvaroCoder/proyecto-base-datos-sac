@@ -10,3 +10,9 @@ export {default as DialogCreatePapers} from "./DialogCreatePapers";
 export {default as DialogCreateTrabajo} from "./DialogCreateTrabajo";
 export {default as DialogCreateProyectos} from "./DialogCreateProyectos";
 export {default as DialogCreateUsuario} from "./DialogCreateUsuario";
+export {default as DialogDeleteMultiplesElements} from "./DialogDeleteMultiplesElements";
+
+{/** Dialods de eliminar un elemento */}
+export {default as DialogDeleteLibros} from "./Deletes/DialogDeleteLibros";
+export {default as DialogDeleteEquipos} from "./Deletes/DialogDeleteEquipos";
+export {default as DialogDeletePapers} from "./Deletes/DialogDeletePapers"

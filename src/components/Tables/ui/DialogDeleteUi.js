@@ -1,11 +1,9 @@
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import React, { useState } from 'react'
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Loader2 } from 'lucide-react';
-
-
 
 export default function DialogDeleteUi({
     idDeleteData,
@@ -39,8 +37,13 @@ export default function DialogDeleteUi({
             <DialogTitle>
                 Estas seguro de eliminar este elemento?
             </DialogTitle>
-            <section>
+            <DialogDescription>
+                Ten en cuenta que no se podrán recuperar los datos una vez eliminados
+            </DialogDescription>
+            <section className=''>
+                <div className='shadow-lg rounded-sm p-4 mb-4'>
                 {children}
+                </div>
                 <div className='flex flex-row w-full py-2'>
                     <Button
                         disabled={loadingData}
