@@ -4,23 +4,21 @@ import { Button } from '../ui/button';
 import { Textarea } from '../ui/textarea';
 import ClearIcon from '@mui/icons-material/Clear';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
-
+import _ from "lodash"
 
 export default function DialogProyectos({
   initialDataDialog,
   dataDialog : dataDialogProyectos, 
   handleChangeExistChanges,
+  handleChangeNotExistChanges,
   setDataDialog : setDataDialogProyectos,
   dataCoordinator=[],
   dataStatus=[]
 }) 
-{
-  console.log(dataDialogProyectos);
-  console.log(dataStatus);
-  
+{  
   const refInputNameResearcher=useRef(null);
   const refInputLasNameResearcher=useRef(null);
-
+  
   const [mostrarDropdownCoordinador, setMostrarDropdownCoordinador] = useState(false);
   const [showFormNewAuthor, setShowFormNewAuthor] = useState(false);
   const [filterSearchCoordinator, setFilterSearchCoordinator] = useState(dataCoordinator);
@@ -47,38 +45,57 @@ export default function DialogProyectos({
       researchers : newDataResearcher,
       authors_added : newDataAdded
     });
-    handleChangeExistChanges();
     setShowFormNewAuthor(false);
     refInputNameResearcher.current.value = null;
     refInputLasNameResearcher.current.value = null;
+
+    handleChangeExistChanges();
   }
   const handleClickCancelAuthor=()=>{
 
   }
   const handleChangeInput=(evt, keyValue)=>{
     const inputValue = evt.target.value;
-    if (inputValue!==dataDialogProyectos[keyValue]) {
-      handleChangeExistChanges();
-    }
-    setDataDialogProyectos({
+    
+    const newObjDataInput = {
       ...dataDialogProyectos,
       [keyValue] : inputValue
-    })
+    }
+    const existChanges = _.isEqual(initialDataDialog, newObjDataInput);
+        
+    if (!existChanges) {
+      handleChangeExistChanges();
+    }else{
+      handleChangeNotExistChanges();
+    }
+    
+    setDataDialogProyectos(newObjDataInput);
   }
   const handleClickClearResearcher=(idResearcher)=>{
     const newDataResearcher=[...dataDialogProyectos?.researchers].filter(researcher=>researcher?.id !== idResearcher);
     const newDataProyects = {
       ...dataDialogProyectos,
-      researchers : newDataResearcher,
-      authors_deleted : [dataDialogProyectos?.authors_deleted, dataDialogProyectos?.researchers?.filter(r=>r?.id === idResearcher)[0]]
+      authors_deleted : [...dataDialogProyectos?.authors_deleted, dataDialogProyectos?.researchers?.filter(r=>r?.id === idResearcher)[0]],
+      researchers : newDataResearcher
     }
+    
     setDataDialogProyectos(newDataProyects);
     handleChangeExistChanges();
   }
   const handleClickShowFormNewAuthor=()=>{
     setShowFormNewAuthor(!showFormNewAuthor)
   }
-  
+  const handleChangeChecked=(name_status)=>{
+    setDataDialogProyectos({
+      ...dataDialogProyectos,
+      status : name_status
+    });
+    if (initialDataDialog?.status === name_status) {
+      handleChangeNotExistChanges();
+      return;
+    }
+    handleChangeExistChanges();
+  }
   return (
     <section className='h-[450px] overflow-auto py-2 px-2'>
       <div className='my-2'>
@@ -219,7 +236,11 @@ export default function DialogProyectos({
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-full">
             {
-              dataStatus?.map((item,key)=><DropdownMenuCheckboxItem key={key}>{item}</DropdownMenuCheckboxItem>)
+              dataStatus?.map((item,key)=><DropdownMenuCheckboxItem 
+              key={key} 
+              checked={dataDialogProyectos?.status === item}
+              onCheckedChange={()=>handleChangeChecked(item)}
+              >{item}</DropdownMenuCheckboxItem>)
             }
           </DropdownMenuContent>
         </DropdownMenu>

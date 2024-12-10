@@ -101,6 +101,16 @@ export default function TableProyectos({dataProyectos = []}) {
     }
     setCoordinatorData(item);
   }
+  const handleSaveDataEditProjects =async(dataDialogComponent)=>{
+    const idDialog = dataDialogComponent?.id;
+    const newDataJSONToSend={
+      id : dataDialogComponent?.id,
+      name : dataDialogComponent?.project,
+      coordinator : dataDialogComponent?.coordinator,
+      
+    } 
+
+  }
   const listFilterComponents=[
     <DropdownFiltersComponent data={estadosSinRepetir} titleButton='Estados' titleData={statusData} handleCheckedChange={handleCheckedDropddownStatus} />,
     <DropdownFiltersComponent data={coordinadorSinRepetir} titleButton='Coordinador' titleData={coordinatorData} handleCheckedChange={handleCheckedDropdownCoordinate} />
@@ -115,11 +125,11 @@ export default function TableProyectos({dataProyectos = []}) {
       dataCoordinator={coordinadorSinRepetir}
       dataStatusDialog={estadosSinRepetir}
       filtersComponents={listFilterComponents}
+      setDataTable={handleSaveDataEditProjects}
       handleChangeChecked={handleChangeChecked}
       handleCheckedRow={handleChangeRow}
       handleChangeInput={handleChangeInput}
       handlePaginate={handlePaginate}
-      hrefCreateButton='/dashboard/proyectos/create'
       DialogEditComponent={DialogProyectos}
       DialogDeleteComponent={DialogDeleteProyectos}
       DialogCreateComponent={DialogCreateProyectos}

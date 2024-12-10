@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 const URL_IMG_UDEP = "https://res.cloudinary.com/ddcb3fk7s/image/upload/v1723319328/udep_logo_eqcizp.png";
 const URL_IMG_LABSAC = "https://res.cloudinary.com/ddcb3fk7s/image/upload/v1723319348/logo_lab_sac_guinda_xefpo1.png";
 const URL_IMG_SAC_DASHBOARD="https://res.cloudinary.com/dabyqnijl/image/upload/v1727218255/Screenshot_2024-09-24_at_17.48.39_y6ohso.png"
-
+  
 export default  function Home() {
   const [visibleDashboardImage, setVisibleDashboardImage] = useState(false);
   useEffect(()=>{

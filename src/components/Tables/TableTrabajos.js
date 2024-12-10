@@ -4,6 +4,7 @@ import TableLayout from './Layout/TableLayout';
 import { DropdownFiltersComponent } from './ui';
 import { extraerDataSinRepetir } from '../commons/tableFunctions';
 import { DialogCreateTrabajo, DialogTrabajos } from '../Dialogs';
+import DialogDeleteTrabajos from '../Dialogs/Deletes/DialogDeleteTrabajos';
 
 export default function TableTrabajos({
     dataTrabajos=[],
@@ -114,6 +115,7 @@ export default function TableTrabajos({
             handlePaginate={paginate}
             hrefCreateButton='/dashboard/trabajos/create'
             DialogEditComponent={DialogTrabajos}
+            DialogDeleteComponent={DialogDeleteTrabajos}
             DialogCreateComponent={DialogCreateTrabajo}
             dataCourse={dataCourses}
             handleClickSaveRegister={handleClickSaveRegister}

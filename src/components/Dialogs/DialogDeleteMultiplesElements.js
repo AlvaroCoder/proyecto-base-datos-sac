@@ -24,7 +24,8 @@ export default function DialogDeleteMultiplesElements({elements=[]}) {
                     key={key}
                     className='w-full shadow-sm rounded-sm p-4'
                     >
-                    <h1 className=''>{item?.title}</h1>
+                        <h1 className='font-bold'>Nombre</h1>
+                        <p className=''>{item?.title || item?.equipment || item?.project }</p>
                     </article>)
             }
             <Button

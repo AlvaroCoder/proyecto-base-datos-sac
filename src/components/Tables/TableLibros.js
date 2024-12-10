@@ -209,7 +209,6 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
         handleChangeChecked={handleChangeChecked}
         handleCheckedRow={handleChangeCheckedRow}
         handlePaginate={paginate}
-        hrefCreateButton='/dashboard/libros/create'
         deleteElementFunction={handleDeleteBook}
         dialogTitleEdit='Editar Libro'
         DialogDeleteComponent={DialogDeleteLibros}
@@ -219,10 +218,3 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
     />
   )
 }
-
-/**
- *             {
-                librosData.filter(libro=>libro.Seleccionado).length > 0 && <Button className="border-2 mx-2 border-guinda bg-white hover:bg-red-50 text-guinda">
-                    <p className='flex flex-row items-center'><DeleteIcon/> <span>Eliminar libro</span></p>                </Button>
-            }
- */

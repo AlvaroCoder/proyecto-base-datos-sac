@@ -3,7 +3,7 @@ import React, { useMemo, useState } from 'react'
 import TableLayout from './Layout/TableLayout';
 import { extraerDataSinRepetir } from '../commons/tableFunctions';
 import { DropdownFiltersComponent } from './ui';
-import { DialogCreatePapers, DialogPapers } from '../Dialogs';
+import { DialogCreatePapers, DialogDeletePapers, DialogPapers } from '../Dialogs';
 
 export default function TablePapers({dataPapers=[]}) {
     const titlesData=[
@@ -107,6 +107,7 @@ export default function TablePapers({dataPapers=[]}) {
             handleChangeInput={handleChangeInput}
             handlePaginate={handlePaginate}
             DialogCreateComponent={DialogCreatePapers}
+            DialogDeleteComponent={DialogDeletePapers}
             DialogEditComponent={DialogPapers}
             handleClickSaveRegister={handleClickSaveRegister}
         />

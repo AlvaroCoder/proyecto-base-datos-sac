@@ -19,9 +19,7 @@ export default function DialogEditUi({
     handleClickCancel,
     setDataTable,
     DialogBody=React.Component
-}) {
-    console.log(dataDialog);
-    
+}) {    
     const [openDialog, setOpenDialog] = useState(false);
     const [loadingData, setLoadingData] = useState(false);
     const [openDialogAlert, setOpenDialogAlert] = useState(false);
@@ -48,7 +46,7 @@ export default function DialogEditUi({
         setHasChanges(false);
     }
     const handleChangeExistChanges=()=>{
-        setHasChanges(true)
+        setHasChanges(true);
     }
     const handleChangeNotExistChanges=()=>{
         setHasChanges(false)
