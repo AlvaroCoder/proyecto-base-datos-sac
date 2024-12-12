@@ -14,6 +14,9 @@ export default function TableProyectos({dataProyectos = []}) {
   const [statusData, setStatusData] = useState("");
   const [coordinatorData, setCoordinatorData] = useState("");
 
+  
+  
+
   const PROYECTOS_POR_PAGINA = 10;
   const indexLast = currentPage * PROYECTOS_POR_PAGINA;
   const indexFirst = indexLast - PROYECTOS_POR_PAGINA;
@@ -34,24 +37,29 @@ export default function TableProyectos({dataProyectos = []}) {
     return filterDataButtonCoordinator.slice(indexFirst, indexLast);
   },[filterDataButtonCoordinator, indexFirst, indexLast]);
 
+  console.log(currentData);
+  
   const handlePaginate=(pageNumber)=>setCurrentPage(pageNumber);
   const numProyectos = proyectosData.length;
 
   const titlesData=[
     {name:"Proyecto", className:"w-[300px] mr-8"},
     {name:"Coordinador", className:"px-4"},
+    {name:"Convenios", className:"w-[50px] "},
     {name:"Investigadores", className:""},
     {name:"Estado", className:""},
     {name:"Inicio", className:""},
     {name:"Fin", className:""},
+    
   ]
   const keysData=[
     "project",
     "coordinator",
+    "agreement",
     "researchers",
     "status",
     "year_start",
-    "year_end"
+    "year_end",
   ]
   
   const estadosSinRepetir = extraerDataSinRepetir(proyectosData, "status");
@@ -102,14 +110,26 @@ export default function TableProyectos({dataProyectos = []}) {
     setCoordinatorData(item);
   }
   const handleSaveDataEditProjects =async(dataDialogComponent)=>{
-    const idDialog = dataDialogComponent?.id;
+    // Preguntar sobre el id de status 
+    // Preguntar si para convenios se debe listar los 
+    // convenios
     const newDataJSONToSend={
       id : dataDialogComponent?.id,
       name : dataDialogComponent?.project,
       coordinator : dataDialogComponent?.coordinator,
-      
+      researchers_added : dataDialogComponent?.authors_added,
+      researchers_deleted : dataDialogComponent?.authors_deleted,
+      agreements_added : [],
+      agreements_deleted : [],
+      status : 2,
+      period : {
+        year_start : dataDialogComponent?.year_start,
+        year_end : dataDialogComponent?.year_end
+      }
     } 
 
+    console.log(newDataJSONToSend);
+    
   }
   const listFilterComponents=[
     <DropdownFiltersComponent data={estadosSinRepetir} titleButton='Estados' titleData={statusData} handleCheckedChange={handleCheckedDropddownStatus} />,

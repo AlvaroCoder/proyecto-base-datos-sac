@@ -71,10 +71,13 @@ export default function DialogProyectos({
     
     setDataDialogProyectos(newObjDataInput);
   }
-  const handleClickClearResearcher=(idResearcher)=>{
+  const handleClickClearResearcher=(idResearcher, objResearcher)=>{
     const newDataResearcher=[...dataDialogProyectos?.researchers].filter(researcher=>researcher?.id !== idResearcher);
+    const newDataResearchersAdded = [...dataDialogProyectos?.authors_added].filter(item=>JSON.stringify(item)!== JSON.stringify(objResearcher))
+
     const newDataProyects = {
       ...dataDialogProyectos,
+      authors_added : newDataResearchersAdded,
       authors_deleted : [...dataDialogProyectos?.authors_deleted, dataDialogProyectos?.researchers?.filter(r=>r?.id === idResearcher)[0]],
       researchers : newDataResearcher
     }
@@ -155,21 +158,22 @@ export default function DialogProyectos({
           className='w-full rounded-lg flex flex-wrap gap-x-4 gap-y-2 items-center'
         >
           {
-            dataDialogProyectos?.researchers?.map((researcher)=>{
+            dataDialogProyectos?.researchers?.map((researcher, key)=>{
+              const {first_name, last_name} = researcher;
               return (
                 <p 
-                key={researcher?.id}
+                key={key}
                 className='p-2 bg-slate-100 rounded-xl w-fit mt-2 text-nowrap'
                 >
                   <span className='mr-2'>
-                    {researcher?.first_name}
+                    {first_name}
                   </span>
                   <span>
-                    {researcher?.last_name}
+                    {last_name}
                   </span>
                   <ClearIcon
                     className='cursor-pointer'
-                    onClick={()=>handleClickClearResearcher(researcher?.id)}
+                    onClick={()=>handleClickClearResearcher(researcher?.id, {first_name, last_name})}
                   />
                 </p>
               )
@@ -222,6 +226,13 @@ export default function DialogProyectos({
             </Button>
           }
         </div>
+      </div>
+      <div className='my-2'>
+          <h1 className='font-bold'>Convenios</h1>
+          <Input 
+            value={dataDialogProyectos?.agreement}
+            disabled={true}
+          />
       </div>
       <div className='my-2'>
         <h1 className='font-semibold'>Estado</h1>

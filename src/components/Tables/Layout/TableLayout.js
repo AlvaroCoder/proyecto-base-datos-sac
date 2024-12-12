@@ -135,10 +135,10 @@ export default function TableLayout({
                                                     )
                                                 }
                                                 if (currentValue !== null && typeof currentValue === 'object' && !Array.isArray(currentValue)) {
-                                                    return <TableCell><p >{currentValue?.value}</p></TableCell>
+                                                    return <TableCell key={idx}><p >{currentValue?.value}</p></TableCell>
                                                 }
                                                 if (keysData[idx] == "link") {
-                                                    return <TableCell >
+                                                    return <TableCell key={idx}>
                                                         <a
                                                             href={currentValue}
                                                             target='_blank'

@@ -94,6 +94,17 @@ export default function TableTrabajos({
         }
         setCourseData(item)
     }
+    const handleSaveDataEditTable=async(dataDialogComponent)=>{
+        const newDataObj={
+            id : dataDialogComponent?.id,
+            title : dataDialogComponent?.title,
+            course : 1,
+            year : dataDialogComponent?.year,
+            link : dataDialogComponent?.link
+        }
+        console.log(newDataObj);
+        
+    }
     const paginate = (pageNumber)=>setCurrentPage(pageNumber);
     const numBooks = trabajosData.length;
 
@@ -118,7 +129,9 @@ export default function TableTrabajos({
             DialogDeleteComponent={DialogDeleteTrabajos}
             DialogCreateComponent={DialogCreateTrabajo}
             dataCourse={dataCourses}
+            dataStatusDialog={cursoSinRepetir}
             handleClickSaveRegister={handleClickSaveRegister}
+            setDataTable={handleSaveDataEditTable}
         />
     </>
   )
