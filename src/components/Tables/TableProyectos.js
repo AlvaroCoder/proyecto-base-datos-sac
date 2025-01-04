@@ -5,17 +5,24 @@ import { DropdownFiltersComponent } from './ui';
 import { extraerDataSinRepetir } from '../commons/tableFunctions';
 import { DialogCreateProyectos, DialogProyectos } from '../Dialogs';
 import DialogDeleteProyectos from '../Dialogs/Deletes/DialogDeleteProyectos';
+import { UPDATE_PROYECTS } from '../commons/apiConnection';
 
 export default function TableProyectos({dataProyectos = []}) {
-  const newDataProyectos = dataProyectos?.map((item)=>({...item, Seleccionado : false}));  
+  const newDataProyectos = dataProyectos?.map((item)=>{
+    const arrAgreements = item?.agreement?.split(";")
+    return {
+      ...item,
+      agreement : arrAgreements,
+      fullNameCoordinator : item?.coordinator?.first_name + " "+ item?.coordinator?.last_name,
+      Seleccionado : false
+    }
+  });  
+  
   const [proyectosData, setProyectosData] = useState(newDataProyectos);
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState("");
   const [statusData, setStatusData] = useState("");
   const [coordinatorData, setCoordinatorData] = useState("");
-
-  
-  
 
   const PROYECTOS_POR_PAGINA = 10;
   const indexLast = currentPage * PROYECTOS_POR_PAGINA;
@@ -30,14 +37,13 @@ export default function TableProyectos({dataProyectos = []}) {
   },[filterData, statusData]);
 
   const filterDataButtonCoordinator=useMemo(()=>{
-    return filterDataButtonStatus.filter(item=>item?.coordinator?.toUpperCase().includes(coordinatorData.toUpperCase()))
+    return filterDataButtonStatus.filter(item=>item?.fullNameCoordinator.toUpperCase().includes(coordinatorData.toUpperCase()) )
   },[filterDataButtonStatus, coordinatorData]);
 
   const currentData = useMemo(()=>{
     return filterDataButtonCoordinator.slice(indexFirst, indexLast);
   },[filterDataButtonCoordinator, indexFirst, indexLast]);
 
-  console.log(currentData);
   
   const handlePaginate=(pageNumber)=>setCurrentPage(pageNumber);
   const numProyectos = proyectosData.length;
@@ -54,7 +60,7 @@ export default function TableProyectos({dataProyectos = []}) {
   ]
   const keysData=[
     "project",
-    "coordinator",
+    "fullNameCoordinator",
     "agreement",
     "researchers",
     "status",
@@ -63,7 +69,7 @@ export default function TableProyectos({dataProyectos = []}) {
   ]
   
   const estadosSinRepetir = extraerDataSinRepetir(proyectosData, "status");
-  const coordinadorSinRepetir = extraerDataSinRepetir(proyectosData, "coordinator");
+  const coordinadorSinRepetir = extraerDataSinRepetir(proyectosData, "fullNameCoordinator");
     
   const handleChangeChecked=(_)=>{
     const newListProyectos = proyectosData.map(proyecto=>({...proyecto, Seleccionado : !proyecto.Seleccionado}))
@@ -109,10 +115,9 @@ export default function TableProyectos({dataProyectos = []}) {
     }
     setCoordinatorData(item);
   }
+  // Funcion de guardar los cambios de la edicion de proyectos
   const handleSaveDataEditProjects =async(dataDialogComponent)=>{
-    // Preguntar sobre el id de status 
-    // Preguntar si para convenios se debe listar los 
-    // convenios
+    
     const newDataJSONToSend={
       id : dataDialogComponent?.id,
       name : dataDialogComponent?.project,
@@ -121,15 +126,32 @@ export default function TableProyectos({dataProyectos = []}) {
       researchers_deleted : dataDialogComponent?.authors_deleted,
       agreements_added : [],
       agreements_deleted : [],
-      status : 2,
+      status : dataDialogComponent?.status === "En Proceso" ? 1 : 2,
       period : {
-        year_start : dataDialogComponent?.year_start,
-        year_end : dataDialogComponent?.year_end
+        year_start : `${dataDialogComponent?.year_start}-01-01`,
+        year_end : `${dataDialogComponent?.year_end}-01-01`
       }
-    } 
-
-    console.log(newDataJSONToSend);
-    
+    }     
+    await UPDATE_PROYECTS(newDataJSONToSend);
+    const jsonNewDataProject = {
+      id : dataDialogComponent?.id,
+      project : dataDialogComponent?.project,
+      coordinator : dataDialogComponent?.coordinator,
+      fullNameCoordinator : dataDialogComponent?.fullNameCoordinator,
+      researchers : dataDialogComponent?.researchers,
+      status : dataDialogComponent?.status,
+      year_end : dataDialogComponent?.year_end,
+      year_start : dataDialogComponent?.year_start,
+      agreement : dataDialogComponent?.agreement,
+      Seleccionado : false
+    }
+    const newDataProjects = proyectosData.map(item=>{
+      if (item?.id === dataDialogComponent?.id) {
+        return jsonNewDataProject
+      }
+      return item
+    })
+    setProyectosData(newDataProjects)
   }
   const listFilterComponents=[
     <DropdownFiltersComponent data={estadosSinRepetir} titleButton='Estados' titleData={statusData} handleCheckedChange={handleCheckedDropddownStatus} />,

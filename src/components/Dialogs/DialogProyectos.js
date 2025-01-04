@@ -6,6 +6,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import _ from "lodash"
 
+// Dialog de editar proyectos
 export default function DialogProyectos({
   initialDataDialog,
   dataDialog : dataDialogProyectos, 
@@ -85,9 +86,11 @@ export default function DialogProyectos({
     setDataDialogProyectos(newDataProyects);
     handleChangeExistChanges();
   }
+
   const handleClickShowFormNewAuthor=()=>{
     setShowFormNewAuthor(!showFormNewAuthor)
   }
+
   const handleChangeChecked=(name_status)=>{
     setDataDialogProyectos({
       ...dataDialogProyectos,
@@ -112,16 +115,44 @@ export default function DialogProyectos({
       </div>
       <div className='my-2 relative'>
         <h1 className='font-semibold'>Coordinador</h1>
-        <Input
-          name="coordinator"
-          value={dataDialogProyectos?.coordinator}
-          onChange={(evt)=>{
-            handleChangeInput(evt, "coordinator");
-            setMostrarDropdownCoordinador(evt.target.valie !== initialDataDialog?.coordinator)
-            setFilterSearchCoordinator(dataCoordinator.filter(item=>item.toUpperCase().includes(evt.target.value.toUpperCase())))
-          }}
-          required  
-        />
+        <div className='flex flex-row items-center'>
+          <div className='flex-1 mr-2'>
+            <h1>Nombre</h1>
+            <Input 
+              value={dataDialogProyectos?.coordinator?.first_name}
+              onChange={(evt)=>{
+                // Funcion de cambiar el nombre del coordinador
+                const value = evt.target.value;
+                setDataDialogProyectos({
+                  ...dataDialogProyectos,
+                  coordinator : {
+                    ...dataDialogProyectos?.coordinator,
+                    first_name : value
+                  }
+                });
+                handleChangeExistChanges();
+              }}
+            />
+          </div>
+          <div className='flex-1'>
+            <h1>Apellido</h1>
+            <Input 
+              value={dataDialogProyectos?.coordinator?.last_name}
+              onChange={(evt)=>{
+                // Funcion de cambiar el apellido del coordinador
+                const value = evt.target.value;
+                setDataDialogProyectos({
+                  ...dataDialogProyectos,
+                  coordinator : {
+                    ...dataDialogProyectos?.coordinator,
+                    last_name : value
+                  }
+                });
+                handleChangeExistChanges();
+              }}
+            />
+          </div>
+        </div>
         {
           (mostrarDropdownCoordinador && filterSearchCoordinator.length > 0) &&
           <div className='absolute mt-2 z-10 shadow-lg rounded-lg p-2 bg-white w-full'>

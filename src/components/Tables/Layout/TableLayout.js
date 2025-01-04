@@ -35,6 +35,7 @@ export default function TableLayout({
     DialogDeleteComponent=React.Component,
     DialogCreateComponent=React.Component,
     dialogTitleEdit="Editar",
+    dialogTitleCreate="Crear registro",
     dataLocationDialog=[],
     dataOriginDialog=[],
     dataPeopleBorrowTo=[],
@@ -44,7 +45,8 @@ export default function TableLayout({
     setDataTable,
     deleteElementFunction,
     handleClickSaveRegister,
-    dataStatusDialog
+    dataStatusDialog,
+    dataListAgreements=[]
 }) 
 {   
     const elementsSelected = currentData?.filter(data=>data.Seleccionado);
@@ -57,11 +59,13 @@ export default function TableLayout({
             />
 
             <DialogCreateUi
+                dialogTitle={dialogTitleCreate}
                 DialogBody={
                 <DialogCreateComponent
                     dataStatus={dataStatusDialog}
                     dataLocation={dataLocationDialog}
                     dataCourse={dataCourse}
+                    dataListAgreements={dataListAgreements}
                     dataPeopleBorrowTo={dataPeopleBorrowTo}
                     handleClickSaveRegister={handleClickSaveRegister}
                 />}  
@@ -185,7 +189,7 @@ export default function TableLayout({
                         ) :
                         (
                             <TableRow className="text-center">
-                                <TableCell colSpan={Object.keys(currentData[0]).length}><h1 className='py-6'>No se encontraron resultados</h1></TableCell>
+                                <TableCell colSpan={titlesData.length   }><h1 className='py-6'>No se encontraron resultados</h1></TableCell>
                             </TableRow>
                         )
                     }

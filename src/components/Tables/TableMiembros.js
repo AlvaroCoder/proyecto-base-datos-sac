@@ -8,6 +8,7 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { DialogCreateUsuario } from '../Dialogs';
+import { REGISTER_MEMBER } from '../commons/apiConnection';
 
 function CardUser({first_name, last_name, email, phone, category}) {
     return(
@@ -36,7 +37,6 @@ export default function TableMiembros({dataMiembros=[]}) {
 
     const [query, setQuery] = useState("");
     const filterData = useMemo(()=>{
-        
         return miembrosData.filter(item=>{
             const nameCompleted = item?.first_name.trim() + " " + item?.last_name.trim();
             return nameCompleted.toUpperCase().includes(query.toUpperCase())
@@ -46,6 +46,13 @@ export default function TableMiembros({dataMiembros=[]}) {
     
     const onChangeInput=(e)=>{
         setQuery(e.target.value);
+    }
+    const handleClickAddMember=async(dataMember)=>{        
+        await REGISTER_MEMBER(dataMember);
+        setMiembrosData([
+            ...miembrosData,
+            dataMember
+        ])
     }
   return (
     <div className='w-full'>
@@ -66,7 +73,7 @@ export default function TableMiembros({dataMiembros=[]}) {
                     <DialogTitle>
                         <h1 className='font-bold'>Nuevo Miembro</h1>
                     </DialogTitle>
-                    <DialogCreateUsuario></DialogCreateUsuario>
+                    <DialogCreateUsuario handleClickAddMember={handleClickAddMember}></DialogCreateUsuario>
                 </DialogContent>
             </Dialog>
         </section>

@@ -4,8 +4,10 @@ import { DialogClose, DialogFooter } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Loader2 } from 'lucide-react';
 import SaveIcon from '@mui/icons-material/Save';
-
-export default function DialogCreateUsuario() {
+import _ from "lodash";
+import { useToast } from '../ui/use-toast';
+export default function DialogCreateUsuario({handleClickAddMember}) {
+  const {toast} = useToast()
   const [dataDialog, setDataDialog] = useState({
     user_name : "",
     first_name : "",
@@ -13,6 +15,7 @@ export default function DialogCreateUsuario() {
     email : "",
     category : "Tesista",
     phone : "",
+    password : "",
     disabled : false
   });
   const [loadingData, setLoadingData] = useState(false);
@@ -24,8 +27,19 @@ export default function DialogCreateUsuario() {
       [target.name] : target.value
     })
   }
-  const handleClickSave=()=>{
-
+  const handleClickSave=async()=>{
+    
+    if ( dataDialog?.user_name.trim() === "" || dataDialog?.first_name.trim() === "" || dataDialog?.last_name.trim() === "") {
+      toast({
+        variant : "destructive",
+        title : "Datos incompletos",
+        description : "Completa el formulario"
+      })
+      return;
+    }    
+    setLoadingData(true);
+    await handleClickAddMember(dataDialog);
+    setLoadingData(false);
   }
   return (
     <section>
@@ -36,6 +50,15 @@ export default function DialogCreateUsuario() {
           value={dataDialog.user_name}
           onChange={handleChangeInput}
           required
+        />
+     </div>
+     <div>
+        <h1 className='font-bold'>Contraseña</h1>
+        <Input
+          name="password"
+          value={dataDialog.password}
+          onChange={handleChangeInput}
+          type="password"
         />
      </div>
      <div className='grid grid-cols-2 gap-2'>
