@@ -5,7 +5,7 @@ import { DropdownFiltersComponent } from './ui';
 import { extraerDataSinRepetir } from '../commons/tableFunctions';
 import { DialogCreateProyectos, DialogProyectos } from '../Dialogs';
 import DialogDeleteProyectos from '../Dialogs/Deletes/DialogDeleteProyectos';
-import { UPDATE_PROYECTS } from '../commons/apiConnection';
+import { DELETE_PROYECT, UPDATE_PROYECTS } from '../commons/apiConnection';
 
 export default function TableProyectos({dataProyectos = []}) {
   const newDataProyectos = dataProyectos?.map((item)=>{
@@ -115,6 +115,19 @@ export default function TableProyectos({dataProyectos = []}) {
     }
     setCoordinatorData(item);
   }
+  // Funcion de agregar proyectos a la tabla de proyectos
+  const handleClickSaveRegister=(data)=>{
+    setProyectosData([
+      data,
+      ...proyectosData
+    ])
+  } 
+  // Funcion de eliminar un elemento de la lista de proyectos
+  const handleClickDelete=async(idDeletedata)=>{
+    await DELETE_PROYECT(idDeletedata);
+    const newDatProjects = dataProyectos.filter(item=>item?.id !== idDeletedata);     
+    setProyectosData(newDatProjects);
+  }
   // Funcion de guardar los cambios de la edicion de proyectos
   const handleSaveDataEditProjects =async(dataDialogComponent)=>{
     
@@ -167,11 +180,13 @@ export default function TableProyectos({dataProyectos = []}) {
       dataCoordinator={coordinadorSinRepetir}
       dataStatusDialog={estadosSinRepetir}
       filtersComponents={listFilterComponents}
+      deleteElementFunction={handleClickDelete}
       setDataTable={handleSaveDataEditProjects}
       handleChangeChecked={handleChangeChecked}
       handleCheckedRow={handleChangeRow}
       handleChangeInput={handleChangeInput}
       handlePaginate={handlePaginate}
+      handleClickSaveRegister={handleClickSaveRegister}
       DialogEditComponent={DialogProyectos}
       DialogDeleteComponent={DialogDeleteProyectos}
       DialogCreateComponent={DialogCreateProyectos}

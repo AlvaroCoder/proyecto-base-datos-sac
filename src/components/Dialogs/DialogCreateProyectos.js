@@ -7,20 +7,24 @@ import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMe
 import { DialogClose, DialogFooter } from '../ui/dialog';
 import { Loader2 } from 'lucide-react';
 import SaveIcon from '@mui/icons-material/Save';
+import { CREATE_PROYECTS } from '../commons/apiConnection';
 
 export default function DialogCreateProyectos({
   dataStatus=[],
-  dataListAgreements=[]
+  dataListAgreements=[],
+  handleClickSaveRegister,
 }) {
 
   const updateDataStatus = dataStatus.map((item, idx)=>{
     if (idx == 0) {
       return {
+        id: idx+1,
         status : item,
         selected : true
       }
     }
     return {
+      id : idx+1,
       status : item,
       selected : false
     }
@@ -66,7 +70,8 @@ export default function DialogCreateProyectos({
       alert("Debe completar el formulario");
       return;
     }
-    const newDataResearcher = [...dataDialog?.researchers, {first_name : refFirstNameResearcher.current.value, last_name: refLasNameResearcher.current.value}]
+    const newDataResearcher = [...dataDialog?.researchers, 
+      {first_name : refFirstNameResearcher.current.value.trim(), last_name: refLasNameResearcher.current.value.trim()}]
     setDataDialog({
       ...dataDialog,
       researchers : newDataResearcher
@@ -117,7 +122,7 @@ export default function DialogCreateProyectos({
     }
     setDataDialog({
       ...dataDialog,
-      agreements : [...dataDialog.agreements, dataAgreement]
+      agreements : [...dataDialog.agreements, dataAgreement.trim()]
     });
     setShowFormAgreements(false)
     setNameAgreement("");
@@ -129,15 +134,40 @@ export default function DialogCreateProyectos({
   // Funcion de guardar el nuevo proyecto
   const handleClickSave=async()=>{
     setLoadingData(true);
-    console.log(dataDialog);
     
-    const adapterSaveData={
-      
+    const newDataJSONProyects={
+      name : dataDialog?.name.trim(),
+      coordinator : {
+        first_name : dataDialog?.coordinator?.first_name.trim(),
+        last_name : dataDialog?.coordinator?.last_name.trim()
+      },
+      period : dataDialog?.period,
+      researchers : dataDialog?.researchers,
+      agreements : dataDialog?.agreements.map(item=>({name : item})),
+      status : newDataStatus.filter(item=>item.selected)[0].id
     }
-    const adapterSaveToSend={
 
+    
+    const response = await CREATE_PROYECTS(newDataJSONProyects);
+    if (response.ok) {
+      handleClickSaveRegister({
+        ...newDataJSONProyects,
+        fullNameCoordinator : newDataJSONProyects?.coordinator.first_name + " "+ newDataJSONProyects?.coordinator.last_name
+      });
+      setLoadingData(false);
+      toast({
+        title :"Exito",
+        description : "Proyecto guardado correctamente"
+      })
+      return;
     }
     setLoadingData(false);
+    toast({
+      variant:"destructive",
+      title : "Error",
+      description : "Ocurrio un error en la base de datos"
+    })
+   setLoadingData(false)
   }
   return (
     <section>
@@ -342,14 +372,34 @@ export default function DialogCreateProyectos({
             <h1 >Fecha Inicio</h1>
             <Input
               type="number"
-              ref={refYearStart}
+              value={dataDialog?.period?.year_start}
+              onChange={(evt)=>{
+                const target = evt.target;
+                setDataDialog({
+                  ...dataDialog,
+                  period:{
+                    year_start : target.value,
+                    year_end : dataDialog.period.year_end
+                  }
+                })
+              }}
             />
           </div>
           <div>
             <h1>Fecha Fin</h1>
             <Input
               type="number"
-              ref={refYearEnd}
+              value={dataDialog?.period?.year_end}
+              onChange={(evt)=>{
+                const target= evt.target;
+                setDataDialog({
+                  ...dataDialog,
+                  period : { 
+                    year_end : target.value,
+                    year_start : dataDialog.period.year_start
+                  }
+                })
+              }}
             />
           </div>
         </section>

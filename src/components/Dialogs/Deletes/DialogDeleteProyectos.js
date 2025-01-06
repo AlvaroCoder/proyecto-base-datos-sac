@@ -5,7 +5,7 @@ import React from 'react'
 import PersonIcon from '@mui/icons-material/Person';
 
 export default function DialogDeleteProyectos({
-    project,
+  project,
     coordinator,
     year_start,
     year_end,
@@ -16,7 +16,7 @@ export default function DialogDeleteProyectos({
       <h1 className='font-bold'>Proyecto</h1>
       <p>"{project}"</p>
       <h1 className='font-bold'>Coordinador</h1>
-      <p><PersonIcon/> {coordinator}</p>
+      <p><PersonIcon/> {coordinator?.first_name} {coordinator?.last_name}</p>
       <h1 className='font-bold'>Estado</h1>
       <p>{status}</p>
       <section className='flex flex-row items-center'>

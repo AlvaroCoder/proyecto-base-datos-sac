@@ -103,3 +103,15 @@ export async function CREATE_PROYECTS(dataProjects) {
         body : JSON.stringify(dataProjects)
     })
 }
+
+export async function DELETE_PROYECT(idProject) {
+    const session = await getSession();
+    return await fetch(BASE_URL+`delete/project/${idProject}`,{
+        method : 'DELETE',
+        headers : {
+            'Content-Type' : 'application/json',
+            'Authorization' : `Bearer ${session?.user?.access_token}`
+        },
+        mode : 'cors'
+    })
+}
