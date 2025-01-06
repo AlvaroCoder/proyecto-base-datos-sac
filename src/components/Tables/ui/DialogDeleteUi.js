@@ -15,7 +15,10 @@ export default function DialogDeleteUi({
     const [loadingData, setloadingData] = useState(false)
     const clickDeleteButton=async()=>{
         setloadingData(true);
+        
         await handleClickDelete(idDeleteData);
+        setOpenDialog(false);
+        
         setloadingData(false);
     }
   return (

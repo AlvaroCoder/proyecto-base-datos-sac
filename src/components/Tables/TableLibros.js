@@ -123,6 +123,7 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
         });
         setLibrosData(newListBooks);
     }
+    // Funcion de actualizar la data de un libro en la tabla
     const handleAddNewDataToTable=async(dataDialogComponent)=>{
         const idDialog = dataDialogComponent?.id;
         const newDataJSONToSend = {
@@ -134,9 +135,7 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
             status : dataDialogComponent?.status?.id,
             borrowed_to : null,
             amount : null
-        }
-        console.log(newDataJSONToSend);
-        
+        }        
         const newDataTable = librosData.map(item=>{
             if (item.id == idDialog) {
                 return dataDialogComponent
@@ -184,6 +183,7 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
         console.log(newDataLibros);
         
     }
+    // Funcion de guardar registro
     const handleClickSaveRegister=(data)=>{
         setLibrosData([
             data,

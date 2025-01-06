@@ -25,11 +25,6 @@ export default function DialogLibros({
     apellidoPersona : ""
   })
 
-  const handleClickClearData=()=>{
-    const updateData=[...dataDialog?.authors].filter((_,idx)=>idx!==key);
-    const existAuthorInAdded = []
-
-  }
   const handleClickClearAuthor=(key)=>{
     const newDataAuthors = [...dataDialog?.authors].filter((_, idx)=>idx!==key);
     const newDataLibros = {

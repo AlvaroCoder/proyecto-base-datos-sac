@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
-import { Input } from '../ui/input'
+import { Input } from '../../ui/input'
 import ClearIcon from '@mui/icons-material/Clear';
 import SaveIcon from '@mui/icons-material/Save';
 
-import { Button } from '../ui/button';
-import { DialogClose, DialogFooter } from '../ui/dialog';
+import { Button } from '../../ui/button';
+import { DialogClose, DialogFooter } from '../../ui/dialog';
 import { Loader2 } from 'lucide-react';
-import { CREATE_PAPER } from '../commons/apiConnection';
-import { useToast } from '../ui/use-toast';
+import { CREATE_PAPER } from '../../commons/apiConnection';
+import { useToast } from '../../ui/use-toast';
 
 export default function DialogCreatePapers({
   handleClickSaveRegister

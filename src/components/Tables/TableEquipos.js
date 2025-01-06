@@ -5,7 +5,7 @@ import TableLayout from './Layout/TableLayout';
 import { DropdownFiltersComponent } from './ui';
 import { extraerDataSinRepetir } from '../commons/tableFunctions';
 import { DialogDeleteEquipos, DialogEquipos } from '../Dialogs';
-import DialogCreateEquipos from '../Dialogs/DialogCreateEquipos';
+import DialogCreateEquipos from '../Dialogs/Creates/DialogCreateEquipos';
 
 export default function TableEquipos({dataEquipos=[]}) {
     const titlesData=[

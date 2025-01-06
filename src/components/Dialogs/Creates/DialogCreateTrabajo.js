@@ -1,12 +1,12 @@
 import React, { useRef, useState } from 'react'
-import { useToast } from '../ui/use-toast'
-import { Input } from '../ui/input';
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import { Button } from '../ui/button';
-import { DialogClose, DialogFooter } from '../ui/dialog';
+import { useToast } from '../../ui/use-toast'
+import { Input } from '../../ui/input';
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '../../ui/dropdown-menu';
+import { Button } from '../../ui/button';
+import { DialogClose, DialogFooter } from '../../ui/dialog';
 import { Loader2 } from 'lucide-react';
 import SaveIcon from '@mui/icons-material/Save';
-import { CREATE_TRABAJOS } from '../commons/apiConnection';
+import { CREATE_TRABAJOS } from '../../commons/apiConnection';
 
 
 export default function DialogCreateTrabajo({
@@ -26,7 +26,8 @@ export default function DialogCreateTrabajo({
   });
   const semesters=[
     {id : 1, value : "I"},
-    {id : 2, value : "II"}
+    {id : 2, value : "II"},
+    {id : 3, value : "Verano"},
   ]
   const [semesterSelected, setSemesterSelected] = useState(semesters[0]);
 

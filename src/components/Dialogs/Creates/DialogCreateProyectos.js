@@ -1,13 +1,13 @@
 import React, { useRef, useState } from 'react'
-import { useToast } from '../ui/use-toast'
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
+import { useToast } from '../../ui/use-toast'
+import { Input } from '../../ui/input';
+import { Button } from '../../ui/button';
 import ClearIcon from '@mui/icons-material/Clear';
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import { DialogClose, DialogFooter } from '../ui/dialog';
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '../../ui/dropdown-menu';
+import { DialogClose, DialogFooter } from '../../ui/dialog';
 import { Loader2 } from 'lucide-react';
 import SaveIcon from '@mui/icons-material/Save';
-import { CREATE_PROYECTS } from '../commons/apiConnection';
+import { CREATE_PROYECTS } from '../../commons/apiConnection';
 
 export default function DialogCreateProyectos({
   dataStatus=[],
@@ -31,14 +31,8 @@ export default function DialogCreateProyectos({
   });
   
   const  {toast} = useToast();
-  const refFirstNameCoordinator=useRef(null);
-  const refLastNameCoordinator=useRef(null);
   const refFirstNameResearcher=useRef(null);
   const refLasNameResearcher=useRef(null);
-  const refYearStart=useRef(null);
-  const refYearEnd=useRef(null);
-
-  
   const [newDataStatus, setNewDataStatus] = useState(updateDataStatus);
   const [loadingData, setLoadingData] = useState(false);
   const [showFormResearchers, setShowFormResearchers] = useState(false);
@@ -141,12 +135,16 @@ export default function DialogCreateProyectos({
         first_name : dataDialog?.coordinator?.first_name.trim(),
         last_name : dataDialog?.coordinator?.last_name.trim()
       },
-      period : dataDialog?.period,
+      period : {
+        year_start : dataDialog?.period?.year_start+"-01-01",
+        year_end : dataDialog?.period?.year_end+"-01-01"
+      },
       researchers : dataDialog?.researchers,
       agreements : dataDialog?.agreements.map(item=>({name : item})),
       status : newDataStatus.filter(item=>item.selected)[0].id
     }
 
+    console.log(newDataJSONProyects);
     
     const response = await CREATE_PROYECTS(newDataJSONProyects);
     if (response.ok) {

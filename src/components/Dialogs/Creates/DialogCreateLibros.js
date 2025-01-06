@@ -1,14 +1,14 @@
 import React, { useRef, useState } from 'react'
-import { Input } from '../ui/input'
+import { Input } from '../../ui/input'
 import ClearIcon from '@mui/icons-material/Clear';
-import { Button } from '../ui/button';
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { Button } from '../../ui/button';
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '../../ui/dropdown-menu';
 import { Loader2 } from 'lucide-react';
 
 import SaveIcon from '@mui/icons-material/Save';
-import { CREATE_BOOK } from '../commons/apiConnection';
-import { useToast } from '../ui/use-toast';
-import { DialogClose, DialogFooter } from '../ui/dialog';
+import { CREATE_BOOK } from '../../commons/apiConnection';
+import { useToast } from '../../ui/use-toast';
+import { DialogClose, DialogFooter } from '../../ui/dialog';
 export default function DialogCreateLibros({
   dataStatus=[],
   dataLocation=[],

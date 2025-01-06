@@ -145,7 +145,11 @@ export default function TableProyectos({dataProyectos = []}) {
         year_end : `${dataDialogComponent?.year_end}-01-01`
       }
     }     
-    await UPDATE_PROYECTS(newDataJSONToSend);
+    
+    console.log(newDataJSONToSend);
+    
+    const response = await UPDATE_PROYECTS(newDataJSONToSend);
+    
     const jsonNewDataProject = {
       id : dataDialogComponent?.id,
       project : dataDialogComponent?.project,

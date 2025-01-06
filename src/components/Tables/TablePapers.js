@@ -4,6 +4,7 @@ import TableLayout from './Layout/TableLayout';
 import { extraerDataSinRepetir } from '../commons/tableFunctions';
 import { DropdownFiltersComponent } from './ui';
 import { DialogCreatePapers, DialogDeletePapers, DialogPapers } from '../Dialogs';
+import { DELETE_PAPER } from '../commons/apiConnection';
 
 export default function TablePapers({dataPapers=[]}) {
     const titlesData=[
@@ -93,6 +94,10 @@ export default function TablePapers({dataPapers=[]}) {
             ...papersData
         ])
     }
+    // Funcion de eliminar paper
+    const handleClickDeletePaper=async(idDeletePaper)=>{
+        await DELETE_PAPER(idDeletePaper)
+    }
   return (
     <>
         <TableLayout
@@ -102,6 +107,7 @@ export default function TablePapers({dataPapers=[]}) {
             numData={numPapers}
             currentPage={currentPage}
             filtersComponents={listFilterComponents}
+            deleteElementFunction={handleClickDeletePaper}
             handleCheckedRow={handleChangeRow}
             handleChangeChecked={handleChangeChecked}
             handleChangeInput={handleChangeInput}

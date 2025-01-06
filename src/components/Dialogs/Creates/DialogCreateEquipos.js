@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Input } from '../ui/input'
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu'
-import { Button } from '../ui/button'
+import { Input } from '../../ui/input'
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../../ui/dropdown-menu'
+import { Button } from '../../ui/button'
 
 function DropdownComponent({
   nameButton="",

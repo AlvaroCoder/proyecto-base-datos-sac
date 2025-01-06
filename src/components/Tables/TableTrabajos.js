@@ -5,6 +5,7 @@ import { DropdownFiltersComponent } from './ui';
 import { extraerDataSinRepetir } from '../commons/tableFunctions';
 import { DialogCreateTrabajo, DialogTrabajos } from '../Dialogs';
 import DialogDeleteTrabajos from '../Dialogs/Deletes/DialogDeleteTrabajos';
+import { DELETE_TRABAJOS, UPDATE_TRABAJOS } from '../commons/apiConnection';
 
 export default function TableTrabajos({
     dataTrabajos=[],
@@ -24,7 +25,7 @@ export default function TableTrabajos({
         "link"
     ]
 
-    const newDataTrabajos = dataTrabajos.map((item)=>({...item, Seleccionado : false}));
+    const newDataTrabajos = dataTrabajos.map((item)=>({...item, Seleccionado : false}));    
     const [trabajosData, setTrabajosData] = useState(newDataTrabajos);
 
     
@@ -102,8 +103,16 @@ export default function TableTrabajos({
             year : dataDialogComponent?.year,
             link : dataDialogComponent?.link
         }
-        console.log(newDataObj);
+        const response =  await UPDATE_TRABAJOS(newDataObj);
         
+    }
+    // Funcion de eliminar un trabajo de la lista de trabajos
+    const handleClickDeleteTrabajo=async(idTrabajo)=>{
+        console.log(idTrabajo);
+        
+        // const response = await DELETE_TRABAJOS(idTrabajo);
+
+
     }
     const paginate = (pageNumber)=>setCurrentPage(pageNumber);
     const numBooks = trabajosData.length;
@@ -130,6 +139,7 @@ export default function TableTrabajos({
             DialogCreateComponent={DialogCreateTrabajo}
             dataCourse={dataCourses}
             dataStatusDialog={cursoSinRepetir}
+            deleteElementFunction={handleClickDeleteTrabajo}
             handleClickSaveRegister={handleClickSaveRegister}
             setDataTable={handleSaveDataEditTable}
         />

@@ -4,8 +4,7 @@ export default function DialogDeleteTrabajos({
   title,
   link,
   year,
-  course,
-  id
+  course,  
 }) {
   return (
     <section className='w-full px-8 my-4'>

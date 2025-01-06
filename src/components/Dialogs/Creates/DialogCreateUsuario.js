@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { Input } from '../ui/input'
-import { DialogClose, DialogFooter } from '../ui/dialog';
-import { Button } from '../ui/button';
+import { Input } from '../../ui/input'
+import { DialogClose, DialogFooter } from '../../ui/dialog';
+import { Button } from '../../ui/button';
 import { Loader2 } from 'lucide-react';
 import SaveIcon from '@mui/icons-material/Save';
 import _ from "lodash";
-import { useToast } from '../ui/use-toast';
+import { useToast } from '../../ui/use-toast';
 export default function DialogCreateUsuario({handleClickAddMember}) {
   const {toast} = useToast()
   const [dataDialog, setDataDialog] = useState({
