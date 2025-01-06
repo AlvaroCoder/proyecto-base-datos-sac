@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react'
-import { Input } from '../ui/input'
-import { Textarea } from '../ui/textarea';
-import { Button } from '../ui/button';
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { Input } from '../../ui/input'
+import { Textarea } from '../../ui/textarea';
+import { Button } from '../../ui/button';
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../../ui/dropdown-menu';
 
 export default function DialogEquipos({
     initialDataDialog,

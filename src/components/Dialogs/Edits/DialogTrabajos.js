@@ -1,9 +1,9 @@
 'use client'
 import React from 'react'
-import { Input } from '../ui/input'
-import { Textarea } from '../ui/textarea';
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import { Button } from '../ui/button';
+import { Input } from '../../ui/input'
+import { Textarea } from '../../ui/textarea';
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '../../ui/dropdown-menu';
+import { Button } from '../../ui/button';
 import _ from "lodash";
 
 export default function DialogTrabajos({

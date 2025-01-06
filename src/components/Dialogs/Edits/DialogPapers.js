@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Input } from '../ui/input'
-import { Button } from '../ui/button';
+import { Input } from '../../ui/input'
+import { Button } from '../../ui/button';
 
 import ClearIcon from '@mui/icons-material/Clear';
 export default function DialogPapers({

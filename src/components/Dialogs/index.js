@@ -1,8 +1,8 @@
-export {default as DialogLibros} from "./DialogLibros";
-export {default as DialogEquipos} from "./DialogEquipos";
-export {default as DialogProyectos} from "./DialogProyectos";
-export {default as DialogTrabajos} from "./DialogTrabajos";
-export {default as DialogPapers} from "./DialogPapers";
+export {default as DialogLibros} from "./Edits/DialogLibros";
+export {default as DialogEquipos} from "./Edits/DialogEquipos";
+export {default as DialogProyectos} from "./Edits/DialogProyectos";
+export {default as DialogTrabajos} from "./Edits/DialogTrabajos";
+export {default as DialogPapers} from "./Edits/DialogPapers";
 
 export {default as DialogCreateEquipos} from "./Creates/DialogCreateEquipos";
 export {default as DialogCreateLibros} from "./Creates/DialogCreateLibros"; 

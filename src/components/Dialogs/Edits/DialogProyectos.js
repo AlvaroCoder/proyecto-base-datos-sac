@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react'
-import { Input } from '../ui/input'
-import { Button } from '../ui/button';
-import { Textarea } from '../ui/textarea';
+import { Input } from '../../ui/input'
+import { Button } from '../../ui/button';
+import { Textarea } from '../../ui/textarea';
 import ClearIcon from '@mui/icons-material/Clear';
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../../ui/dropdown-menu';
 import _ from "lodash"
 
 // Dialog de editar proyectos
