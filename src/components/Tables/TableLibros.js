@@ -46,11 +46,11 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
 
 
     const filterData =useMemo(()=>{
-        return  librosData.filter(item=>item?.title?.toUpperCase().includes(query.toUpperCase()))
+        return  librosData.filter(item=>item?.title?.value.toUpperCase().includes(query.toUpperCase()))
     },[librosData, query]);
     
     const filterButtonLocation=useMemo(()=>{
-        return filterData.filter(item=>item?.location[0].value.toUpperCase().includes(locationData.toUpperCase()))
+        return filterData.filter(item=>item?.location.value.toUpperCase().includes(locationData.toUpperCase()))
     },[filterData, locationData])
     
     const filterButtonStatus=useMemo(()=>{

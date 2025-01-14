@@ -28,7 +28,6 @@ export default function Page() {
             Libros
         </h1>
         {loadingDataLibros || loadingDataStatus || loadingDataLocations ? <SkeletonTable headers={headersLibros}/> : <TableLibros 
-        
         dataLibros={dataLibros} 
         dataLocations={dataLocations?.locations} 
         dataStatus={dataStatus?.status}/>}

@@ -44,7 +44,7 @@ export default function TableTrabajos({
     },[trabajosData, query]);
     
     const filterDataButtonCourse = useMemo(()=>{
-        return filterData.filter(item=>item?.course?.toUpperCase().includes(courseData.toUpperCase()))
+        return filterData.filter(item=>item?.course?.value.toUpperCase().includes(courseData.toUpperCase()))
     },[filterData, courseData])
     
     const currentData = useMemo(()=>{

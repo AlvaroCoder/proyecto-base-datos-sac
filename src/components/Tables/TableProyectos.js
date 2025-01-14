@@ -33,7 +33,7 @@ export default function TableProyectos({dataProyectos = []}) {
   },[proyectosData, query]);
 
   const filterDataButtonStatus=useMemo(()=>{
-    return filterData.filter(item=>item?.status?.toUpperCase().includes(statusData.toUpperCase()))
+    return filterData.filter(item=>item?.status?.value.toUpperCase().includes(statusData.toUpperCase()))
   },[filterData, statusData]);
 
   const filterDataButtonCoordinator=useMemo(()=>{

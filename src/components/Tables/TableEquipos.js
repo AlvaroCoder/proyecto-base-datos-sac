@@ -59,7 +59,7 @@ export default function TableEquipos({dataEquipos=[]}) {
     },[filterDataStatus, locationData])
 
     const filterDataType=useMemo(()=>{
-        return filterDataLocation.filter(item=>item?.type.toUpperCase().includes(typeData.toUpperCase()))
+        return filterDataLocation.filter(item=>item?.type?.value.toUpperCase().includes(typeData.toUpperCase()))
     },[filterDataLocation, typeData])
 
     const currentData = useMemo(()=>{

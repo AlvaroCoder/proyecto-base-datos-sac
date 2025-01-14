@@ -127,7 +127,17 @@ export default function TableLayout({
                                                             <div className="flex flex-wrap gap-x-4 gap-y-2">
                                                                 {
                                                                     currentValue.map((val, idx)=>{
-                                                                        return idx < 3 && <p key={idx} className='px-4 py-2 bg-slate-100 rounded-sm w-fit shadow-sm'>{ Object.values(val).filter(i=>!Number.isInteger(i)).map((v, idx)=><span key={idx}>{v}</span>)}</p>
+                                                                        return idx < 3 && <p key={idx} className='px-4 py-2 bg-slate-100 rounded-sm w-fit shadow-sm'>{ Object.values(val).filter(i=>{
+                                                                            if (Number.isInteger(i)) {
+                                                                                return false
+                                                                            }
+                                                                            if (typeof i === 'object') {
+                                                                                return false
+                                                                            }                                                                            
+                                                                            return true
+                                                                        }).map((v, idx)=>{
+                                                                            return <span key={idx}>{v}</span>
+                                                                        })}</p>
                                                                     })
                                                                 }
                                                                 {
@@ -151,6 +161,7 @@ export default function TableLayout({
                                                         </a>
                                                     </TableCell>
                                                 }
+
                                                 return (
                                                     <TableCell key={idx}>
                                                         <p className='text-justify'> {currentValue}</p>
