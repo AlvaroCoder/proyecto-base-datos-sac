@@ -7,7 +7,13 @@ import { extraerDataSinRepetir } from '../commons/tableFunctions';
 import { DialogDeleteEquipos, DialogEquipos } from '../Dialogs';
 import DialogCreateEquipos from '../Dialogs/Creates/DialogCreateEquipos';
 
-export default function TableEquipos({dataEquipos=[]}) {
+export default function TableEquipos({
+    dataEquipos=[], 
+    dataStatusEquipos=[],
+    dataTypeEquipos=[],
+    dataLocationEquipos=[]
+}) {
+    
     const titlesData=[
         {name:"Equipo", className:"w-[400px]"},
         {name:"Comentarios", className:""},
@@ -132,9 +138,9 @@ export default function TableEquipos({dataEquipos=[]}) {
         keysData={keysData}
         numData={numEquipos}
         currentPage={currentPage}
-        dataLocationDialog={ubicacionSinRepetir}
-        dataStatusDialog={estadosSinRepetir}
-        dataTypeDialog={tiposSinRepetir}
+        dataLocationDialog={dataLocationEquipos}
+        dataStatusDialog={dataStatusEquipos}
+        dataTypeDialog={dataTypeEquipos}
         dataOriginDialog={origenSinRepetir}
         filtersComponents={listFiltersEquipos}
         handleCheckedRow={handleChangeRow}

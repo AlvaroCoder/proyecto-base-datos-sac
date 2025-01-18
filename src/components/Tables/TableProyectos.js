@@ -7,7 +7,13 @@ import { DialogCreateProyectos, DialogProyectos } from '../Dialogs';
 import DialogDeleteProyectos from '../Dialogs/Deletes/DialogDeleteProyectos';
 import { DELETE_PROYECT, UPDATE_PROYECTS } from '../commons/apiConnection';
 
-export default function TableProyectos({dataProyectos = []}) {
+export default function TableProyectos({
+  dataProyectos = [],
+  dataMiembros = [],
+  dataCargosUsuarios=[],
+  dataStatus=[],
+  dataAgreements=[]
+}) {
   const newDataProyectos = dataProyectos?.map((item)=>{
     const arrAgreements = item?.agreement?.split(";")
     return {
@@ -177,12 +183,15 @@ export default function TableProyectos({dataProyectos = []}) {
   return (
     <TableLayout
       titlesData={titlesData}
+      dataMembers={dataMiembros}
       currentData={currentData} 
+      dataCategoriesUser={dataCargosUsuarios}
+      dataListAgreements={dataAgreements}
+      dataStatusDialog={dataStatus}
       keysData={keysData}
       numData={numProyectos}
       currentPage={currentPage}
       dataCoordinator={coordinadorSinRepetir}
-      dataStatusDialog={estadosSinRepetir}
       filtersComponents={listFilterComponents}
       deleteElementFunction={handleClickDelete}
       setDataTable={handleSaveDataEditProjects}

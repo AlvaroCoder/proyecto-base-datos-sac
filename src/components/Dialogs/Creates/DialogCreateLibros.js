@@ -2,13 +2,13 @@ import React, { useRef, useState } from 'react'
 import { Input } from '../../ui/input'
 import ClearIcon from '@mui/icons-material/Clear';
 import { Button } from '../../ui/button';
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '../../ui/dropdown-menu';
-import { Loader2 } from 'lucide-react';
+import { ChevronsUpDown, Loader2 } from 'lucide-react';
 
 import SaveIcon from '@mui/icons-material/Save';
 import { CREATE_BOOK } from '../../commons/apiConnection';
 import { useToast } from '../../ui/use-toast';
 import { DialogClose, DialogFooter } from '../../ui/dialog';
+import DropdownMenuComponent from '@/components/elementos/dropdownComponent';
 export default function DialogCreateLibros({
   dataStatus=[],
   dataLocation=[],
@@ -17,10 +17,11 @@ export default function DialogCreateLibros({
 }) {
   const {toast} = useToast();
   const refAuthorName =useRef(null);
+
   const [loadingData, setLoadingData] = useState(false);
 
   const [dataDialog, setDataDialog] = useState({
-    author : [],
+    authors : [],
     title : '',
     location : {
       value : dataLocation[0]?.value,
@@ -29,7 +30,12 @@ export default function DialogCreateLibros({
     status : {
       value : dataStatus[0]?.value,
       id : dataStatus[0]?.id
-    }
+    },
+    borrowed_to : {
+      first_name : "",
+      last_name : ""
+    },
+    amount : 1
   });
   const [showFormAuthor, setShowFormAuthor] = useState(false);
 
@@ -40,24 +46,17 @@ export default function DialogCreateLibros({
     })
   }
   const handleClickClearAuthor=(key)=>{
-    const newDataAuthors=[...dataDialog?.author].filter((_, idx)=>idx!==key);
+    const newDataAuthors=[...dataDialog?.authors].filter((_, idx)=>idx!==key);
     setDataDialog({
       ...dataDialog,
-      author : newDataAuthors
+      authors : newDataAuthors
     });
 
   }
   const handleClickShowFormNewAuthor=()=>{
     setShowFormAuthor(!showFormAuthor);
   }
-  const handleChangeCheckedDropdown=(id, keyValue)=>{
-    const jsonSelected= keyValue=="location" ? dataLocation?.filter(elem=>elem?.id == id)[0] : dataStatus?.filter(elem=>elem?.id==id)[0];
 
-    setDataDialog({
-      ...dataDialog,
-      [keyValue] : jsonSelected
-    })
-  }
   const handleClickAddAuthor=(evt)=>{
     evt.preventDefault();
     if (refAuthorName.current.value === "") {
@@ -65,10 +64,10 @@ export default function DialogCreateLibros({
       return;
     }
     const authorData = refAuthorName.current.value;
-    const newDataAtuhors = [...dataDialog?.author, {name : authorData}]
+    const newDataAtuhors = [...dataDialog?.authors, {value : authorData}]
     setDataDialog({
       ...dataDialog,
-      author : newDataAtuhors
+      authors : newDataAtuhors
     });
     setShowFormAuthor(false );
     refAuthorName.current.value = null;
@@ -79,32 +78,7 @@ export default function DialogCreateLibros({
     refAuthorName.current.value=null;
   }
   const handleClickSave=async()=>{
-    const adapterSaveData = {
-      authors : dataDialog.author,
-      title : dataDialog.title,
-      location : [
-        dataDialog.location
-      ],
-      status :dataDialog.status,
-      borrowed_to : "NO PRESTADO",
-      amount : 1
-    };
-    const adapterSaveToSend={
-      title : dataDialog.title,
-      authors : dataDialog.author,
-      location : dataDialog.location.id,
-      status : dataDialog.status.id,
-      borrowed_to : null,
-      amount : 1
-    }
-    setLoadingData(true)
-    handleClickSaveRegister(adapterSaveData);
-    await CREATE_BOOK(adapterSaveToSend);
-    setLoadingData(false);
-    toast({
-      title : "Exito",
-      description : "Libro guardado con exito"
-    })
+    console.log(dataDialog);
   }
   const handleClickCancelSave=()=>{
 
@@ -112,7 +86,7 @@ export default function DialogCreateLibros({
   return (
    <section>
     <div className='my-2'>
-      <h1>Titulo</h1>
+      <h1 className='font-bold'>Titulo</h1>
       <Input
         name="title"
         value={dataDialog.title}
@@ -121,13 +95,13 @@ export default function DialogCreateLibros({
       />
     </div>
     <div className='my-2'>
-      <h1>Autor</h1>
+      <h1 className='font-bold'>Autor</h1>
       <div className='w-full rounded-lg flex flex-wrap gap-x-4'>
         {
-          dataDialog.author.map((author, key)=>{
+          dataDialog.authors.map((author, key)=>{
             return (
-              <p key={key} className='p-2 bg-slate-100 rounded-xl w-fit mt-2 text-nowrap' >
-                {author?.name}
+              <p key={key} className='p-2 hover:bg-gray-200 border border-gray-100 rounded-lg w-fit mt-2 text-nowrap' >
+                {author?.value}
                 <ClearIcon
                   className='cursor-pointer'
                   onClick={()=>handleClickClearAuthor(key)}
@@ -168,10 +142,13 @@ export default function DialogCreateLibros({
           </section> : 
           <Button
             variant="ghost"
-            className="text-guinda underline hover:bg-white hover:text-guinda"
+            className="w-full shadow-sm border border-gray-100"
             onClick={handleClickShowFormNewAuthor}  
           >
-            Agregar Autor
+            <p>Agregar autor</p>
+            <ChevronsUpDown
+              className='opacity-50'
+            />
           </Button>
         }
       </div>
@@ -179,67 +156,62 @@ export default function DialogCreateLibros({
     <div className='my-2 flex flex-row items-center'>
       <div className='w-[300px] flex flex-col'>
         <h1 className='font-bold'>Ubicación</h1>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              className="w-full border-gray-100 border-[1px] shadow-sm"
-            >
-              <span>{dataDialog.location.value}</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            {
-              dataLocation?.map(item=>
-                <DropdownMenuCheckboxItem
-                  key={item.id}
-                  className="capitalize"
-                  checked={item?.id === dataDialog?.location.id}
-                  onCheckedChange={()=>handleChangeCheckedDropdown(item.id, "location")}
-                 >
-                  {item.value}
-                </DropdownMenuCheckboxItem>
-              )
-            }
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <DropdownMenuComponent
+          data={dataLocation}
+          initialValue={dataDialog?.location}
+          changeData={(data)=>setDataDialog({
+            ...dataDialog,
+            location : data
+          })}
+        />
       </div>
       <div className='flex-1 ml-2'>
-        <h1>Estado</h1>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              className="w-full border-gray-100 border-[1px] shadow-sm"
-              variant="ghost"
-            >
-              <span>{dataDialog.status.value}</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            {
-              dataStatus?.map(item=>
-                <DropdownMenuCheckboxItem
-                  key={item.id}
-                  className="capitalize"
-                  checked={item?.id===dataDialog?.status.id}
-                  onCheckedChange={()=>handleChangeCheckedDropdown(item?.id, "status")}
-                >
-                  {item?.value}
-                </DropdownMenuCheckboxItem>
-              )
-            }
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <h1 className='font-bold'>Estado</h1>
+        <DropdownMenuComponent
+          data={dataStatus}
+          initialValue={dataDialog?.status}
+          changeData={(data)=>setDataDialog({
+            ...dataDialog,
+            status : data
+          })}
+        />
       </div>
     </div>
-    <div className='flex-1 border-b-2 border-b-guindaOpaco py-2 my-4'>
+    <div className='flex-1  py-2 mt-2'>
       <h1 className='font-bold'>
         Prestado a 
       </h1>
     </div>
-    <div className='w-full mb-4'>
-            
-    </div>
+    <section className='w-full mb-4 flex flex-row items-center'>
+      <div className='flex-1 mr-2'>
+        <h1 className=''>Nombre</h1>
+        <Input  
+          name="first_name"
+          value={dataDialog?.borrowed_to?.first_name}
+          onChange={(evt)=>setDataDialog({
+            ...dataDialog,
+            borrowed_to : {
+              first_name : evt.target.value,
+              last_name : dataDialog?.borrowed_to.last_name
+            }
+          })}
+        />
+      </div>
+      <div className='flex-1'>
+        <h1>Apellido</h1>
+        <Input
+          name="last_name"
+          value={dataDialog?.borrowed_to?.last_name}
+          onChange={(evt)=>setDataDialog({
+            ...dataDialog,
+            borrowed_to : {
+              first_name : dataDialog?.borrowed_to.first_name,
+              last_name : evt.target.value
+            }
+          })}
+        />
+      </div>
+    </section>
     <DialogFooter className='flex flex-row items-center my-4'>
       <DialogClose asChild>
       <Button

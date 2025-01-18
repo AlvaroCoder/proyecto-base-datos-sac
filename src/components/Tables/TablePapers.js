@@ -6,7 +6,10 @@ import { DropdownFiltersComponent } from './ui';
 import { DialogCreatePapers, DialogDeletePapers, DialogPapers } from '../Dialogs';
 import { DELETE_PAPER } from '../commons/apiConnection';
 
-export default function TablePapers({dataPapers=[]}) {
+export default function TablePapers({
+    dataPapers=[],
+    dataMiembros=[]
+}) {
     const titlesData=[
         {name : "Titulo", className: "w-[300px]"},
         {name : "Miembros", className: "w-[500px] px-2"},
@@ -105,6 +108,7 @@ export default function TablePapers({dataPapers=[]}) {
             currentData={currentData}
             keysData={keysData}
             numData={numPapers}
+            dataMembers={dataMiembros}
             currentPage={currentPage}
             filtersComponents={listFilterComponents}
             deleteElementFunction={handleClickDeletePaper}

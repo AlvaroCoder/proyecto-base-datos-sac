@@ -20,6 +20,7 @@ import { DialogDeleteMultiplesElements } from '@/components/Dialogs'
 
 export default function TableLayout({
     currentData=[],
+    dataCategoriesUser=[],
     titlesData=[],
     handleChangeInput,
     handleChangeChecked,
@@ -42,6 +43,7 @@ export default function TableLayout({
     dataTypeDialog=[],
     dataCourse=[],
     dataCoordinator=[],
+    dataMembers=[],
     setDataTable,
     deleteElementFunction,
     handleClickSaveRegister,
@@ -64,7 +66,10 @@ export default function TableLayout({
                 <DialogCreateComponent
                     dataStatus={dataStatusDialog}
                     dataLocation={dataLocationDialog}
+                    dataTypes={dataTypeDialog}
                     dataCourse={dataCourse}
+                    dataCategoriesUser={dataCategoriesUser}
+                    dataMembers={dataMembers}
                     dataListAgreements={dataListAgreements}
                     dataPeopleBorrowTo={dataPeopleBorrowTo}
                     handleClickSaveRegister={handleClickSaveRegister}

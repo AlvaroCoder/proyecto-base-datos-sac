@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '../ui/dialog'
 import { DialogCreateUsuario } from '../Dialogs';
 import { REGISTER_MEMBER } from '../commons/apiConnection';
 
-function CardUser({first_name, last_name, email, phone, category}) {
+function CardUser({first_name, last_name, email, phone, role}) {
     return(
         <div className='shadow-sm rounded-sm p-4 flex flex-row border border-slate-50'>
             <div>
@@ -20,7 +20,7 @@ function CardUser({first_name, last_name, email, phone, category}) {
                 <h1 className='capitalize font-bold text-xl'>
                     {first_name}, {last_name}
                 </h1>
-                <h2 className='px-2 py-1 my-2 text-sm rounded-sm bg-guindaOpaco text-white w-fit'>{category}</h2>
+                <h2 className='px-2 py-1 my-2 text-sm rounded-sm bg-guindaOpaco text-white w-fit'>{role?.value}</h2>
                 <div>
                     <p className='text-sm cursor-pointer'><EmailIcon/> {email}</p>
                     <p className='text-sm'><PhoneIcon/> {phone}</p>
@@ -31,7 +31,10 @@ function CardUser({first_name, last_name, email, phone, category}) {
     )
 }
 
-export default function TableMiembros({dataMiembros=[]}) {
+export default function TableMiembros({
+    dataMiembros=[],
+    dataCargosMiembros=[]
+}) {
     const newDataMiembros = dataMiembros?.map((item)=>({...item, Seleccionado : false}))
     const [miembrosData, setMiembrosData] = useState(newDataMiembros);
 

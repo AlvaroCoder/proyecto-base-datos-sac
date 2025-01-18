@@ -5,8 +5,16 @@ import React from 'react'
 
 export default function Page() {
   const  URL_EQUIPOS = process.env.NEXT_PUBLIC_URL_EQUIPOS;
-  const {loading : loadingDataEquipos, dataResponse : dataEquipos, error : errorDataEquipos, sessionUser : sessionUserEquipos} = useFetch(URL_EQUIPOS);  
-    const headersEquipos = [
+  const  URL_STATUS_EQUIPOS = process.env.NEXT_PUBLIC_URL_STATUS_EQUIPOS;
+  const  URL_LOCATION_EQUIPOS = process.env.NEXT_PUBLIC_URL_LOCATION_EQUIPOS;
+  const URL_TYPE_LOCATIONS = process.env.NEXT_PUBLIC_URL_TYPE_EQUIPOS;
+
+  const {loading : loadingDataEquipos, dataResponse : dataEquipos, error : errorDataEquipos} = useFetch(URL_EQUIPOS);  
+  const {loading : loadingDataStatusEquipos, dataResponse : dataStatusEquipos} = useFetch(URL_STATUS_EQUIPOS);
+  const {loading : loadingDataLocationEquipos, dataResponse : dataLocationEquipos} = useFetch(URL_LOCATION_EQUIPOS);
+  const {loading : loadingDataTypeEquipos, dataResponse :dataTypeEquipos} = useFetch(URL_TYPE_LOCATIONS);
+  
+  const headersEquipos = [
     "Descripcion",
     "Tipo",
     "Origen",
@@ -21,10 +29,13 @@ export default function Page() {
             Equipos
         </h1>
         {
-          loadingDataEquipos ? <SkeletonTable headers={headersEquipos}/> : 
+          (loadingDataEquipos || loadingDataStatusEquipos || loadingDataLocationEquipos || loadingDataTypeEquipos) ? 
+          <SkeletonTable headers={headersEquipos}/> : 
           <TableEquipos
             dataEquipos={dataEquipos}
-            
+            dataLocationEquipos={dataLocationEquipos?.locations}
+            dataStatusEquipos={dataStatusEquipos?.status}
+            dataTypeEquipos={dataTypeEquipos?.equipment_types}
           />
         }
 
