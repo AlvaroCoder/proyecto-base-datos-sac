@@ -191,7 +191,7 @@ export default function TableProyectos({
       keysData={keysData}
       numData={numProyectos}
       currentPage={currentPage}
-      dataCoordinator={coordinadorSinRepetir}
+      dataCoordinator={dataMiembros}
       filtersComponents={listFilterComponents}
       deleteElementFunction={handleClickDelete}
       setDataTable={handleSaveDataEditProjects}

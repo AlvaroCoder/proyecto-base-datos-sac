@@ -9,7 +9,8 @@ export default function popOverAddList({
     data=[],
     handleClickAddMember,
     componentAdd=null,
-    dataMembers=true
+    dataMembers=true,
+    textButton="Agregar Item"
 }) {
     const [queryInput, setQueryInput] = useState("");
     const filterData = useMemo(()=>{
@@ -31,7 +32,7 @@ export default function popOverAddList({
                 variant="ghost"
                 className="w-full border border-gray-200 shadow-sm"
             >
-                <p>Agregar Item</p>
+                <p>{textButton}</p>
                 <ChevronsUpDown
                     className='opacity-50'
                 />

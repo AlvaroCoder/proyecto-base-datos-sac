@@ -1,143 +1,104 @@
 import React, { useState } from 'react'
 import { Input } from '../../ui/input'
-import { Button } from '../../ui/button';
-
-import ClearIcon from '@mui/icons-material/Clear';
+import { ButtonCloseDialog,  ListCardShort,  PopoverAddList } from '@/components';
+import { useToast } from '@/components/ui/use-toast';
 export default function DialogPapers({
+    initialDataDialog,
     dataDialog,
     setDataDialog : setDataDialogPaper,
-    handleChangeExistChanges
+    handleChangeExistChanges,
+    dataMembers=[]
 }) {
-    console.log(dataDialog);
-    
-    const [showFormNewMember, setShowFormNewMember] = useState(false);
-    const [inputValueMember, setInputValueMember] = useState({
-        first_name : "",
-        last_name : ""
+    const {toast} = useToast();
+    const [dataPapers, setDataPapers] = useState({
+        id : initialDataDialog?.id,
+        title : initialDataDialog?.title,
+        course : initialDataDialog?.course,
+        members : initialDataDialog?.members,
+        members_added : [],
+        members_deleted : [],
+        year : initialDataDialog?.year,
+        link : initialDataDialog?.link
     })
-    const handleChangeFormMember=(evt)=>{
-        const target = evt.target;
-        setInputValueMember({
-            ...inputValueMember,
-            [target.name] : target.value
-        })
-    }
-    const handleChangeTitleDialog=(evt)=>{
-        const inputValue = evt.target.value;
-        if (inputValue !== dataDialog.title) {
-            handleChangeExistChanges();
+    const handleClickAddMember=(data)=>{
+        const existeMiembro = dataPapers.members_added.some(item=>JSON.stringify(data) === JSON.stringify(item)) || dataPapers.members?.some(item=>JSON.stringify(data) === JSON.stringify(item));
+        if (!existeMiembro) {
+            setDataPapers({
+                ...dataPapers,
+                members : [...dataPapers.members, data],
+                members_added : [...dataPapers.members_added, data]
+            })
+        }else {
+            toast({
+                variant : "destructive",
+                title : "Error de agregar",
+                description : "No se puede agregar la misma persona 2 veces"
+            })
         }
-        setDataDialogPaper({
-            ...dataDialog,
-            title : inputValue
-        })
     }
-    const handleClickShowFormNewMember=()=>{
-        setShowFormNewMember(!showFormNewMember);
-    }
-    const handleClickDeleteMember=()=>{
+    const handleClickClearMember=(id, data)=>{
+        const existeMiembroAgregado = dataPapers.members_added.some(obj=>JSON.stringify(data) === obj);
+        console.log(existeMiembroAgregado, dataPapers.members_added);
         
+        const nuevaDataMiembrosAgregado = !existeMiembroAgregado ? [...dataPapers.members_added].filter((obj)=>JSON.stringify(obj)!==JSON.stringify(data)) : [...dataPapers.members_added];
+        console.log(nuevaDataMiembrosAgregado);
+        
+        setDataPapers(prev=>({
+            ...dataPapers,
+            members : [...prev.members].filter((_,idx)=>idx!==id),
+            members_added : nuevaDataMiembrosAgregado,
+            members_deleted : [...prev.members_deleted, data]
+        }))
     }
-    const handleClickAddMember=()=>{
-
-    }
-    const handleClickCancelMember=()=>{
-
+    const handleClickSave=()=>{
+        console.log(dataPapers);
+        
     }
   return (
     <section>
         <div className='my-2'>
-            <h1>Titulo</h1>
+            <h1 className='font-bold'>Titulo</h1>
             <Input
                 name="title"
-                value={dataDialog?.title}
-                onChange={handleChangeTitleDialog}
+                value={dataPapers?.title}
             />
         </div>
         <div className='my-2'>
-            <h1>Miembros</h1>
-            <div className='w-full rounded-lg flex flex-wrap gap-x-4 gap-y-2 items-center'>
-                {
-                    dataDialog?.members?.map((member,key)=>{
-                        return(
-                            <p key={key} className='p-2 bg-slate-100 rounded-xl w-fit mt-2 text-nowrap'>
-                                <span className='mr-2'>
-                                    {member?.first_name}, {member?.last_name}
-                                    <ClearIcon
-                                        className='cursor-pointer'
-                                        onClick={handleClickDeleteMember}
-                                    />
-                                </span>
-                            </p>
-                        )
-                    })
-                }
-            </div>
+            <h1 className='font-bold'>Miembros</h1>
+            <ListCardShort
+                data={dataPapers?.members}
+                handleClickClear={handleClickClearMember}
+            />
             <div className='mt-2'>
-                {
-                    showFormNewMember ?
-                    <section className='p-4 rounded-lg bg-slate-50'>
-                        <h1>Nuevo Miembro</h1>
-                        <div className='grid grid-cols-2 gap-2'>
-                            <div className='flex-1'>
-                                <label>Nombre</label>
-                                <Input
-                                    name="first_name"
-                                    value={inputValueMember.first_name}
-                                    onChange={handleChangeFormMember}
-                                />
-                            </div>
-                            <div className='flex-1'>
-                                <label>Apellido</label>
-                                <Input
-                                    name="last_name"
-                                    value={inputValueMember?.last_name}
-                                    onChange={handleChangeFormMember}
-                                />
-                            </div>
-                        </div>
-                        <div className='mt-2'>
-                            <Button
-                                className="bg-white text-guinda border-2 border-guinda hover:bg-red-50"
-                                onClick={handleClickAddMember}
-                            >
-                                Agregar
-                            </Button>
-                            <Button
-                                variant="ghost"
-                                className="mx-2"
-                                onClick={handleClickCancelMember}
-                            >
-                                Cancelar
-                            </Button>
-                        </div>
-                    </section> :
-                    <Button
-                    variant="ghost"
-                    className="text-guinda underline hover:bg-white hover:text-guinda"
-                    onClick={handleClickDeleteMember}
-                    >
-                        Agregar Miembro
-                    </Button>
-                }
+                <PopoverAddList
+                    data={dataMembers}
+                    textButton='Agregar Miembros'
+                    handleClickAddMember={handleClickAddMember} 
+                />
             </div>
+            
         </div>
-        <div className='my-2'>
-            <h1 className='font-semibold'>Año</h1>
-            <Input
-                type="number"
-                name="year"
-                value={dataDialog?.year}
-            />
-        </div>
-        <div className='my-2'>
-            <h1 className='font-semibold'>Link</h1>
-            <Input
-                type="text"
-                name="link"
-                value={dataDialog?.link}
-            />
-        </div>
+        <section className='flex flex-row items-center'>
+            <div className='my-2 flex-1'>
+                <h1 className='font-semibold'>Link</h1>
+                <Input
+                    type="text"
+                    name="link"
+                    value={dataPapers?.link}
+                />
+            </div>
+            <div className='my-2 w-[100px] ml-2'>
+                <h1 className='font-semibold'>Año</h1>
+                <Input
+                    type="number"
+                    name="year"
+                    value={dataPapers?.year}
+                />
+            </div>
+        </section>
+        <ButtonCloseDialog
+            handleClickSave={handleClickSave}
+        />
     </section>
   )
 }

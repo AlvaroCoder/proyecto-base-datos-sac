@@ -18,7 +18,7 @@ export default function Page() {
         {
           (loadingDataMiembros || loadingDataCategoriasMiembros) ? <p>Cargando datos ...</p> :
           <TableMiembros
-            dataCargosMiembros={dataCategoriasMiembros}
+            dataCargosMiembros={dataCategoriasMiembros?.agreements}
             dataMiembros={dataResponseMiembros?.users}
           />
         }

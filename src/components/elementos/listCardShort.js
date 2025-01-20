@@ -16,10 +16,12 @@ export default function listCardShort({
                         className='p-2 border border-gray-200 hover:bg-gray-100 rounded-lg w-fit text-nowrap'
                     >
                         <span className='mr-2 px-2'>
+                            {item?.first_name}
+                            {item?.last_name}
                             {item?.value}
                             <ClearIcon
                                 className='cursor-pointer ml-2'
-                                onClick={()=>handleClickClear(idx)}
+                                onClick={()=>handleClickClear(idx, item)}
                             />
                         </span>
                     </p>

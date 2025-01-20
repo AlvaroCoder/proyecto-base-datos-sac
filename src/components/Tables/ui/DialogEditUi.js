@@ -10,8 +10,10 @@ export default function DialogEditUi({
     dataDialog,
     dataStatus=[],
     dataLocation=[],
+    dataMembers=[],
     dataCoordinator=[],
     dataPeopleBorrowTo=[],
+    dataCourses=[],
     dataType=[],
     dialogTitle="Edición",
     dataOrigin=[],
@@ -82,6 +84,7 @@ export default function DialogEditUi({
                     <DialogBody
                         dataDialog={dataDialogComponent}
                         dataStatus={dataStatus}
+                        dataMembers={dataMembers}
                         dataLocation={dataLocation}
                         dataCoordinator={dataCoordinator}
                         initialDataDialog={initialData}
@@ -91,23 +94,9 @@ export default function DialogEditUi({
                         dataPeopleBorrowTo={dataPeopleBorrowTo}
                         handleChangeExistChanges={handleChangeExistChanges}
                         handleChangeNotExistChanges={handleChangeNotExistChanges}
-
+                        dataCourses={dataCourses}
                     />
-                    <div className='flex flex-row items-center my-4'>
-                        <Button
-                            className='flex-1 cursor-pointer mr-2 bg-guinda rounded-lg py-4  text-white text-center hover:bg-guindaOpaco  hover:font-bold border-2 border-guinda hover:border-guinda'
-                            disabled={!hasChanges || loadingData}
-                            onClick={handleClickSaveData}
-                        >
-                           {loadingData ?  <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <><SaveIcon/><span className='ml-2'>Guardar Cambios</span></>}
-                        </Button>
-                        <Button
-                            variant="ghost"
-                            onClick={handleCliclCancelSave}
-                        >
-                            <p>Cancelar</p>
-                        </Button>
-                    </div>
+
                 </section>
             </DialogContent>
         </Dialog>

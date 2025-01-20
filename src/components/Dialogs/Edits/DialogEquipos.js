@@ -1,8 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { Input } from '../../ui/input'
 import { Textarea } from '../../ui/textarea';
-import { Button } from '../../ui/button';
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../../ui/dropdown-menu';
+import { ButtonCloseDialog, DropdownMenuComponent, FormUploadImage, PopOverAddButton } from '@/components';
 
 export default function DialogEquipos({
     initialDataDialog,
@@ -10,278 +9,129 @@ export default function DialogEquipos({
     handleChangeExistChanges,
     setDataDialog : setDataDialogEquipos,
     dataType=[],
-    dataOrigin=[],
     dataLocation=[],
     dataStatus=[],
 }) {    
+
+    const [dataEquipment, setDataEquipment] = useState({
+        id : initialDataDialog?.id,
+        equipment: initialDataDialog?.equipment,
+        description : initialDataDialog?.description,
+        evidence : initialDataDialog?.evidence,
+        origin : initialDataDialog?.origin,
+        year : initialDataDialog?.year,
+        type : dataType[0],
+        location : dataLocation[0],
+        status : dataStatus[0],
+    });
+
+    const handleChangeInput=(evt)=>{
+        const target = evt.target;
+        const nameInput = target.name;
+        const valueInput = target.value;
+        setDataEquipment({
+            ...dataEquipment,
+            [nameInput] : valueInput
+        });
+    }   
     
-    const [mostrarComentarios, seTmostrarComentarios] = useState(false);
-    const [mostrarDropdownInputType, setMostrarDropdownInputType] = useState(false);
-    const [mostrarDropdownInputOrigin, setMostrarDropdownInputOrigin] = useState(false);
+    const handleClickSave=async()=>{
+        console.log(dataEquipment);
+        
+    }
 
-    const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
-    const [filterSearchType, setFilterSearchType] = useState(dataType);
-    const [filterSearchOrigin, setFilterSearchOrigin] = useState(dataOrigin);
-
-    const handleChangeMostrarComentario=()=>{
-        seTmostrarComentarios(!mostrarComentarios);
-    }
-    const handleChangeInput=(evt,keyValue)=>{
-        const inputValue = evt.target.value;
-        if (inputValue!==dataDialog[keyValue]) {
-            handleChangeExistChanges()
-        }
-        setDataDialogEquipos({
-            ...dataDialog,
-            [keyValue] : inputValue
-        })
-    }
-    const handleChangeImage=(evt)=>{
-        const file = evt.target.files[0];
-        if (file) {
-            setImagenSeleccionada(URL.createObjectURL(file));
-            setDataDialogEquipos({
-                ...dataDialog,
-                evidence : file
-            })
-        }
-        handleChangeExistChanges();
-    }
-    const handleDrop=(evt)=>{
-        evt.preventDefault();
-        const file = evt.dataTransfer.files[0];
-        if (file) {
-            setImagenSeleccionada(URL.createObjectURL(file));
-        }
-        handleChangeExistChanges();
-    }
-    const handleDragOver=(evt)=>{
-        evt.preventDefault();   
-    }
-    const handleCheckedChangeLocation=(item)=>{
-        if (item===dataDialog?.location?.value) {
-            setDataDialogEquipos({
-                ...dataDialog,
-                location : {value : ""} 
-            });
-            return;
-        }
-        setDataDialogEquipos({
-            ...dataDialog,
-            location : {value : item}
-        });
-        handleChangeExistChanges();
-    }
-    const handleCheckedChangeStatus=(item)=>{
-        if (item === dataDialog?.status?.value) {
-            setDataDialogEquipos({
-                ...dataDialog,
-                status : {value : ""}
-            })
-            return;
-        }
-        setDataDialogEquipos({
-            ...dataDialog,
-            status : {value : item}
-        });
-        handleChangeExistChanges();
-    }
-    const handleChangeDescription=(evt)=>{
-        setDataDialogEquipos({
-            ...dataDialog,
-            description : evt.target.value
-        });
-        handleChangeExistChanges();
-    }
   return (
-    <section className='max-h-[400px] h-full overflow-auto py-2 px-2'>
+    <section className='h-fit overflow-auto py-2  px-2 max-h-[400px] overflow-y-auto'>
         <div className='my-2'>
-            <h1>Equipo</h1>
+            <h1 className='font-bold'>Equipo</h1>
             <Input
                 name="equipment"
-                value={dataDialog?.equipment}
-                onChange={(evt)=>handleChangeInput(evt, "equipment")}
+                value={dataEquipment?.equipment}
                 required
+                onChange={handleChangeInput}
             />
         </div>
-        <div className='my-2 relative'>
-            <h1>Tipo</h1>
-            <Input
-                name="type"
-                value={dataDialog?.type}
-                onChange={(evt)=>{
-                    handleChangeInput(evt, "type");
-                    setMostrarDropdownInputType(evt.target.value !== initialDataDialog?.type)
-                    setFilterSearchType(dataType.filter(item=>item.toUpperCase().includes(evt.target.value.toUpperCase())))
-                }}
-                required
+        <div className='my-2'>
+            <h1 className='font-bold'>Descripcion</h1>
+            <Textarea
+                name="description"
+                value={dataEquipment?.description}
+                onChange={handleChangeInput}
             />
-            {
-                (mostrarDropdownInputType && filterSearchType.length > 0) &&
-                <div className='absolute mt-2 z-10 shadow-lg rounded-lg p-2 bg-white w-full'>
-                    {
-                        filterSearchType.map((item, idx)=>{
-                            if (idx < 4) {
-                                return (
-                                    <Button key={idx} className="w-full" variant="ghost" onClick={(evt)=>{
-                                        evt.preventDefault();
-                                        setDataDialogEquipos({
-                                            ...dataDialog,
-                                            type : item
-                                        });
-                                        setMostrarDropdownInputType(false);
-                                    }}>
-                                        {item}
-                                    </Button>
-                                )
-                            }
-                            return null
-                        })
-                    }
-                </div>
-            }
         </div>
-        <div className='my-2 relative'>
-            <h1>Origen</h1>
-            <Input
-                name="origin"
-                value={dataDialog?.origin}
-                onChange={(evt)=>{
-                    handleChangeInput(evt, "origin");
-                    setMostrarDropdownInputOrigin(evt.target.value!==initialDataDialog?.origin);
-                    setFilterSearchOrigin(dataOrigin.filter(item=>item.toUpperCase().includes(evt.target.value.toUpperCase())));
-                    
+        <div className='my-2'>
+            <h1 className='font-bold'>Evidencia</h1>
+            <FormUploadImage
+                handleChange={(file)=>{
+                    setDataEquipment({
+                        ...dataEquipment,
+                        evidence : file
+                    })
                 }}
             />
-            {
-                (mostrarDropdownInputOrigin && filterSearchOrigin.length > 0) &&
-                <div className='absolute mt-2 z-10 shadow-lg rounded-lg p-2 bg-white w-full'>
-                    {
-                        filterSearchOrigin.map((item,idx)=>{
-                            if (idx < 4) {
-                                return (
-                                    <Button key={idx} className="w-full" variant="ghost" onClick={(evt)=>{
-                                        evt.preventDefault();
-                                        setDataDialogEquipos({
-                                            ...dataDialog,
-                                            origin : item
-                                        })
-                                        setMostrarDropdownInputOrigin(false);
-                                    }}>
-                                        {item}
-                                    </Button>
-                                )
-                            }
-                            return null
-                        })
-                    }
-                </div>
-            }
         </div>
         <div className='my-2 relative'>
-            <h1>Año de adquisición</h1>
-            <Input
-                name="year"
-                value={dataDialog?.year}
+            <h1 className='font-bold'>Tipo</h1>
+            <PopOverAddButton
+                data={dataType}
+                dataMembers={false}
+                textButton='Selecciona un tipo de equipo'
+                changeValue={(data)=>{
+                    setDataEquipment({
+                        ...dataEquipment,
+                        type : data
+                    });
+                    handleChangeExistChanges();
+                }}
             />
         </div>
-
+        <div className='my-2'>
+                <h1 className='font-bold'>Origen</h1>
+                <Input
+                    name="origin"
+                    value={dataEquipment?.origin}
+                    onChange={handleChangeInput}
+                />
+            </div>
+            <div className='my-2'>
+                <h1 className='font-bold'>Año de adquisición</h1>
+                <Input
+                    name="year"
+                    value={dataEquipment?.year}
+                    onChange={handleChangeInput}
+                />
+            </div>
         <div className='w-full flex flex-row items-center justify-center my-2'>
             <section className='flex-1'>
-                <h1>Ubicacion</h1>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            className="w-full border border-slate-50 shadow-sm"
-                        >
-                            {dataDialog?.location?.value}
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="p-2">
-                        {
-                            dataLocation?.map((item, idx)=>
-                            <DropdownMenuCheckboxItem 
-                                key={idx} 
-                                className="capitalize"
-                                checked={item===dataDialog?.location?.value}
-                                onCheckedChange={()=>handleCheckedChangeLocation(item)}
-                            >
-                                <p>{item}</p>
-                            </DropdownMenuCheckboxItem>)
-                        }
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <h1 className='font-bold'>Ubicacion</h1>
+                <DropdownMenuComponent
+                    data={dataLocation}
+                    initialValue={dataEquipment?.location}
+                    changeData={(data)=>{
+                    handleChangeExistChanges();    
+                    setDataEquipment({
+                        ...dataEquipment,
+                        location : data
+                    })}}
+                />
             </section>
             <section className='flex-1 ml-2'>
-                <h1>Estado</h1>
-                <DropdownMenu >
-                    <DropdownMenuTrigger className='w-full'>
-                        <Button
-                            variant="ghost"
-                            className="w-full border border-slate-50 shadow-sm"
-                        >
-                            {dataDialog?.status?.value}
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="p-2">
-                        {
-                            dataStatus?.map((item, idx)=>
-                            <DropdownMenuCheckboxItem 
-                                key={idx} 
-                                className="capitalize"
-                                checked={item==dataDialog?.status?.value}
-                                onCheckedChange={()=>handleCheckedChangeStatus(item)}
-                                >
-                                <p>{item}</p>
-                            </DropdownMenuCheckboxItem>)
-                        }
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <h1 className='font-bold'>Estado</h1>
+                <DropdownMenuComponent
+                    data={dataStatus}
+                    initialValue={dataEquipment?.status}
+                    changeData={(data)=>{
+                    handleChangeExistChanges();
+                    setDataEquipment({
+                        ...dataEquipment,
+                        status : data
+                    })}}
+                />
             </section>
         </div>
-        {
-                mostrarComentarios ? 
-                <div className='my-2 border-t-slate-50 border-t-2 mt-4 pt-4'>
-                <h1>Comentarios</h1>
-                <Textarea
-                    placeholder ="Ingresa un comentario"
-                    value={dataDialog?.description}
-                    onChange={handleChangeDescription}
-                />
-                <h1>Evidencia</h1>
-                <div 
-                onDrop={handleDrop}
-                onDrag={handleDragOver}
-                className="mt-5 w-full p-4 border-2 border-dashed border-guindaOpaco bg-slate-50 text-center rounded-lg">
-                    <input
-                        type='file'
-                        accept='image/*'
-                        onChange={handleChangeImage}
-                        className="block w-full mb-3"
-                    />
-                    <div className="h-48 flex justify-center items-center bg-gray-100 rounded-lg overflow-hidden">
-                        {
-                            imagenSeleccionada ?
-                            <img
-                                src={imagenSeleccionada}
-                                alt="Previsualización" 
-                                className="max-h-full max-w-full rounded-md"
-                            /> :
-                            <p className="text-gray-600">Arrastra y suelta una imagen aquí o selecciona una desde tu dispositivo</p>
-                        }
-                    </div>
-                </div>
-                </div>:
-                <Button
-                    className="text-guinda hover:bg-white underline hover:text-guinda"
-                    variant="ghost"
-                    onClick={handleChangeMostrarComentario}
-                >
-                    Agregar comentario+
-                </Button>
-        }
-
+        <ButtonCloseDialog
+            handleClickSave={handleClickSave}
+        />
     </section>
   )
 };

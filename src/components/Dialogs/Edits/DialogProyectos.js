@@ -1,10 +1,9 @@
 import React, { useRef, useState } from 'react'
 import { Input } from '../../ui/input'
-import { Button } from '../../ui/button';
 import { Textarea } from '../../ui/textarea';
-import ClearIcon from '@mui/icons-material/Clear';
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../../ui/dropdown-menu';
 import _ from "lodash"
+import { ButtonCloseDialog, DropdownMenuComponent, ListCardShort, PopOverAddButton, PopoverAddList } from '@/components';
+import { useToast } from '@/components/ui/use-toast';
 
 // Dialog de editar proyectos
 export default function DialogProyectos({
@@ -17,300 +16,154 @@ export default function DialogProyectos({
   dataStatus=[]
 }) 
 {  
-  const refInputNameResearcher=useRef(null);
-  const refInputLasNameResearcher=useRef(null);
-  
-  const [mostrarDropdownCoordinador, setMostrarDropdownCoordinador] = useState(false);
-  const [showFormNewAuthor, setShowFormNewAuthor] = useState(false);
-  const [filterSearchCoordinator, setFilterSearchCoordinator] = useState(dataCoordinator);
-  const [researchersDeleted, setResearchersDeleted] = useState([]);
+  const {toast} = useToast();
+  const [dataProjects, setDataProjects] = useState({
+    id : initialDataDialog?.id,
+    name : initialDataDialog?.project,
+    coordinator : initialDataDialog?.coordinator,
+    researchers_added :[],
+    researchers : initialDataDialog?.researchers,
+    researchers_deleted :[],
+    agreements_added : [],
+    agreements_deleted : [],
+    status : initialDataDialog?.status,
+    agreement : initialDataDialog?.agreement,
+    period : initialDataDialog?.period
+  });
 
-  const handleClickAddResearcher=(evt)=>{
-    evt.preventDefault();
-    if (refInputNameResearcher.current.value === "" || refInputLasNameResearcher.current.value === "") {
-      alert("Complete los campos vacíos")
-      return;
-    }
-    const nameResearcher = refInputNameResearcher.current.value;
-    const lastNameResearcher = refInputLasNameResearcher.current.value;
 
-    const newDataResearcher = [
-      ...dataDialogProyectos?.researchers, 
-      {first_name : nameResearcher, last_name : lastNameResearcher}]
-    const newDataAdded = [
-      ...dataDialogProyectos?.authors_added,
-      {first_name : nameResearcher, last_name : lastNameResearcher}
-    ]
-    setDataDialogProyectos({
-      ...dataDialogProyectos,
-      researchers : newDataResearcher,
-      authors_added : newDataAdded
-    });
-    setShowFormNewAuthor(false);
-    refInputNameResearcher.current.value = null;
-    refInputLasNameResearcher.current.value = null;
-
-    handleChangeExistChanges();
-  }
-  const handleClickCancelAuthor=()=>{
-
-  }
-  const handleChangeInput=(evt, keyValue)=>{
-    const inputValue = evt.target.value;
-    
-    const newObjDataInput = {
-      ...dataDialogProyectos,
-      [keyValue] : inputValue
-    }
-    const existChanges = _.isEqual(initialDataDialog, newObjDataInput);
-        
-    if (!existChanges) {
-      handleChangeExistChanges();
+  const handleClickAddResearcher=(data)=>{
+    const existeMiembro = dataProjects.researchers_added.some(item=>JSON.stringify(item) === JSON.stringify(data)) || dataProjects.researchers?.some(item=>JSON.stringify(item) === JSON.stringify(data))
+    if (!existeMiembro) {
+      setDataProjects({
+        ...dataProjects,
+        researchers : [...dataProjects.researchers, data ],
+        researchers_added : [...dataProjects.researchers_added, data]
+      })
     }else{
-      handleChangeNotExistChanges();
+      toast({
+        variant:"destructive",
+        title : "Error de agregar",
+        description :"No se puede agregar la misma persona 2 veces"
+      })
     }
-    
-    setDataDialogProyectos(newObjDataInput);
   }
-  const handleClickClearResearcher=(idResearcher, objResearcher)=>{
-    const newDataResearcher=[...dataDialogProyectos?.researchers].filter(researcher=>researcher?.id !== idResearcher);
-    const newDataResearchersAdded = [...dataDialogProyectos?.authors_added].filter(item=>JSON.stringify(item)!== JSON.stringify(objResearcher))
-
-    const newDataProyects = {
-      ...dataDialogProyectos,
-      authors_added : newDataResearchersAdded,
-      authors_deleted : [...dataDialogProyectos?.authors_deleted, dataDialogProyectos?.researchers?.filter(r=>r?.id === idResearcher)[0]],
-      researchers : newDataResearcher
-    }
-    
-    setDataDialogProyectos(newDataProyects);
-    handleChangeExistChanges();
+  
+  const handleChangeInput=(evt)=>{
+    const target = evt.target;
+    setDataProjects({
+      ...dataProjects,
+      [target.name] : target.value
+    })
   }
-
-  const handleClickShowFormNewAuthor=()=>{
-    setShowFormNewAuthor(!showFormNewAuthor)
+  const handleClickResearcherClear=(id, item)=>{
+    const existeMiembroAgregado=dataProjects.researchers_added.some(obj=>JSON.stringify(obj)===JSON.stringify(item));
+    const nuevaDataMiembrosAgregado=existeMiembroAgregado ? [...dataProjects.researchers_added].filter((obj)=>JSON.stringify(obj)!== JSON.stringify(item)) : [...dataProjects.researchers_added];
+    setDataProjects(prev=>({
+      ...dataProjects,
+      researchers : [...prev.researchers].filter((_,idx)=>idx!==id),
+      researchers_added : nuevaDataMiembrosAgregado,
+      researchers_deleted : [...prev.researchers_deleted, item]
+    }));
   }
 
-  const handleChangeChecked=(name_status)=>{
-    setDataDialogProyectos({
-      ...dataDialogProyectos,
-      status : name_status
-    });
-    if (initialDataDialog?.status === name_status) {
-      handleChangeNotExistChanges();
-      return;
-    }
-    handleChangeExistChanges();
+  const handleClickSave=()=>{
+    console.log(dataProjects); 
   }
   return (
     <section className='h-[450px] overflow-auto py-2 px-2'>
       <div className='my-2'>
-        <h1 className='font-semibold'>Proyectos</h1>
+        <h1 className='font-semibold'>Proyecto</h1>
         <Textarea
-          name="project"
+          name="name"
           className="text-wrap py-2 h-fit"
-          value={dataDialogProyectos?.project}
-          onChange={evt=>handleChangeInput(evt, "project")}
+          value={dataProjects?.name}
+          onChange={handleChangeInput}
         />
       </div>
       <div className='my-2 relative'>
         <h1 className='font-semibold'>Coordinador</h1>
-        <div className='flex flex-row items-center'>
-          <div className='flex-1 mr-2'>
-            <h1>Nombre</h1>
-            <Input 
-              value={dataDialogProyectos?.coordinator?.first_name}
-              onChange={(evt)=>{
-                // Funcion de cambiar el nombre del coordinador
-                const value = evt.target.value;
-                setDataDialogProyectos({
-                  ...dataDialogProyectos,
-                  coordinator : {
-                    ...dataDialogProyectos?.coordinator,
-                    first_name : value
-                  }
-                });
-                handleChangeExistChanges();
-              }}
-            />
-          </div>
-          <div className='flex-1'>
-            <h1>Apellido</h1>
-            <Input 
-              value={dataDialogProyectos?.coordinator?.last_name}
-              onChange={(evt)=>{
-                // Funcion de cambiar el apellido del coordinador
-                const value = evt.target.value;
-                setDataDialogProyectos({
-                  ...dataDialogProyectos,
-                  coordinator : {
-                    ...dataDialogProyectos?.coordinator,
-                    last_name : value
-                  }
-                });
-                handleChangeExistChanges();
-              }}
-            />
-          </div>
-        </div>
-        {
-          (mostrarDropdownCoordinador && filterSearchCoordinator.length > 0) &&
-          <div className='absolute mt-2 z-10 shadow-lg rounded-lg p-2 bg-white w-full'>
-            {
-              filterSearchCoordinator.map((item,key)=>{
-                if (key < 4) {
-                    return (
-                      <Button
-                        key={key}
-                        className="w-full"
-                        variant="ghost"
-                        onClick={(evt)=>{
-                          evt.preventDefault();
-                          setDataDialogProyectos({
-                            ...dataDialogProyectos,
-                            coordinator : item
-                          });
-                          setMostrarDropdownCoordinador(false);
-                        }}
-                      >
-                        {item}
-                      </Button>
-                    )
-                }
-                return null;
-              })
-            }
-          </div>
-        }
+        <PopOverAddButton
+          initialValue={dataProjects?.coordinator}
+          data={dataCoordinator}
+          textButton='Agregar Coordinador'
+          changeValue={(data)=>setDataProjects({
+            ...dataProjects,
+            coordinator : data
+          })}
+        />
       </div>
       <div className='my-2'>
         <h1 className='font-semibold'>Investigadores</h1>
-        <div
-          className='w-full rounded-lg flex flex-wrap gap-x-4 gap-y-2 items-center'
-        >
-          {
-            dataDialogProyectos?.researchers?.map((researcher, key)=>{
-              const {first_name, last_name} = researcher;
-              return (
-                <p 
-                key={key}
-                className='p-2 bg-slate-100 rounded-xl w-fit mt-2 text-nowrap'
-                >
-                  <span className='mr-2'>
-                    {first_name}
-                  </span>
-                  <span>
-                    {last_name}
-                  </span>
-                  <ClearIcon
-                    className='cursor-pointer'
-                    onClick={()=>handleClickClearResearcher(researcher?.id, {first_name, last_name})}
-                  />
-                </p>
-              )
-            })
-          }
-        </div>
+        <ListCardShort
+          data={dataProjects?.researchers}
+          handleClickClear={handleClickResearcherClear}
+        />
         <div className='mt-2'>
-          {
-            showFormNewAuthor ? 
-            <section className='p-4 rounded-lg bg-slate-50'>
-              <h1 className='font-semibold'>Nuevo Investigador</h1>
-              <div className='grid grid-cols-2 gap-2'>
-                <div className='flex-1'>
-                  <label>Nombre</label>
-                  <Input
-                    name="first_name"
-                    ref={refInputNameResearcher}
-                  />
-                </div>
-                <div className='flex-1'>
-                  <label>Apellido</label>
-                  <Input
-                    name="last_name"
-                    ref={refInputLasNameResearcher}
-                  />
-                </div>
-              </div>
-              <div className='mt-2'>
-                <Button
-                  className="bg-white text-guinda border-2 border-guinda hover:bg-red-50"
-                  onClick={handleClickAddResearcher}
-                >
-                  <span>Agregar</span>
-                </Button>
-                <Button
-                  className="mx-2"
-                  variant="ghost"
-                  onClick={handleClickCancelAuthor}
-                >
-                  <span>Cancelar</span>
-                </Button>
-              </div>
-            </section> : 
-            <Button
-              variant="ghost"
-              className="text-guinda underline hover:bg-white hover:text-guinda"
-              onClick={handleClickShowFormNewAuthor}
-            >
-              Agregar Investigador
-            </Button>
-          }
+          <PopoverAddList
+            data={dataCoordinator}
+            handleClickAddMember={handleClickAddResearcher}
+            textButton='Agregar Investigador'
+          />
         </div>
       </div>
       <div className='my-2'>
           <h1 className='font-bold'>Convenios</h1>
           <Input 
-            value={dataDialogProyectos?.agreement}
+            value={dataProjects?.agreement}
             disabled={true}
           />
       </div>
       <div className='my-2'>
         <h1 className='font-semibold'>Estado</h1>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              className="w-full border-gray-100 border-[1px] shadow-sm"
-            >
-              <span>{dataDialogProyectos?.status}</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-full">
-            {
-              dataStatus?.map((item,key)=><DropdownMenuCheckboxItem 
-              key={key} 
-              checked={dataDialogProyectos?.status === item}
-              onCheckedChange={()=>handleChangeChecked(item)}
-              >{item}</DropdownMenuCheckboxItem>)
-            }
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <DropdownMenuComponent
+          data={dataStatus}
+          initialValue={dataProjects?.status}
+          changeData={(data)=>setDataProjects({
+            ...dataProjects,
+            status : data
+          })}
+        />
       </div>
       <div className='my-2 flex flex-row items-center'>
           <div className='flex-1 my-1 mr-2'>
             <h1 className='font-semibold'>Fecha de Inicio</h1>
             <Input
-              name="year_start"
-              value={dataDialogProyectos?.year_start}
-              type="number"
+              value={dataProjects?.period?.year_start}
               onChange={(evt)=>{
-                handleChangeInput(evt, "year_start");
+                const target = evt.target;
+                setDataProjects({
+                  ...dataProjects,
+                  period : {
+                    ...dataProjects,
+                    year_start : target.value
+                  }
+                })
               }}
+              type="number"
             />
           </div>
           <div className='flex-1 my-1'>
             <h1 className='font-semibold'>Fecha de Fin</h1>
             <Input
-              name="year_end"
-              value={dataDialogProyectos?.year_end}
-              type="number"
+              value={dataProjects?.period?.year_end}
               onChange={(evt)=>{
-                handleChangeInput(evt, "year_end")
+                const target = evt.target;
+                setDataProjects({
+                  ...dataProjects,
+                  period : {
+                    ...dataProjects,
+                    year_end : target.value
+                  }
+                })
               }}
+              type="number"
             />
           </div>
       </div>
+      <ButtonCloseDialog
+        handleClickSave={handleClickSave}
+      />
     </section>
   )
 }

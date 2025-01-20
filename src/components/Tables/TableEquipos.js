@@ -49,7 +49,6 @@ export default function TableEquipos({
 
     const ubicacionSinRepetir = extraerDataSinRepetir(equiposData, "location");
     const estadosSinRepetir = extraerDataSinRepetir(equiposData, "status");
-    const tiposSinRepetir = extraerDataSinRepetir(equiposData,"type");
     const origenSinRepetir = extraerDataSinRepetir(equiposData, "origin");
 
     const filterData = useMemo(()=>{
@@ -129,7 +128,7 @@ export default function TableEquipos({
 
     const listFiltersEquipos=[
         <DropdownFiltersComponent data={ubicacionSinRepetir} titleData={locationData} titleButton='Ubicacion' handleCheckedChange={handleCheckedDropdownLocation}/>,
-        <DropdownFiltersComponent data={estadosSinRepetir} titleButton='Estado' titleData={statusData} handleCheckedChange={handleCheckedDropwdownStatus} />,
+        <DropdownFiltersComponent data={dataStatusEquipos} titleButton='Estado' titleData={statusData} handleCheckedChange={handleCheckedDropwdownStatus} />,
     ]
   return (
     <TableLayout

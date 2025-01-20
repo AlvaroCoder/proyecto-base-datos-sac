@@ -30,7 +30,6 @@ export default function TableTrabajos({
 
     
     const [currentPage, setCurrentPage]=useState(1);
-    const [stateData, setstateData] = useState("");
     const [courseData, setCourseData] = useState("");
     const [query, setQuery] = useState("");     
 
@@ -118,11 +117,13 @@ export default function TableTrabajos({
     const numBooks = trabajosData.length;
 
     const listFilterComponents = [
-        <DropdownFiltersComponent data={cursoSinRepetir} titleButton='Curso' titleData={courseData} handleCheckedChange={handleCheckedDropdownCourse} />
+        <DropdownFiltersComponent data={dataCourses} titleButton='Curso' titleData={courseData} handleCheckedChange={handleCheckedDropdownCourse} />
     ]
+    
   return (
     <>
         <TableLayout
+            dataCourse={dataCourses}
             titlesData={titlesData}
             currentData={currentData}
             keysData={keysData}
@@ -137,7 +138,6 @@ export default function TableTrabajos({
             DialogEditComponent={DialogTrabajos}
             DialogDeleteComponent={DialogDeleteTrabajos}
             DialogCreateComponent={DialogCreateTrabajo}
-            dataCourse={dataCourses}
             dataStatusDialog={cursoSinRepetir}
             deleteElementFunction={handleClickDeleteTrabajo}
             handleClickSaveRegister={handleClickSaveRegister}

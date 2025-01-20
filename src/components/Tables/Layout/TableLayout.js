@@ -50,8 +50,8 @@ export default function TableLayout({
     dataStatusDialog,
     dataListAgreements=[]
 }) 
-{   
-    const elementsSelected = currentData?.filter(data=>data.Seleccionado);
+{       
+const elementsSelected = currentData?.filter(data=>data.Seleccionado);
   return (
     <div className='w-full'>
         <div className='flex items-center py-4'>
@@ -181,6 +181,7 @@ export default function TableLayout({
                                                     dataDialog={item}
                                                     dataCoordinator={dataCoordinator}
                                                     dataStatus={dataStatusDialog}
+                                                    dataCourses={dataCourse}
                                                     dataLocation={dataLocationDialog}
                                                     dataPeopleBorrowTo={dataPeopleBorrowTo}
                                                     dataType={dataTypeDialog}
@@ -188,6 +189,7 @@ export default function TableLayout({
                                                     dialogTitle={dialogTitleEdit}
                                                     DialogBody={DialogEditComponent}
                                                     setDataTable={setDataTable}
+                                                    dataMembers={dataMembers}
                                                 />}
                                                 DialogDeleteComponente={
                                                 <DialogDeleteUi

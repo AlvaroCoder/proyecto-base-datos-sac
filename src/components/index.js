@@ -28,3 +28,4 @@ export {default as ListCardsShortPerson} from "@/components/elementos/listCardsS
 export {default as ListCardShort} from "@/components/elementos/listCardShort";
 export {default as PopOverAddButton} from "@/components/elementos/popOverAddButton";
 export {default as FormUploadImage} from "@/components/elementos/formUploadImage";
+export {default as ButtonCloseDialog} from "@/components/elementos/buttonCloseDialog";

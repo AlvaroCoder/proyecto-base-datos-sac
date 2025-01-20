@@ -26,7 +26,7 @@ export default function DropdownFiltersComponents({
                         checked={item==titleData}
                         onCheckedChange={()=>handleCheckedChange(item)}
                     >
-                        {item}
+                        {item?.value} 
                     </DropdownMenuCheckboxItem>)
                 }
             </DropdownMenuContent>
