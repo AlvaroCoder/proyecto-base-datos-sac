@@ -1,20 +1,17 @@
 import React, { useState } from 'react'
 import { Input } from '../../ui/input'
-import { Button } from '../../ui/button'
-import { DialogClose, DialogFooter } from '@/components/ui/dialog'
-import { Loader2, SaveIcon } from 'lucide-react'
 import { Textarea } from '@/components/ui/textarea'
 import DropdownMenuComponent from '@/components/elementos/dropdownComponent'
-import { FormUploadImage } from '@/components'
+import { ButtonCloseDialog, FormUploadImage } from '@/components'
+import { CREATE_EQUIPO, UPLOAD_IMAGE_EQUIPO } from '@/components/commons/apiConnection'
+import { useToast } from '@/components/ui/use-toast'
 
 export default function DialogCreateEquipos({
   dataLocation=[],
   dataTypes=[],
   dataStatus=[]
 }) {
-  
-  const [loadingData, setLoadingData] = useState(false);
-
+  const {toast} = useToast();
   const [dataDialog, setDataDialog] = useState({
     equipment : '',
     type : '',
@@ -45,9 +42,51 @@ export default function DialogCreateEquipos({
     })
   }
 
-
+  // Funcion de guardar registro
   const handleClickSave=async()=>{
-    console.log(dataDialog);
+    const newFormDataImage = new FormData();
+    newFormDataImage.append("evidence", dataDialog.evidence);
+    newFormDataImage.append("equipment_name", dataDialog.equipment);
+
+    const responseImage = await UPLOAD_IMAGE_EQUIPO(newFormDataImage);
+    if (!responseImage.ok) {
+      toast({
+        variant : "destructive",
+        title : "Error",
+        description : "Problemas de subir la imagen"
+      });
+      return;
+    }
+    const responseImageJSON = await responseImage.json();
+    const newJSONToSend={
+      ...dataDialog,
+      evidence : responseImageJSON?.url
+    }
+    console.log(newJSONToSend);
+    
+    const response = await CREATE_EQUIPO(newJSONToSend);
+    if (!response.ok) {
+      toast({
+        variant : "destructive",
+        title : "Error",
+        description :"Ocurrio un error"
+      });
+      return;
+    }
+
+    const responseJSON = await response.json();
+    console.log(responseJSON);
+    
+    toast({
+      title : "Exito",
+      description : `Se guardo el equipo ${dataDialog.equipment}`
+    });
+  }
+  const handleChangeImage=(data)=>{
+    setDataDialog({
+      ...dataDialog,
+      evidence : data
+    })
   }
   return (
     <div className='max-h-[600px] h-full overflow-auto py-2 px-2'>
@@ -71,7 +110,8 @@ export default function DialogCreateEquipos({
       <div>
         <h1 className='font-bold'>Evidencia</h1>
         <FormUploadImage
-          
+          handleChange={handleChangeImage}
+
         />
       </div>
       <section
@@ -135,19 +175,10 @@ export default function DialogCreateEquipos({
           />
         </section>
       </div>
-      <DialogFooter
-        className="flex flex-row items-center my-4"
-      >
-        <DialogClose asChild>
-          <Button
-            className='flex-1 cursor-pointer mr-2 bg-guinda rounded-lg py-4  text-white text-center hover:bg-guindaOpaco  hover:font-bold border-2 border-guinda hover:border-guinda'
-            onClick={handleClickSave}
-          >
-          {loadingData ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <><SaveIcon/><span className='ml-2'>Guardar Registro</span></>}
-
-          </Button>
-        </DialogClose>
-      </DialogFooter>
+      <ButtonCloseDialog
+        textButton='Guardar Registro'
+        handleClickSave={handleClickSave}
+      />
     </div>
   )
 };

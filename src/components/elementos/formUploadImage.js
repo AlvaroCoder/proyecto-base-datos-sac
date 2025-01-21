@@ -7,7 +7,7 @@ export default function formUploadImage({
   previewImage=null,
   handleChange,
 }) {
-    const [preview, setPreview] = useState(null);
+    const [preview, setPreview] = useState(previewImage);
     const [image, setImage] = useState(null)
     const handleImageChange = (e) => {
       const file = e.target.files[0];

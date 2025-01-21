@@ -4,7 +4,8 @@ import { Button } from '../ui/button'
 import { Loader2, SaveIcon } from 'lucide-react';
 
 export default function buttonCloseDialog({
-    handleClickSave
+    handleClickSave,
+    textButton = "Actualizar Registro"
 }) {
     
     const [loadingData, setLoadingData] = useState(false);
@@ -23,7 +24,7 @@ export default function buttonCloseDialog({
                     className='flex-1 cursor-pointer mr-2 bg-guinda rounded-lg py-4  text-white text-center hover:bg-guindaOpaco  hover:font-bold border-2 border-guinda hover:border-guinda'
                     onClick={handleClick}
                 >
-                    {loadingData ? <Loader2 className='mr-2 h-4 w-4 animate-spin'/> : <><SaveIcon/><span className='ml-2'>Actualizar Registro</span></>}
+                    {loadingData ? <Loader2 className='mr-2 h-4 w-4 animate-spin'/> : <><SaveIcon/><span className='ml-2'>{textButton}</span></>}
                 </Button>
             </DialogClose>
         </DialogFooter>

@@ -10,7 +10,13 @@ import { DialogCreateLibros, DialogDeleteLibros, DialogLibros } from '../Dialogs
 import { DELETE_BOOK, UPDATE_BOOKS } from '../commons/apiConnection';
 import { useToast } from '../ui/use-toast';
 
-export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations=[]}) {    
+export default function TableLibros({
+    dataLibros=[], 
+    dataStatus=[], 
+    dataLocations=[],
+    dataMembers=[],
+    dataUsers=[]
+}) {    
     const titlesData=[
         {name:"Titulo",className:"w-[800px] px-2"},
         {name:"Autor",className:"w-[500px]"},
@@ -203,6 +209,7 @@ export default function TableLibros({dataLibros=[], dataStatus=[], dataLocations
         numData={numBooks}
         dataStatusDialog={dataStatus}
         dataLocationDialog={dataLocations}
+        dataMembers={dataUsers}
         setDataTable={handleAddNewDataToTable}
         filtersComponents={filterComponents}
         handleChangeInput={onChangeInput}

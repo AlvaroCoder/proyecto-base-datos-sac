@@ -28,6 +28,18 @@ export async function CREATE_EQUIPO(data) {
     })
 }
 
+export async function UPLOAD_IMAGE_EQUIPO(data) {
+    const session = await getSession();
+    return await fetch(BASE_URL+`create/equipment_evidence`,{
+        method : 'POST',
+        headers : {
+            'Authorization' : `Bearer ${session?.user?.access_token}`
+        },
+        mode : 'cors',
+        body : data
+    })
+}
+
 export async function UPDATE_EQUIPO(data) {
     const session =  await getSession();
     return await fetch(BASE_URL+`update/equipment`,{

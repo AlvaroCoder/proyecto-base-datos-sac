@@ -3,23 +3,18 @@ import { Input } from '../../ui/input'
 import ClearIcon from '@mui/icons-material/Clear';
 import { Button } from '../../ui/button';
 import { ChevronsUpDown, Loader2 } from 'lucide-react';
-
-import SaveIcon from '@mui/icons-material/Save';
 import { CREATE_BOOK } from '../../commons/apiConnection';
 import { useToast } from '../../ui/use-toast';
-import { DialogClose, DialogFooter } from '../../ui/dialog';
 import DropdownMenuComponent from '@/components/elementos/dropdownComponent';
+import { ButtonCloseDialog, ListCardShort, PopoverAddList } from '@/components';
 export default function DialogCreateLibros({
   dataStatus=[],
   dataLocation=[],
   handleClickSaveRegister,
-  
+  dataMembers=[]
 }) {
   const {toast} = useToast();
   const refAuthorName =useRef(null);
-
-  const [loadingData, setLoadingData] = useState(false);
-
   const [dataDialog, setDataDialog] = useState({
     authors : [],
     title : '',
@@ -31,10 +26,7 @@ export default function DialogCreateLibros({
       value : dataStatus[0]?.value,
       id : dataStatus[0]?.id
     },
-    borrowed_to : {
-      first_name : "",
-      last_name : ""
-    },
+    borrowed_to : [],
     amount : 1
   });
   const [showFormAuthor, setShowFormAuthor] = useState(false);
@@ -78,10 +70,43 @@ export default function DialogCreateLibros({
     refAuthorName.current.value=null;
   }
   const handleClickSave=async()=>{
-    console.log(dataDialog);
-  }
-  const handleClickCancelSave=()=>{
+    if (dataDialog.authors.length <= 0) {
+      toast({
+        variant : "destructive",
+        title :"Error",
+        description :"Debe asignarle un autor al libro"
+      });
+      return;
+    }
+    const response = await CREATE_BOOK(dataDialog);
+    if (response.ok) {
+      const responseJSON = await response.json();
+      console.log(responseJSON);
+      
+      toast({
+        title : "Exito",
+        description : `Se guardo el libro ${dataDialog.title}`
+      });
+      return
+    }
 
+    toast({
+      variant : "destructive",
+      title : "Error",
+      description : "Ocurrio un error"
+    })
+  }
+  const handleClickAddMember=(data)=>{
+    setDataDialog(prev=>({
+      ...dataDialog,
+      borrowed_to : [...prev.borrowed_to, data]
+    }))
+  }
+  const handleClickClearMember=(id)=>{
+    setDataDialog(prev=>({
+      ...dataDialog,
+      borrowed_to : [...prev.borrowed_to].filter((_, idx)=>id!==idx)
+    }))
   }
   return (
    <section>
@@ -177,52 +202,24 @@ export default function DialogCreateLibros({
         />
       </div>
     </div>
-    <div className='flex-1  py-2 mt-2'>
-      <h1 className='font-bold'>
-        Prestado a 
-      </h1>
+    <div className='my-2'>
+      <h1 className='font-bold'>Prestado a</h1>
+      <ListCardShort
+        data={dataDialog?.borrowed_to}
+        handleClickClear={handleClickClearMember}
+      />
+      <div className='mt-2'>
+        <PopoverAddList
+          data={dataMembers}
+          textButton='Agregar Usuario'
+          handleClickAddMember={handleClickAddMember}
+        />
+      </div>
     </div>
-    <section className='w-full mb-4 flex flex-row items-center'>
-      <div className='flex-1 mr-2'>
-        <h1 className=''>Nombre</h1>
-        <Input  
-          name="first_name"
-          value={dataDialog?.borrowed_to?.first_name}
-          onChange={(evt)=>setDataDialog({
-            ...dataDialog,
-            borrowed_to : {
-              first_name : evt.target.value,
-              last_name : dataDialog?.borrowed_to.last_name
-            }
-          })}
-        />
-      </div>
-      <div className='flex-1'>
-        <h1>Apellido</h1>
-        <Input
-          name="last_name"
-          value={dataDialog?.borrowed_to?.last_name}
-          onChange={(evt)=>setDataDialog({
-            ...dataDialog,
-            borrowed_to : {
-              first_name : dataDialog?.borrowed_to.first_name,
-              last_name : evt.target.value
-            }
-          })}
-        />
-      </div>
-    </section>
-    <DialogFooter className='flex flex-row items-center my-4'>
-      <DialogClose asChild>
-      <Button
-          className='flex-1 cursor-pointer mr-2 bg-guinda rounded-lg py-4  text-white text-center hover:bg-guindaOpaco  hover:font-bold border-2 border-guinda hover:border-guinda'
-          onClick={handleClickSave}
-      >
-          {loadingData ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <><SaveIcon/><span className='ml-2'>Guardar Registro</span></>}
-      </Button>
-
-      </DialogClose>
-    </DialogFooter>
+    <ButtonCloseDialog
+      handleClickSave={handleClickSave}
+      textButton='Guardar Registro'
+    />
    </section>
   )
 };

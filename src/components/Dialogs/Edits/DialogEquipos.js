@@ -62,6 +62,7 @@ export default function DialogEquipos({
         <div className='my-2'>
             <h1 className='font-bold'>Evidencia</h1>
             <FormUploadImage
+                previewImage={dataEquipment.evidence}
                 handleChange={(file)=>{
                     setDataEquipment({
                         ...dataEquipment,
