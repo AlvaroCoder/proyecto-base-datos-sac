@@ -37,6 +37,15 @@ export default function DialogCreateProyectos({
   }
   // Funcion de agregar investigador (nuevo o existente) al JSON de guardar información
   const handleClickAddResearcher=(jsonResearcher)=>{
+    const existeMiembro = dataDialog.researchers.some(item=>JSON.stringify(item) === JSON.stringify(jsonResearcher));
+    if (existeMiembro) {
+      toast({
+        variant : "destructive",
+        title : "Error",
+        description : "No se puede agregar la misma persona 2 veces."
+      });
+      return;
+    }
     setDataDialog(prev=>({
       ...dataDialog,
       researchers : [...prev.researchers, jsonResearcher]
@@ -65,6 +74,8 @@ export default function DialogCreateProyectos({
   }
   // Funcion de guardar el nuevo proyecto
   const handleClickSave=async()=>{
+    console.log(dataDialog);
+    
     const response = await CREATE_PROYECTS(dataDialog);        
     if (!response.ok) {
       toast({
@@ -98,6 +109,10 @@ export default function DialogCreateProyectos({
         <PopOverAddButton
           data={dataMembers}
           changeValue={(item)=>setDataDialog({...dataDialog,coordinator:item})}
+          componentAdd={
+          <FormAddMember
+            handleClickAddMember={(item)=>setDataDialog({...dataDialog, coordinator : item})}
+          />}
         />
       </div>
       <div >
@@ -111,6 +126,7 @@ export default function DialogCreateProyectos({
             data={dataListAgreements}
             dataMembers={false}
             handleClickAddMember={handleClickAddAgreement}
+            
           />
         </div>
       </div>
@@ -119,6 +135,7 @@ export default function DialogCreateProyectos({
         <ListCardsShortPerson
           data={dataDialog?.researchers}
           handleClickClearMember={handleClickClearResearcher}
+        
         />
       </div>
       <div className='mt-2 w-full'>
@@ -155,6 +172,7 @@ export default function DialogCreateProyectos({
             <h1 >Fecha Inicio</h1>
             <Input
               type="number"
+              placeholder="yyyy"
               value={dataDialog?.period?.year_start}
               onChange={(evt)=>{
                 const target = evt.target;
@@ -172,6 +190,7 @@ export default function DialogCreateProyectos({
             <h1>Fecha Fin</h1>
             <Input
               type="number"
+              placeholder="yyyy"
               value={dataDialog?.period?.year_end}
               onChange={(evt)=>{
                 const target= evt.target;

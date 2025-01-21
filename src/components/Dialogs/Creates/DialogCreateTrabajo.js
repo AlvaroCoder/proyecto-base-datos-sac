@@ -24,7 +24,6 @@ export default function DialogCreateTrabajo({
   const semesters=[
     {id : 1, value : "I"},
     {id : 2, value : "II"},
-    {id : 3, value : "Verano"},
   ]
   const [semesterSelected, setSemesterSelected] = useState(semesters[0]);
 
@@ -83,6 +82,7 @@ export default function DialogCreateTrabajo({
           <Input
             name="link"
             value={dataDialog.link}
+            placeholder="www.web.com"
             onChange={handleChangeInput}
             required
           />
@@ -105,8 +105,9 @@ export default function DialogCreateTrabajo({
         <div className='mr-2 flex-1'>
             <h1 className='font-bold'>Año</h1>
             <Input
-              className="w-full "
+              className="w-full"
               type="number"
+              placeholder="yyyy"
               ref={refNumberYear}
               required
             />

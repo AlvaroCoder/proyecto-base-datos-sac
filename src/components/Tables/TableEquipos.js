@@ -6,6 +6,8 @@ import { DropdownFiltersComponent } from './ui';
 import { extraerDataSinRepetir } from '../commons/tableFunctions';
 import { DialogDeleteEquipos, DialogEquipos } from '../Dialogs';
 import DialogCreateEquipos from '../Dialogs/Creates/DialogCreateEquipos';
+import { DELETE_EQUIPO } from '../commons/apiConnection';
+import { useToast } from '../ui/use-toast';
 
 export default function TableEquipos({
     dataEquipos=[], 
@@ -13,7 +15,7 @@ export default function TableEquipos({
     dataTypeEquipos=[],
     dataLocationEquipos=[]
 }) {
-    
+    const{toast}=useToast();
     const titlesData=[
         {name:"Equipo", className:"w-[400px]"},
         {name:"Comentarios", className:""},
@@ -115,13 +117,19 @@ export default function TableEquipos({
         }
         setLocationData(item)
     }
-    const handleCheckedDropdownType=(item)=>{
-        setQuery("");
-        if (item===typeData) {
-            setTypeData("");
-            return
+    const handleClickDeleteRegister=async(id)=>{
+        const response = await DELETE_EQUIPO(id);
+        if (!response.ok) {
+            toast({
+                variant: "destructive",
+                title : "Error",
+                description : "Ocurrio un error"
+            })
+            return;
         }
-        setTypeData(item)
+        const responseJSON = await response.json();
+        console.log(responseJSON);
+        
     }
     const paginate=(pageNumber) => setCurrentPage(pageNumber);
     const numEquipos = equiposData.length;
@@ -142,6 +150,7 @@ export default function TableEquipos({
         dataTypeDialog={dataTypeEquipos}
         dataOriginDialog={origenSinRepetir}
         filtersComponents={listFiltersEquipos}
+        deleteElementFunction={handleClickDeleteRegister}
         handleCheckedRow={handleChangeRow}
         handleChangeChecked={handleChangeChecked}
         handleChangeInput={onChangeInput}

@@ -12,7 +12,7 @@ export default function DialogDeleteEquipos({
         <h1 className='font-bold'>Ubicación:</h1>
         <p>{location?.value}</p>
         <h1 className='font-bold'>Tipo:</h1>
-        <p>{type}</p>
+        <p>{type?.value}</p>
     </section>
   )
 };

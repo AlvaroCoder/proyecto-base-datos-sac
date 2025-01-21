@@ -3,7 +3,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 export default function listCardsShortPerson({
     data=[],
-    handleClickClearMember
+    handleClickClearMember,
 }) {
   return (
     <div className='w-full rounded-lg flex flex-wrap gap-x-4 gap-y-2 items-center'>

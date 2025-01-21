@@ -4,15 +4,10 @@ import { Input } from '../../ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table'
 import { Checkbox } from '../../ui/checkbox'
 import { Button } from '@/components/ui/button'
-
-import Link from 'next/link'
 import { DialogCreateUi, DialogDeleteUi, DialogEditUi, DropdownUiTable } from '../ui'
 
 {/** Iconos */}
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import PersonIcon from '@mui/icons-material/Person';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { DialogDeleteMultiplesElements } from '@/components/Dialogs'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
