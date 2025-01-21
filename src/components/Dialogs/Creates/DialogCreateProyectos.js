@@ -69,8 +69,22 @@ export default function DialogCreateProyectos({
   }
   // Funcion de guardar el nuevo proyecto
   const handleClickSave=async()=>{
-    console.log(dataDialog);
-        
+    const response = await CREATE_PROYECTS(dataDialog);        
+    if (!response.ok) {
+      toast({
+        variant : "destructive",
+        title : "Error",
+        description : "Sucedio un error con el servidor"
+      });
+      return;
+    }
+    const responseJSON = await response.json();
+    console.log(responseJSON);
+    
+    toast({
+      title : "Exito",
+      description : "Se guardo correctamente el proyecto"
+    })
   }
   // Funcion de agregar miembro nuevo o antiguo a la 
   return (
