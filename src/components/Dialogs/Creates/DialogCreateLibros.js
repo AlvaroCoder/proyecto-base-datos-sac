@@ -1,8 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { Input } from '../../ui/input'
 import ClearIcon from '@mui/icons-material/Clear';
-import { Button } from '../../ui/button';
-import { ChevronsUpDown, Loader2 } from 'lucide-react';
 import { CREATE_BOOK } from '../../commons/apiConnection';
 import { useToast } from '../../ui/use-toast';
 import DropdownMenuComponent from '@/components/elementos/dropdownComponent';
@@ -14,6 +12,7 @@ export default function DialogCreateLibros({
   dataMembers=[],
   dataAutores=[]
 }) {  
+  
   const {toast} = useToast();
   const refAuthorName =useRef(null);
   const [dataDialog, setDataDialog] = useState({
@@ -45,7 +44,19 @@ export default function DialogCreateLibros({
 
   }
   const handleClickAddAuthor=(data)=>{
-
+    const existeMiembro = dataDialog.authors.some(obj=>JSON.stringify(obj) === JSON.stringify(data));
+    if (existeMiembro) {
+      toast({
+        variant : "destructive",
+        title : "Error",
+        description : "No se puede agregar a la misma persona 2 veces"
+      });
+      return;
+    }
+    setDataDialog(prev=>({
+      ...dataDialog,
+      authors : [...prev.authors, data]
+    }))
   }
 
   const handleClickSave=async()=>{
@@ -76,6 +87,7 @@ export default function DialogCreateLibros({
     })
   }
   const handleClickAddMember=(data)=>{
+    
     setDataDialog(prev=>({
       ...dataDialog,
       borrowed_to : [...prev.borrowed_to, data]
@@ -123,7 +135,10 @@ export default function DialogCreateLibros({
           handleClickAddMember={handleClickAddAuthor}
           componentAdd={
             <FormAddMember
-              handleClickAddMember={handleClickAddAuthor}
+              handleClickAddMember={(item)=>{
+                const authorName = item.first_name + " " + item.last_name;
+                handleClickAddAuthor({value : authorName})
+              }}
               hasCategories={false}
             />
           }
