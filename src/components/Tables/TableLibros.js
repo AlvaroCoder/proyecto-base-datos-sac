@@ -14,7 +14,8 @@ export default function TableLibros({
     dataLibros=[], 
     dataStatus=[], 
     dataLocations=[],
-    dataUsers=[]
+    dataUsers=[],
+    dataAutores=[]
 }) {        
     const titlesData=[
         {name:"Titulo",className:"w-[800px] px-2"},
@@ -187,6 +188,7 @@ export default function TableLibros({
         titlesData={titlesData}
         keysData={keysData}
         numData={numBooks}
+        dataAutores={dataAutores}
         dataStatusDialog={dataStatus}
         dataLocationDialog={dataLocations}
         dataMembers={dataUsers}

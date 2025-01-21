@@ -6,7 +6,8 @@ import { Button } from '../ui/button';
 
 export default function formAddMember({
     dataCategoriesUser=[],
-    handleClickAddMember
+    handleClickAddMember,
+    hasCategories=true
 }) {
     const [inputValue, setInputValue] = useState({
         first_name : "",
@@ -71,7 +72,9 @@ export default function formAddMember({
                     required
                 />
             </div>
-            <div className='grid grid-cols-3 items-center gap-4'>
+            {
+                hasCategories && 
+                <div className='grid grid-cols-3 items-center gap-4'>
                 <label>Cargo</label>
                 <div className='col-span-2'>
                 <DropdownMenuComponent
@@ -81,6 +84,7 @@ export default function formAddMember({
                 />
                 </div>
             </div>
+            }
             <div className='grid grid-cols-3'>
             <Button
                 variant="ghost"

@@ -15,9 +15,9 @@ export default function popOverAddList({
     const [queryInput, setQueryInput] = useState("");
     const filterData = useMemo(()=>{
         if (dataMembers) {
-            return data.filter(item=>(item?.first_name.toUpperCase().includes(queryInput.toUpperCase()) || item?.last_name.toUpperCase().includes(queryInput.toUpperCase())))
+            return data.filter(item=>(item?.first_name.toUpperCase().includes(queryInput.toUpperCase().trim()) || item?.last_name.toUpperCase().includes(queryInput.toUpperCase().trim())))
         }else{
-            return data.filter(item=>(item?.value?.toUpperCase().includes(queryInput.toUpperCase())))
+            return data.filter(item=>(item?.value?.toUpperCase().includes(queryInput.toUpperCase().trim())))
         }
     }, [queryInput])
     const handleChangeInput=(evt)=>{

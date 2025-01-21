@@ -14,7 +14,6 @@ export default function DialogCreateProyectos({
 }) {
 
   const  {toast} = useToast();
-  const [loadingData, setLoadingData] = useState(false);
   const [dataDialog, setDataDialog] = useState({
     name : "",
     coordinator : null,

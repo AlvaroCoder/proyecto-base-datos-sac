@@ -6,13 +6,14 @@ import { ChevronsUpDown, Loader2 } from 'lucide-react';
 import { CREATE_BOOK } from '../../commons/apiConnection';
 import { useToast } from '../../ui/use-toast';
 import DropdownMenuComponent from '@/components/elementos/dropdownComponent';
-import { ButtonCloseDialog, ListCardShort, PopoverAddList } from '@/components';
+import { ButtonCloseDialog, FormAddMember, ListCardShort, PopoverAddList } from '@/components';
 export default function DialogCreateLibros({
   dataStatus=[],
   dataLocation=[],
   handleClickSaveRegister,
-  dataMembers=[]
-}) {
+  dataMembers=[],
+  dataAutores=[]
+}) {  
   const {toast} = useToast();
   const refAuthorName =useRef(null);
   const [dataDialog, setDataDialog] = useState({
@@ -29,8 +30,6 @@ export default function DialogCreateLibros({
     borrowed_to : [],
     amount : 1
   });
-  const [showFormAuthor, setShowFormAuthor] = useState(false);
-
   const handleChangeTitle=(evt)=>{
     setDataDialog({
       ...dataDialog,
@@ -45,30 +44,10 @@ export default function DialogCreateLibros({
     });
 
   }
-  const handleClickShowFormNewAuthor=()=>{
-    setShowFormAuthor(!showFormAuthor);
+  const handleClickAddAuthor=(data)=>{
+
   }
 
-  const handleClickAddAuthor=(evt)=>{
-    evt.preventDefault();
-    if (refAuthorName.current.value === "") {
-      alert("Debe ingresar un dato");
-      return;
-    }
-    const authorData = refAuthorName.current.value;
-    const newDataAtuhors = [...dataDialog?.authors, {value : authorData}]
-    setDataDialog({
-      ...dataDialog,
-      authors : newDataAtuhors
-    });
-    setShowFormAuthor(false );
-    refAuthorName.current.value = null;
-  }
-  const handleClickCancelAuthor=(evt)=>{
-    evt.preventDefault();
-    setShowFormAuthor(false);
-    refAuthorName.current.value=null;
-  }
   const handleClickSave=async()=>{
     if (dataDialog.authors.length <= 0) {
       toast({
@@ -137,45 +116,18 @@ export default function DialogCreateLibros({
         }
       </div>
       <div className='mt-2'>
-        {
-          showFormAuthor ? 
-          <section className='p-4 rounded-lg bg-slate-50'>
-            <h1 className='font-bold'>Nuevo Autor</h1>
-            <div className='grid grid-cols-1 gap-2'>
-              <div className='flex-1'>
-                <label>Nombre</label>
-                <Input
-                  ref={refAuthorName}
-                />
-              </div>
-            </div>
-            <div className='mt-2'>
-              <Button
-                className="bg-white text-guinda border-2 border-guinda hover:bg-red-50 "
-                onClick={handleClickAddAuthor}
-              >
-                Agregar
-              </Button>
-              <Button
-                variant="ghost"
-                className="mx-2"
-                onClick={handleClickCancelAuthor}
-              >
-                Cancelar
-              </Button>
-            </div>
-          </section> : 
-          <Button
-            variant="ghost"
-            className="w-full shadow-sm border border-gray-100"
-            onClick={handleClickShowFormNewAuthor}  
-          >
-            <p>Agregar autor</p>
-            <ChevronsUpDown
-              className='opacity-50'
+        <PopoverAddList
+          data={dataAutores}
+          dataMembers={false}
+          textButton='Agregar Autor'
+          handleClickAddMember={handleClickAddAuthor}
+          componentAdd={
+            <FormAddMember
+              handleClickAddMember={handleClickAddAuthor}
+              hasCategories={false}
             />
-          </Button>
-        }
+          }
+        />        
       </div>
     </div>
     <div className='my-2 flex flex-row items-center'>

@@ -13,7 +13,7 @@ export default function Page() {
   return (
     <div className='w-full max-h-screen overflow-y-auto px-6 py-4 '>
         <h1 className='text-guinda font-bold text-2xl'>
-            Miembros
+            Usuarios
         </h1>
         {
           (loadingDataMiembros || loadingDataCategoriasMiembros) ? <p>Cargando datos ...</p> :

@@ -22,6 +22,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 export default function TableLayout({
     currentData=[],
     dataCategoriesUser=[],
+    dataAutores=[],
     titlesData=[],
     handleChangeInput,
     handleChangeChecked,
@@ -49,10 +50,11 @@ export default function TableLayout({
     deleteElementFunction,
     handleClickSaveRegister,
     dataStatusDialog,
-    dataListAgreements=[]
+    dataListAgreements=[],
 }) 
 {       
 const elementsSelected = currentData?.filter(data=>data.Seleccionado);
+
   return (
     <div className='w-full'>
         <div className='flex items-center py-4'>
@@ -65,6 +67,7 @@ const elementsSelected = currentData?.filter(data=>data.Seleccionado);
                 dialogTitle={dialogTitleCreate}
                 DialogBody={
                 <DialogCreateComponent
+                    dataAutores={dataAutores}
                     dataStatus={dataStatusDialog}
                     dataLocation={dataLocationDialog}
                     dataTypes={dataTypeDialog}
@@ -141,7 +144,7 @@ const elementsSelected = currentData?.filter(data=>data.Seleccionado);
                                                                                 return false
                                                                             }                                                                            
                                                                             return true
-                                                                        }).map((v, idx)=>{
+                                                                        }).map((v, idx)=>{                                                                            
                                                                             return <span key={idx}>{v} {v?.user_name}</span>
                                                                         })}</p>
                                                                     })
@@ -232,7 +235,7 @@ const elementsSelected = currentData?.filter(data=>data.Seleccionado);
         </div>
         <div className='flex justify-center my-8'>
             {
-                currentData.length > 9 &&
+                (currentData.length > 9 || currentPage === Math.ceil(numData/dataPerPage))  &&
                 <nav className="relative z-0 inline-flex rounded-md  -space-x-px" aria-label="Pagination">
                     <Button
                         onClick={()=>handlePaginate(currentPage-1)}
