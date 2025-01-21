@@ -4,6 +4,7 @@ import { Textarea } from '../../ui/textarea';
 import _ from "lodash"
 import { ButtonCloseDialog, DropdownMenuComponent, ListCardShort, PopOverAddButton, PopoverAddList } from '@/components';
 import { useToast } from '@/components/ui/use-toast';
+import { UPDATE_PROYECTS } from '@/components/commons/apiConnection';
 
 // Dialog de editar proyectos
 export default function DialogProyectos({
@@ -58,6 +59,8 @@ export default function DialogProyectos({
   }
   const handleClickResearcherClear=(id, item)=>{
     const existeMiembroAgregado=dataProjects.researchers_added.some(obj=>JSON.stringify(obj)===JSON.stringify(item));
+    console.log(existeMiembroAgregado);
+    
     const nuevaDataMiembrosAgregado=existeMiembroAgregado ? [...dataProjects.researchers_added].filter((obj)=>JSON.stringify(obj)!== JSON.stringify(item)) : [...dataProjects.researchers_added];
     setDataProjects(prev=>({
       ...dataProjects,
@@ -67,7 +70,19 @@ export default function DialogProyectos({
     }));
   }
 
-  const handleClickSave=()=>{
+  const handleClickSave=async()=>{
+    const response = await UPDATE_PROYECTS(dataProjects);
+    if (!response.ok) {
+      toast({
+        variant : "destructive",
+        title : "Error",
+        description : "Sucedio un error al guardar los datos"
+      });
+      return;
+    }
+    const responseJSON = await response.json();
+    console.log(responseJSON);
+    
     console.log(dataProjects); 
   }
   return (

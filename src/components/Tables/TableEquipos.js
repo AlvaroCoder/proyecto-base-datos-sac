@@ -127,7 +127,7 @@ export default function TableEquipos({
     const numEquipos = equiposData.length;
 
     const listFiltersEquipos=[
-        <DropdownFiltersComponent data={ubicacionSinRepetir} titleData={locationData} titleButton='Ubicacion' handleCheckedChange={handleCheckedDropdownLocation}/>,
+        <DropdownFiltersComponent data={dataLocationEquipos} titleData={locationData} titleButton='Ubicacion' handleCheckedChange={handleCheckedDropdownLocation}/>,
         <DropdownFiltersComponent data={dataStatusEquipos} titleButton='Estado' titleData={statusData} handleCheckedChange={handleCheckedDropwdownStatus} />,
     ]
   return (

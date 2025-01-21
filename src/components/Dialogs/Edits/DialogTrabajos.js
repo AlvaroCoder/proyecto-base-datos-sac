@@ -5,6 +5,8 @@ import { Textarea } from '../../ui/textarea';
 import _ from "lodash";
 import DropdownMenuComponent from '@/components/elementos/dropdownComponent';
 import { ButtonCloseDialog } from '@/components';
+import { UPDATE_TRABAJOS } from '@/components/commons/apiConnection';
+import { useToast } from '@/components/ui/use-toast';
 
 export default function DialogTrabajos({
     initialDataDialog,
@@ -12,6 +14,7 @@ export default function DialogTrabajos({
     dataCourses=[],
 
 }) {    
+  const {toast} = useToast();
   const [dataTrabajos, setDataTrabajos] = useState({
     id : initialDataDialog.id,
     title : initialDataDialog?.title,
@@ -27,9 +30,23 @@ export default function DialogTrabajos({
    });
   }
 
-  const handleClickSave=()=>{
-    console.log(dataTrabajos);
+  const handleClickSave=async()=>{
+    const response = await UPDATE_TRABAJOS(dataTrabajos);
+    if (!response.ok) {
+      toast({
+        variant :"destructive",
+        title : "Error",
+        description : "Hubo error en guardar el trabajo"
+      });
+      return
+    }
+    const responseJSON = await response.json();
+    console.log(responseJSON);
     
+    toast({
+      title : "Exito",
+      description : "Se actualizo correctamente el trabajo"
+    })
   }
   return (
     <section>

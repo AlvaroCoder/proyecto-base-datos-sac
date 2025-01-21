@@ -1,29 +1,42 @@
 "use client"
 import React, { useRef, useState } from 'react'
 import { Input } from '../../ui/input'
-import ClearIcon from '@mui/icons-material/Clear';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Button } from '../../ui/button';
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '../../ui/dropdown-menu';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';
+import { ButtonCloseDialog, DropdownMenuComponent, ListCardShort, PopoverAddList } from '@/components';
+import { useToast } from '@/components/ui/use-toast';
+import { UPDATE_BOOKS } from '@/components/commons/apiConnection';
 
 export default function DialogLibros({
+  initialDataDialog,
   dataDialog,
   dataLocation=[],
   dataStatus=[],
+  dataMembers=[],
   dataPeopleBorrowTo=[],
   handleChangeExistChanges,
   setDataDialog : setDataDialogLibros,
-}) {
-
+}) {  
+  console.log(initialDataDialog);
+  
+  const {toast }= useToast();
   const refInputNameAuthor=useRef(null);
+  const [dataLibros, setDataLibros] = useState({
+    id : initialDataDialog?.id,
+    title : initialDataDialog?.title,
+    authors_added : [],
+    authors_deleted : [],
+    authors : initialDataDialog.authors,
+    location : initialDataDialog.location,
+    status : initialDataDialog.status,
+    borrowed_to : initialDataDialog.borrowed_to === "No prestado" ? [] : initialDataDialog.borrowed_to,
+    borrowed_to_added : [],
+    borrowed_to_deleted : [],
+    amount : initialDataDialog.amount
+  });
 
   const [showFormNewAuthor, setShowFormNewAuthor] = useState(false);
-  const [showFormNewPerson, setShowFormNewPerson] = useState(false);
-  const [inputDataNewPersona, setInputDataNewPersona] = useState({
-    nombrePersona : "",
-    apellidoPersona : ""
-  })
 
   const handleClickClearAuthor=(key)=>{
     const newDataAuthors = [...dataDialog?.authors].filter((_, idx)=>idx!==key);
@@ -38,9 +51,7 @@ export default function DialogLibros({
   const handleClickShowFormNewAuthor=()=>{
     setShowFormNewAuthor(!showFormNewAuthor);
   }
-  const handleClickShowFormNewPerson=()=>{
-    setShowFormNewPerson(!showFormNewPerson);
-  }
+
   const handleClickAddAuthor=(evt)=>{
     evt.preventDefault();
     if (refInputNameAuthor.current.value === "") {
@@ -59,47 +70,63 @@ export default function DialogLibros({
     setShowFormNewAuthor(false)
     refInputNameAuthor.current.value = null;
   }
-  const handleClickAddPerson=(evt)=>{
-    evt.preventDefault();
 
-  }
-  const handleClickCancelPerson=(evt)=>{
-    evt.preventDefault();
-    setShowFormNewPerson(false);
-
-  }
   const handleClickCancelAuthor=(evt)=>{
     evt.preventDefault();
     setShowFormNewAuthor(false);
     refInputNameAuthor.current.value=null;
   }
-  const handleChangeCheckedDopdown=(id, keyValue)=>{
-    const jsonSelected = keyValue == "location" ? dataLocation?.filter(elem=>elem?.id === id) : dataStatus?.filter(elem=>elem?.id === id)[0];
-    setDataDialogLibros({
-      ...dataDialog,
-      [keyValue] : jsonSelected
-    });
-    handleChangeExistChanges(); 
-  }
-  const handleChangeNewPersona=(evt)=>{
-    const target = evt.target;
-    setInputDataNewPersona({
-      ...inputDataNewPersona,
-      [target.name] : target.value
-    });
-  }
-  const handleClickDeletePeopleTable=(index)=>{
-    const newListPeopleBorrow=dataPeopleBorrowTo?.filter((_,indexpeople)=>indexpeople !== index)
-  }
+
   const handleChangeTitleDialog=(evt)=>{
-    const inputValue = evt.target.value;
-    if (inputValue !== dataDialog.title) {
-      handleChangeExistChanges()
-    }
-    setDataDialogLibros({
-      ...dataDialog,
+    const inputValue = evt.target.value;  
+    setDataLibros({
+      ...dataLibros,
       title : inputValue
     });
+  }
+  const handleClickClearBorrowedTo=(id, item)=>{
+    const existeMiembroAgregado = dataLibros.borrowed_to_added.some(obj=>JSON.stringify(obj) === JSON.stringify(item));
+    const nuevaDataMiembrosAgregado = existeMiembroAgregado?[...dataLibros.borrowed_to_added].filter((obj)=>JSON.stringify(obj)!== JSON.stringify(item)) : [...dataLibros.borrowed_to_added];
+    setDataLibros(prev=>({
+      ...dataLibros,
+      borrowed_to : [...prev.borrowed_to].filter((_,idx)=>idx!==id),
+      borrowed_to_added : nuevaDataMiembrosAgregado,
+      borrowed_to_deleted : existeMiembroAgregado ? [...prev.borrowed_to_deleted, item] : [...prev.borrowed_to_deleted]
+    }));
+  }
+  const handleClickAddBorrowedTo=(data)=>{
+    const existeMiembro = dataLibros.borrowed_to_added.some(item=>JSON.stringify(data) === JSON.stringify(item)) || dataLibros.borrowed_to?.some(item=>JSON.stringify(item) === JSON.stringify(data)) 
+    if (existeMiembro) {
+      toast({
+        variant : "destructive",
+        title : "Error",
+        description : "No se puede agregar a la misma persona 2 veces"
+      });
+      return;
+    }
+    setDataLibros({
+      ...dataLibros,
+      borrowed_to : [...dataLibros.borrowed_to, data],
+      borrowed_to_added : [...dataLibros.borrowed_to_added, data]
+    });
+  }
+  const handleClickSave=async()=>{
+    const response = await UPDATE_BOOKS(dataLibros);
+    if (!response.ok) {
+      toast({
+        variant :"destructive",
+        title : "Error",
+        description : "Ocurrio un error con el servidor"
+      });
+      return;
+    }
+    const responseJSON = await response.json();
+    console.log(responseJSON);
+    
+    toast({
+      title : "Exito",
+      description : "Se actualizo con exito el libro"
+    })    
   }
   return (
     <section>
@@ -107,33 +134,16 @@ export default function DialogLibros({
         <h1 className='font-semibold'>Titulo</h1>
         <Input
           name="title"
-          value={dataDialog.title}
+          value={dataLibros.title}
           onChange={handleChangeTitleDialog}
         />
       </div>
       <div className='my-2'>
         <h1 className='font-semibold'>Autor</h1>
-        <div 
-        className='w-full rounded-lg flex flex-wrap gap-x-4 gap-y-2 items-center'>
-          {
-            dataDialog?.authors?.map((author, key)=>{
-              return (
-                <p 
-                key={key} 
-                className='p-2 bg-slate-100 rounded-xl w-fit mt-2 text-nowrap'
-                >
-                  <span className='mr-2'>
-                    {author?.value}
-                    <ClearIcon
-                      className='cursor-pointer'
-                      onClick={()=>handleClickClearAuthor(key)}
-                    />
-                  </span>
-                </p>
-              )
-            })
-          }
-        </div>
+        <ListCardShort
+          data={dataLibros.authors}
+          handleClickClear={handleClickClearAuthor}
+        />
         <div className='mt-2'>
           {
             showFormNewAuthor ?
@@ -177,56 +187,25 @@ export default function DialogLibros({
       <div className='my-2 flex flex-row items-center'>
         <div className='w-[300px] flex flex-col'>
           <h1 className='font-semibold'>Ubicacion</h1>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghot"
-                className="w-full border-gray-100 border-[1px] shadow-sm"
-              >
-                <span>{dataDialog?.location[0]?.value}</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              {
-                dataLocation?.map(item=>
-                  <DropdownMenuCheckboxItem
-                    key={item.id}
-                    checked={item?.id === dataDialog?.location[0]?.id}
-                    className="capitalize"
-                    onCheckedChange={()=>handleChangeCheckedDopdown(item.id, "location")}
-                  >
-                    {item.value}
-                  </DropdownMenuCheckboxItem>
-                )
-              }
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <DropdownMenuComponent
+            data={dataLocation}
+            initialValue={dataLibros.location}
+            changeData={(item)=>setDataLibros({
+              ...dataLibros,
+              location : item
+            })}
+          />
         </div>
         <div className='flex-1 ml-2'>
-          <h1>Estado</h1>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="w-full border-gray-100 border-[1px] shadow-sm"
-              >
-                <span>{dataDialog?.status?.value}</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              {
-                dataStatus?.map(item=>
-                  <DropdownMenuCheckboxItem
-                    key={item.id}
-                    checked={item.id === dataDialog?.status?.id}
-                    onCheckedChange={()=>handleChangeCheckedDopdown(item.id,"status")}
-                  >
-                    {item.value}
-                  </DropdownMenuCheckboxItem>
-                )
-              }
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <h1 className='font-semibold'>Estado</h1>
+          <DropdownMenuComponent
+            data={dataStatus}
+            initialValue={dataLibros.status}
+            changeData={(item)=>setDataLibros({
+              ...dataLibros,
+              status : item
+            })}
+          />
         </div>
       </div>
       <div className='flex-1 border-b-2 border-b-guindaOpaco py-2 my-4'>
@@ -234,88 +213,21 @@ export default function DialogLibros({
           Prestado a
         </h1>
       </div>
-      <div className='w-full mb-4'>
-        {
-          dataPeopleBorrowTo?.length > 0 &&
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nombre</TableHead>
-                <TableHead>Apellido</TableHead>
-                <TableHead><DeleteIcon/></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {
-                dataPeopleBorrowTo?.map((people,idx)=>(
-                  <TableRow key={idx}>
-                    <TableCell>{people?.nombre}</TableCell>
-                    <TableCell>{people?.apellido}</TableCell>
-                    <TableCell>
-                      <Button
-                        onClick={()=>handleClickDeletePeopleTable(idx)}
-                      >
-                        <DeleteIcon/>
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              }
-            </TableBody>
-          </Table>
-        }
+      <ListCardShort
+        data={dataLibros.borrowed_to}
+        handleClickClear={handleClickClearBorrowedTo}
+      />
+      <div className='mt-2'>
+        <PopoverAddList
+          textButton='Agregar persona'
+          data={dataMembers}
+          handleClickAddMember={handleClickAddBorrowedTo}
+        />
       </div>
-      <div>
-        {
-          showFormNewPerson ?
-          <section className='p-4 rounded-lg bg-slate-50'>
-            <h1 className='font-bold'>Nueva Persona</h1>
-            <div className='' >
-              <div className='flex flex-row items-center mb-2'>
-                <div className='flex-1'>
-                  <label className='text-sm' htmlFor='nombrePersona'>Nombre</label>
-                  <Input
-                    name="nombrePersona"
-                    value={inputDataNewPersona?.nombrePersona}
-                    onChange={handleChangeNewPersona}
-                  />
-                </div>
-                <div className='flex-1 ml-2'>
-                  <label className='text-sm' htmlFor='apellidoPersona'>Apellido</label>
-                  <Input
-                    name="apellidoPersona"
-                    value={inputDataNewPersona?.apellidoPersona}
-                    onChange={handleChangeNewPersona}
-                  />
-                </div>
-              </div>
-              <div>
-                <Button
-                  className="bg-white text-guinda border-2 border-guinda hover:bg-red-50"
-                  onClick={handleClickAddPerson}
-                >
-                  Agregar
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="mx-2"
-                  onClick={handleClickCancelPerson}
-                >
-                  Cancelar
-                </Button>
-              </div>
-            </div>
-          </section> :
-          <Button
-            variant="ghost"
-            className="text-guinda hover:bg-white underline hover:text-guinda"
-            onClick={handleClickShowFormNewPerson}
-          >
-            Agregar Persona
-          </Button>
-        }
-      </div>
-
+      <ButtonCloseDialog
+        handleClickSave={handleClickSave}
+        textButton='Actualizar libros'
+      />
     </section>
   )
 }

@@ -14,6 +14,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DialogDeleteMultiplesElements } from '@/components/Dialogs'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
 
 
@@ -141,13 +142,28 @@ const elementsSelected = currentData?.filter(data=>data.Seleccionado);
                                                                             }                                                                            
                                                                             return true
                                                                         }).map((v, idx)=>{
-                                                                            return <span key={idx}>{v}</span>
+                                                                            return <span key={idx}>{v} {v?.user_name}</span>
                                                                         })}</p>
                                                                     })
                                                                 }
                                                                 {
                                                                     currentValue?.length > 3 &&
-                                                                    <MoreHorizIcon/>
+                                                                    <Popover>
+                                                                        <PopoverTrigger
+                                                                            asChild
+                                                                        >
+                                                                        <Button
+                                                                            variant="ghost"
+                                                                            >
+                                                                                <MoreHorizIcon/>
+                                                                            </Button>
+                                                                        </PopoverTrigger>
+                                                                        <PopoverContent>
+                                                                            {
+                                                                                currentValue?.map(item=><p className='p-2 hover:bg-gray-50 rounded-lg'>{item?.first_name} {item?.last_name} {item?.value} {typeof item === 'string' && item}</p>)
+                                                                            }
+                                                                        </PopoverContent>
+                                                                    </Popover>
                                                                 }
                                                             </div>
                                                         </TableCell>

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Input } from '../../ui/input'
 import { ButtonCloseDialog,  ListCardShort,  PopoverAddList } from '@/components';
 import { useToast } from '@/components/ui/use-toast';
+import { UPDATE_PAPER } from '@/components/commons/apiConnection';
 export default function DialogPapers({
     initialDataDialog,
     dataDialog,
@@ -50,9 +51,28 @@ export default function DialogPapers({
             members_deleted : [...prev.members_deleted, data]
         }))
     }
-    const handleClickSave=()=>{
-        console.log(dataPapers);
+    const handleClickSave=async()=>{
+        const newJSONPapers={
+            ...dataPapers
+        }
+        delete newJSONPapers.members
+        console.log(newJSONPapers);
         
+        const response = await UPDATE_PAPER(newJSONPapers);
+        if (!response.ok) {
+            toast({
+                variant : "destructive",
+                title : "Error",
+                description : "Sucedio un error en guardar el paper"
+            });
+            return;
+        }
+        const responseJSON = await response.json();
+        console.log(responseJSON);
+        toast({
+            title : "Exito",
+            description : "Se actualizo correctamente"
+        });
     }
   return (
     <section>

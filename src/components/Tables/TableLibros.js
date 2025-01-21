@@ -14,9 +14,8 @@ export default function TableLibros({
     dataLibros=[], 
     dataStatus=[], 
     dataLocations=[],
-    dataMembers=[],
     dataUsers=[]
-}) {    
+}) {        
     const titlesData=[
         {name:"Titulo",className:"w-[800px] px-2"},
         {name:"Autor",className:"w-[500px]"},
@@ -29,7 +28,7 @@ export default function TableLibros({
         "authors",
         "status",
         "location",
-        "borrow_to",
+        "borrowed_to",
     ]
     const {toast} = useToast();
     const newDataLibros = dataLibros?.map((item)=>({...item, Seleccionado : false}));
@@ -45,11 +44,6 @@ export default function TableLibros({
     const onChangeInput=(e)=>{
         setQuery(e.target.value);
     } ;
-
-    const estadosSinRepetir=extraerDataSinRepetir(librosData,"status");
-    // TODO : terminar de hacer las filtraciones por Ubicacion y Prestado a
-    const ubicaionSinRepetir=extraerDataSinRepetir(librosData, "location");
-
 
     const filterData =useMemo(()=>{
         return  librosData.filter(item=>item?.title?.toUpperCase().includes(query.toUpperCase()))
@@ -71,20 +65,6 @@ export default function TableLibros({
         return filterButtonStatus.slice(indexOfFirstBook, indexOfLasBook);
     }, [filterButtonStatus, indexOfFirstBook, indexOfLasBook]);
     
-    const handleChangeRow=(idx, field, value)=>{
-        const updateData = [...librosData];
-        const newData = updateData.map((item)=>{
-            if(item?.id === idx){
-                return {...item, [field] : value}                  
-            }
-            return {...item}
-        });
-        setLibrosData(newData)
-    };
-
-    const resetDataRow=()=>{
-        setLibrosData(newDataLibros);
-    }
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
     const numBooks = librosData.length;
@@ -94,7 +74,7 @@ export default function TableLibros({
             setstateData("")
             return;
         }
-        setstateData(item)
+        setstateData(item?.value)
     }
     const handleCheckedDropdownLocation=(item)=>{
         setQuery("");
@@ -197,8 +177,8 @@ export default function TableLibros({
         ])
     }
     const filterComponents=[
-        <DropdownFiltersComponent data={estadosSinRepetir} titleData={stateData} titleButton='Estados' handleCheckedChange={handleChckedDropdownStatus}/>,
-        <DropdownFiltersComponent data={ubicaionSinRepetir} titleData={locationData} titleButton='Ubicación' handleCheckedChange={handleCheckedDropdownLocation} />,
+        <DropdownFiltersComponent data={dataStatus} titleData={stateData} titleButton='Estados' handleCheckedChange={handleChckedDropdownStatus}/>,
+        <DropdownFiltersComponent data={dataLocations} titleData={locationData} titleButton='Ubicación' handleCheckedChange={handleCheckedDropdownLocation} />,
     ]
     return (
     <TableLayout

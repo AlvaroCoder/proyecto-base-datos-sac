@@ -89,7 +89,6 @@ export default function TablePapers({
     const numPapers = papersData.length;
 
     const listFilterComponents = [
-        <DropdownFiltersComponent data={yearSinRepetir} titleButton='Año' titleData={yearData} handleCheckedChange={handleCheckedDropdownYear}/>,
     ]
     const handleClickSaveRegister=(data)=>{
         setPapersData([

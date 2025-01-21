@@ -13,7 +13,7 @@ export default function TableProyectos({
   dataCargosUsuarios=[],
   dataStatus=[],
   dataAgreements=[]
-}) {
+}) {  
   const newDataProyectos = dataProyectos?.map((item)=>{
     const arrAgreements = item?.agreement?.split(";")
     return {
@@ -74,8 +74,6 @@ export default function TableProyectos({
     "year_end",
   ]
   
-  const estadosSinRepetir = extraerDataSinRepetir(proyectosData, "status");
-  const coordinadorSinRepetir = extraerDataSinRepetir(proyectosData, "fullNameCoordinator");
     
   const handleChangeChecked=(_)=>{
     const newListProyectos = proyectosData.map(proyecto=>({...proyecto, Seleccionado : !proyecto.Seleccionado}))
@@ -151,9 +149,7 @@ export default function TableProyectos({
         year_end : `${dataDialogComponent?.year_end}-01-01`
       }
     }     
-    
-    console.log(newDataJSONToSend);
-    
+        
     const response = await UPDATE_PROYECTS(newDataJSONToSend);
     
     const jsonNewDataProject = {
@@ -177,8 +173,7 @@ export default function TableProyectos({
     setProyectosData(newDataProjects)
   }
   const listFilterComponents=[
-    <DropdownFiltersComponent data={estadosSinRepetir} titleButton='Estados' titleData={statusData} handleCheckedChange={handleCheckedDropddownStatus} />,
-    <DropdownFiltersComponent data={coordinadorSinRepetir} titleButton='Coordinador' titleData={coordinatorData} handleCheckedChange={handleCheckedDropdownCoordinate} />
+    <DropdownFiltersComponent data={dataStatus} titleButton='Estados' titleData={statusData} handleCheckedChange={handleCheckedDropddownStatus} />,
   ]
   return (
     <TableLayout

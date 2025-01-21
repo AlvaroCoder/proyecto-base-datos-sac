@@ -29,7 +29,7 @@ export default function Page() {
         <h1 className='text-guinda font-bold text-2xl'>
             Libros
         </h1>
-        {loadingDataLibros || loadingDataStatus || loadingDataLocations ? <SkeletonTable headers={headersLibros}/> : <TableLibros 
+        {(loadingDataLibros || loadingDataStatus || loadingDataLocations || loadingDataUsuarios)? <SkeletonTable headers={headersLibros}/> : <TableLibros 
         dataLibros={dataLibros} 
         dataLocations={dataLocations?.locations} 
         dataStatus={dataStatus?.status}

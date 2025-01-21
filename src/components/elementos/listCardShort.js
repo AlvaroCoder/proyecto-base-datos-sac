@@ -19,6 +19,7 @@ export default function listCardShort({
                             {item?.first_name}
                             {item?.last_name}
                             {item?.value}
+                            {item?.user_name}
                             <ClearIcon
                                 className='cursor-pointer ml-2'
                                 onClick={()=>handleClickClear(idx, item)}
