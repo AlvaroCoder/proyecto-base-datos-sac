@@ -1,13 +1,9 @@
 import React, {  useState } from 'react'
 import { Input } from '../../ui/input'
-import ClearIcon from '@mui/icons-material/Clear';
-import SaveIcon from '@mui/icons-material/Save';
 import { Button } from '../../ui/button';
-import { DialogClose, DialogFooter } from '../../ui/dialog';
-import {  Loader2 } from 'lucide-react';
 import { CREATE_PAPER } from '../../commons/apiConnection';
 import { useToast } from '../../ui/use-toast';
-import { ListCardsShortPerson, PopoverAddList } from '@/components';
+import { ButtonCloseDialog, ListCardsShortPerson, PopoverAddList } from '@/components';
 
 export default function DialogCreatePapers({
   handleClickSaveRegister,
@@ -21,8 +17,6 @@ export default function DialogCreatePapers({
     year : '',
     link : ''
   });
-  const [loadingData, setLoadingData] = useState(false);
-
   const handleChangeDialogInput=(evt)=>{
     const target = evt.target;
     setDataDialog({
@@ -46,16 +40,23 @@ export default function DialogCreatePapers({
     })
   }
   const handleClickSave=async()=>{
-      /*setLoadingData(true);
-      await CREATE_PAPER(dataDialog);
-      toast({
-        title :"Exito",
-        description : "Exito en guardar el paper!"
-      });
-      handleClickSaveRegister(dataDialog)
-      setLoadingData(false);*/
       console.log(dataDialog);
-      
+    const response = await CREATE_PAPER(dataDialog);
+    if (!response.ok) {
+      toast({
+        variant : "destructive",
+        title : "Error",
+        description : "Sucedio un error en el servidor"
+      });
+      return
+    }
+    const responseJSON = await response.json();
+    console.log(responseJSON);
+    
+    toast({
+      title : "Exito",
+      description : "Se guardo correctamente el paper"
+    })
   }
   
   return (
@@ -78,6 +79,7 @@ export default function DialogCreatePapers({
           <PopoverAddList
             data={dataMembers}
             handleClickAddMember={handleClickAddMember}
+            textButton='Agregar Miembro'
           />
         </div>
       </div>
@@ -102,16 +104,9 @@ export default function DialogCreatePapers({
           />
         </div>
       </section>
-      <DialogFooter className='flex flex-row items-center my-4'>
-        <DialogClose asChild>
-          <Button
-            className='flex-1 cursor-pointer mr-2 bg-guinda rounded-lg py-4  text-white text-center hover:bg-guindaOpaco  hover:font-bold border-2 border-guinda hover:border-guinda'
-            onClick={handleClickSave}
-          >
-            {loadingData ? <Loader2  className="mr-2 h-4 w-4 animate-spin"/> : <><SaveIcon/> <span className='ml-2'>Guardar Registro</span></>}
-          </Button>
-        </DialogClose>
-      </DialogFooter>
+      <ButtonCloseDialog
+        handleClickSave={handleClickSave}
+      />
     </section>
   )
 }

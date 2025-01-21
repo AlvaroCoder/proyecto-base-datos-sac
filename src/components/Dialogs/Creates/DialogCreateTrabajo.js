@@ -3,11 +3,9 @@ import { useToast } from '../../ui/use-toast'
 import { Input } from '../../ui/input';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '../../ui/dropdown-menu';
 import { Button } from '../../ui/button';
-import { DialogClose, DialogFooter } from '../../ui/dialog';
-import { Loader2 } from 'lucide-react';
-import SaveIcon from '@mui/icons-material/Save';
 import { CREATE_TRABAJOS } from '../../commons/apiConnection';
 import DropdownMenuComponent from '@/components/elementos/dropdownComponent';
+import { ButtonCloseDialog } from '@/components';
 
 
 export default function DialogCreateTrabajo({
@@ -17,7 +15,6 @@ export default function DialogCreateTrabajo({
   const  {toast} = useToast();
   const refNumberYear = useRef(null);
 
-  const [loadingData, setLoadingData] = useState(false);
   const [dataDialog, setDataDialog] = useState({
     title : '',
     course : dataCourse[0],
@@ -45,22 +42,27 @@ export default function DialogCreateTrabajo({
       year
     }
     
-    console.log(jsonToSend);
-        // const response = await CREATE_TRABAJOS(jsonToSend);
     
+    const response = await CREATE_TRABAJOS(jsonToSend);
+    if (!response.ok) {
+      toast({
+        variant : "destructive",
+        title : "Error",
+        description : "Error en el servidor"
+      });
+      return
+    }
+    const responseJSON = await response.json();
+    console.log(responseJSON);
     
+    toast({
+      title : "Exito",
+      description : "Se guardo con exito el trabajo"
+    })
   }
   const handleChangeDropdownSemester=(idSemester)=>{
     const jsonSelected = semesters.filter(item=>item.id == idSemester)[0];
     setSemesterSelected(jsonSelected)
-  }
-  const handleChangeDropdownCourse=(idCourse)=>{
-    const idSelected = dataCourse.filter(item=>item.id === idCourse)[0]?.id
-    setDataDialog({
-      ...dataDialog,
-      course : idSelected
-    })    
-    
   }
   return (
     <section  >
@@ -137,16 +139,10 @@ export default function DialogCreateTrabajo({
             </DropdownMenu>
         </div>
       </div>
-      <DialogFooter className='flex flex-row items-center my-4'>
-        <DialogClose asChild>
-            <Button
-             className='flex-1 cursor-pointer mr-2 bg-guinda rounded-lg py-4  text-white text-center hover:bg-guindaOpaco  hover:font-bold border-2 border-guinda hover:border-guinda'
-              onClick={handleClickSave}
-            >
-              {loadingData ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <><SaveIcon/><span className='ml-2'>Guardar Registro</span></>}
-            </Button>
-        </DialogClose>
-      </DialogFooter>
+      <ButtonCloseDialog
+        textButton='Guardar Trabajo'
+        handleClickSave={handleClickSave}
+      />
     </section >
   )
 };

@@ -2,11 +2,8 @@ import React, { useState } from 'react'
 import { useToast } from '../../ui/use-toast'
 import { Input } from '../../ui/input';
 import { Button } from '../../ui/button';
-import { DialogClose, DialogFooter } from '../../ui/dialog';
-import { ChevronsUpDown, Loader2 } from 'lucide-react';
-import SaveIcon from '@mui/icons-material/Save';
 import { CREATE_PROYECTS } from '../../commons/apiConnection';
-import { DropdownMenuComponent, FormAddMember, ListCardShort, ListCardsShortPerson, PopOverAddButton, PopoverAddList } from '@/components';
+import { ButtonCloseDialog, DropdownMenuComponent, FormAddMember, ListCardShort, ListCardsShortPerson, PopOverAddButton, PopoverAddList } from '@/components';
 
 export default function DialogCreateProyectos({
   dataStatus=[],
@@ -191,16 +188,9 @@ export default function DialogCreateProyectos({
           </div>
         </section>
       </div>
-      <DialogFooter className='flex flex-row items-center my-4'>
-        <DialogClose asChild>
-          <Button
-            className='flex-1 cursor-pointer mr-2 bg-guinda rounded-lg py-4  text-white text-center hover:bg-guindaOpaco  hover:font-bold border-2 border-guinda hover:border-guinda'
-            onClick={handleClickSave}
-          >
-            {loadingData ? <Loader2 className='mr-2 h-4 w-4 animate-spin' />: <><SaveIcon/><span className='ml-2'>Guardar Registro</span></>}
-          </Button>
-        </DialogClose>
-      </DialogFooter>
+      <ButtonCloseDialog
+        handleClickSave={handleClickSave}
+      />
     </section>
   )
 }
