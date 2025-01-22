@@ -40,7 +40,7 @@ export default function TableProyectos({
   },[filterData, statusData]);
 
   const filterDataButtonCoordinator=useMemo(()=>{
-    return filterDataButtonStatus.filter(item=>item?.fullNameCoordinator.toUpperCase().includes(coordinatorData.toUpperCase()) )
+    return filterDataButtonStatus.filter(item=>item.fullNameCoordinator?.toUpperCase().includes(coordinatorData.toUpperCase()) )
   },[filterDataButtonStatus, coordinatorData]);
 
   const currentData = useMemo(()=>{
@@ -123,44 +123,20 @@ export default function TableProyectos({
     setProyectosData(newDatProjects);
   }
   // Funcion de guardar los cambios de la edicion de proyectos
-  const handleSaveDataEditProjects =async(dataDialogComponent)=>{
+  const handleClickSaveUpdate =(data)=>{
+    const newDataJSON = {...data}
+    delete newDataJSON?.agreements_added;
+    delete newDataJSON?.agreements_deleted;
+    delete newDataJSON?.researchers_added;
+    delete newDataJSON?.researchers_deleted;
     
-    const newDataJSONToSend={
-      id : dataDialogComponent?.id,
-      name : dataDialogComponent?.project,
-      coordinator : dataDialogComponent?.coordinator,
-      researchers_added : dataDialogComponent?.authors_added,
-      researchers_deleted : dataDialogComponent?.authors_deleted,
-      agreements_added : [],
-      agreements_deleted : [],
-      status : dataDialogComponent?.status === "En Proceso" ? 1 : 2,
-      period : {
-        year_start : `${dataDialogComponent?.year_start}-01-01`,
-        year_end : `${dataDialogComponent?.year_end}-01-01`
-      }
-    }     
-        
-    const response = await UPDATE_PROYECTS(newDataJSONToSend);
+    newDataJSON['project']=data.name;
+    newDataJSON['fullNameCoordinator']=data.coordinator.first_name + " " + data.coordinator.last_name;
+    newDataJSON['Seleccionado']=false
     
-    const jsonNewDataProject = {
-      id : dataDialogComponent?.id,
-      project : dataDialogComponent?.project,
-      coordinator : dataDialogComponent?.coordinator,
-      fullNameCoordinator : dataDialogComponent?.fullNameCoordinator,
-      researchers : dataDialogComponent?.researchers,
-      status : dataDialogComponent?.status,
-      year_end : dataDialogComponent?.year_end,
-      year_start : dataDialogComponent?.year_start,
-      agreement : dataDialogComponent?.agreement,
-      Seleccionado : false
-    }
-    const newDataProjects = proyectosData.map(item=>{
-      if (item?.id === dataDialogComponent?.id) {
-        return jsonNewDataProject
-      }
-      return item
-    })
-    setProyectosData(newDataProjects)
+    const newDataProyectos = [...dataProyectos].map(item=>item?.id === data?.id ? newDataJSON : item);
+    
+    setProyectosData(newDataProyectos);
   }
   const listFilterComponents=[
     <DropdownFiltersComponent data={dataStatus} titleButton='Estados' titleData={statusData} handleCheckedChange={handleCheckedDropddownStatus} />,
@@ -179,13 +155,13 @@ export default function TableProyectos({
       dataCoordinator={dataMiembros}
       filtersComponents={listFilterComponents}
       deleteElementFunction={handleClickDelete}
-      setDataTable={handleSaveDataEditProjects}
       handleChangeChecked={handleChangeChecked}
       handleCheckedRow={handleChangeRow}
       handleChangeInput={handleChangeInput}
       handlePaginate={handlePaginate}
       handleClickSaveRegister={handleClickSaveRegister}
       DialogEditComponent={DialogProyectos}
+      handleClickSaveUpdate={handleClickSaveUpdate}
       DialogDeleteComponent={DialogDeleteProyectos}
       DialogCreateComponent={DialogCreateProyectos}
       dialogTitleEdit='Editar Proyecto'

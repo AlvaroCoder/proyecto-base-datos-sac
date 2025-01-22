@@ -100,6 +100,10 @@ export default function TablePapers({
     const handleClickDeletePaper=async(idDeletePaper)=>{
         await DELETE_PAPER(idDeletePaper)
     }
+    const handleSaveUpdate=(data)=>{
+        const newDataPapers = dataPapers.map(item=>item.id === data.id ? data : item);
+        setPapersData(newDataPapers)
+    }
   return (
     <>
         <TableLayout
@@ -118,6 +122,7 @@ export default function TablePapers({
             DialogCreateComponent={DialogCreatePapers}
             DialogDeleteComponent={DialogDeletePapers}
             DialogEditComponent={DialogPapers}
+            handleClickSaveUpdate={handleSaveUpdate}
             handleClickSaveRegister={handleClickSaveRegister}
         />
     </>

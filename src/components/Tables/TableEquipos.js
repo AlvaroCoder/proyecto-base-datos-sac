@@ -13,8 +13,10 @@ export default function TableEquipos({
     dataEquipos=[], 
     dataStatusEquipos=[],
     dataTypeEquipos=[],
+    
     dataLocationEquipos=[]
 }) {
+    
     const{toast}=useToast();
     const titlesData=[
         {name:"Equipo", className:"w-[400px]"},
@@ -48,10 +50,6 @@ export default function TableEquipos({
     const EQUIPOS_POR_PAGINA=10;
     const indexLast = currentPage * EQUIPOS_POR_PAGINA;
     const indexFirst = indexLast - EQUIPOS_POR_PAGINA;
-
-    const ubicacionSinRepetir = extraerDataSinRepetir(equiposData, "location");
-    const estadosSinRepetir = extraerDataSinRepetir(equiposData, "status");
-    const origenSinRepetir = extraerDataSinRepetir(equiposData, "origin");
 
     const filterData = useMemo(()=>{
         return equiposData.filter(item=>item?.equipment?.toUpperCase().includes(query.toUpperCase()))
@@ -137,6 +135,14 @@ export default function TableEquipos({
         console.log(responseJSON);
         
     }
+    const handleClickSaveUpdate=(data)=>{
+        console.log(data);
+        
+        const newDataEquipos = [...dataEquipos].map(item=>item?.id === data.id);
+        console.log(newDataEquipos);
+        
+        setEquiposData(newDataEquipos);
+    }
     const paginate=(pageNumber) => setCurrentPage(pageNumber);
     const numEquipos = equiposData.length;
 
@@ -154,10 +160,10 @@ export default function TableEquipos({
         dataLocationDialog={dataLocationEquipos}
         dataStatusDialog={dataStatusEquipos}
         dataTypeDialog={dataTypeEquipos}
-        dataOriginDialog={origenSinRepetir}
         filtersComponents={listFiltersEquipos}
         deleteElementFunction={handleClickDeleteRegister}
         handleClickSaveRegister={handleClickSaveRegister}
+        handleClickSaveUpdate={handleClickSaveUpdate}
         handleCheckedRow={handleChangeRow}
         handleChangeChecked={handleChangeChecked}
         handleChangeInput={onChangeInput}

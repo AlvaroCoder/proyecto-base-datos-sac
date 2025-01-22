@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useToast } from '../../ui/use-toast'
 import { Input } from '../../ui/input';
-import { Button } from '../../ui/button';
 import { CREATE_PROYECTS } from '../../commons/apiConnection';
 import { ButtonCloseDialog, DropdownMenuComponent, FormAddMember, ListCardShort, ListCardsShortPerson, PopOverAddButton, PopoverAddList } from '@/components';
 
@@ -67,6 +66,15 @@ export default function DialogCreateProyectos({
     }))
   }
   const handleClickAddAgreement=(jsonAgreement)=>{
+    const existeConvenio = dataDialog.agreements.some(item=>JSON.stringify(item) === JSON.stringify(jsonAgreement));
+    if (existeConvenio) {
+      toast({
+        variant : "destructive",
+        title : "Error",
+        description : "No se puede agregar el mismo convenio 2 veces"
+      })
+      return;
+    }
     setDataDialog(prev=>({
       ...dataDialog,
       agreements : [...prev.agreements, jsonAgreement]

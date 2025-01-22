@@ -10,9 +10,8 @@ import { useToast } from '@/components/ui/use-toast';
 
 export default function DialogTrabajos({
     initialDataDialog,
-    setDataDialog : setDataDialogTrabajos,
     dataCourses=[],
-
+    handleClickSaveUpdate
 }) {    
   const {toast} = useToast();
   const [dataTrabajos, setDataTrabajos] = useState({
@@ -41,8 +40,7 @@ export default function DialogTrabajos({
       return
     }
     const responseJSON = await response.json();
-    console.log(responseJSON);
-    
+    handleClickSaveUpdate(dataTrabajos)
     toast({
       title : "Exito",
       description : "Se actualizo correctamente el trabajo"

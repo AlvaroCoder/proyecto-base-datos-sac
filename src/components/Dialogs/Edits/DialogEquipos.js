@@ -2,17 +2,20 @@ import React, { useRef, useState } from 'react'
 import { Input } from '../../ui/input'
 import { Textarea } from '../../ui/textarea';
 import { ButtonCloseDialog, DropdownMenuComponent, FormUploadImage, PopOverAddButton } from '@/components';
+import { UPDATE_EQUIPO, UPLOAD_IMAGE_EQUIPO } from '@/components/commons/apiConnection';
+import { useToast } from '@/components/ui/use-toast';
 
 export default function DialogEquipos({
     initialDataDialog,
     dataDialog,
     handleChangeExistChanges,
     setDataDialog : setDataDialogEquipos,
+    handleClickSaveUpdate,
     dataType=[],
     dataLocation=[],
     dataStatus=[],
 }) {    
-
+    const {toast} = useToast();
     const [dataEquipment, setDataEquipment] = useState({
         id : initialDataDialog?.id,
         equipment: initialDataDialog?.equipment,
@@ -36,8 +39,44 @@ export default function DialogEquipos({
     }   
     
     const handleClickSave=async()=>{
-        console.log(dataEquipment);
-        
+        let urlImagen =null;
+        if (dataEquipment.evidence) {
+            const newFormDataImage = new FormData();
+            newFormDataImage.append("evidence", dataEquipment.evidence);
+            newFormDataImage.append("equipment_name", dataEquipment.equipment);
+            const responseImage = await UPLOAD_IMAGE_EQUIPO(newFormDataImage);
+            if (!responseImage.ok) {
+                toast({
+                    variant : "destructive",
+                    title : "Error",
+                    description : "Problemas de subir la imagen"
+                });
+                return;
+            }
+            const responseImageJSON = await responseImage.json();
+            urlImagen=responseImageJSON?.url;
+        }
+        const newJSONToSend={
+            ...dataEquipment,
+            evidence : urlImagen
+        };
+        const response = await UPDATE_EQUIPO(newJSONToSend);
+        if (!response.ok) {
+            const responseJSON = await response.json();
+            toast({
+                variant: "destructive",
+                title : "Error",
+                description : `Ocurrio un error con el servidor : ${responseJSON?.detail}`
+            });
+            return;
+        }
+        const responseJSON = await response.json();
+        console.log(responseJSON);
+        handleClickSaveUpdate(dataEquipment);
+        toast({
+            title : "Exito",
+            description : `Se actualizo con exito el libro`
+        })
     }
 
   return (
@@ -132,6 +171,7 @@ export default function DialogEquipos({
         </div>
         <ButtonCloseDialog
             handleClickSave={handleClickSave}
+            textButton='Actualizar Registro'
         />
     </section>
   )

@@ -5,58 +5,62 @@ import { useToast } from '@/components/ui/use-toast';
 import { UPDATE_PAPER } from '@/components/commons/apiConnection';
 export default function DialogPapers({
     initialDataDialog,
-    dataDialog,
-    setDataDialog : setDataDialogPaper,
-    handleChangeExistChanges,
-    dataMembers=[]
+    dataMembers=[],
+    handleClickSaveUpdate
 }) {
     const {toast} = useToast();
     const [dataPapers, setDataPapers] = useState({
         id : initialDataDialog?.id,
         title : initialDataDialog?.title,
-        course : initialDataDialog?.course,
         members : initialDataDialog?.members,
         members_added : [],
         members_deleted : [],
         year : initialDataDialog?.year,
         link : initialDataDialog?.link
-    })
+    });
+    // Funcion de agregar miembro a la lista de miembros
     const handleClickAddMember=(data)=>{
-        const existeMiembro = dataPapers.members_added.some(item=>JSON.stringify(data) === JSON.stringify(item)) || dataPapers.members?.some(item=>JSON.stringify(data) === JSON.stringify(item));
-        if (!existeMiembro) {
-            setDataPapers({
-                ...dataPapers,
-                members : [...dataPapers.members, data],
-                members_added : [...dataPapers.members_added, data]
-            })
+        if (!dataPapers.members.some(member=>member.id === data.id)) {
+            setDataPapers(prev=>({
+                ...prev,
+                members : [...prev.members, data],
+                members_added : [...prev.members_added, data]
+            }))
         }else {
             toast({
                 variant : "destructive",
-                title : "Error de agregar",
-                description : "No se puede agregar la misma persona 2 veces"
+                title : "Error",
+                description : "No se puede agregar el mismo usuario 2 veces"
             })
         }
     }
-    const handleClickClearMember=(id, data)=>{
-        const existeMiembroAgregado = dataPapers.members_added.some(obj=>JSON.stringify(data) === obj);
-        console.log(existeMiembroAgregado, dataPapers.members_added);
-        
-        const nuevaDataMiembrosAgregado = !existeMiembroAgregado ? [...dataPapers.members_added].filter((obj)=>JSON.stringify(obj)!==JSON.stringify(data)) : [...dataPapers.members_added];
-        console.log(nuevaDataMiembrosAgregado);
-        
-        setDataPapers(prev=>({
+    // Funcion eliminar miembrod de la lista de miembros
+    const handleClickClearMember=(_, data)=>{
+        const existeMiembroAgregado = dataPapers.members_added.some(member=>member.id === data.id);
+        setDataPapers(prev=>{
+            const actualizarMiembros = prev.members.filter(member=>member.id!==data.id);
+            const actualizarMiembroAgregado = prev.members_added.filter(member=>member.id!==data.id);
+            const actualizatrMiembrosEliminar = existeMiembroAgregado ? prev.members_deleted : [...prev.members_deleted, data];
+            return {
+                ...prev,
+                members : actualizarMiembros,
+                members_added : actualizarMiembroAgregado,
+                members_deleted : actualizatrMiembrosEliminar
+            }
+        })
+    }
+    const handleChangeInput=(evt)=>{
+        const target= evt.target;
+        setDataPapers({
             ...dataPapers,
-            members : [...prev.members].filter((_,idx)=>idx!==id),
-            members_added : nuevaDataMiembrosAgregado,
-            members_deleted : [...prev.members_deleted, data]
-        }))
+            [target.name] : target.value
+        })
     }
     const handleClickSave=async()=>{
         const newJSONPapers={
             ...dataPapers
         }
         delete newJSONPapers.members
-        console.log(newJSONPapers);
         
         const response = await UPDATE_PAPER(newJSONPapers);
         if (!response.ok) {
@@ -68,7 +72,7 @@ export default function DialogPapers({
             return;
         }
         const responseJSON = await response.json();
-        console.log(responseJSON);
+        handleClickSaveUpdate(dataPapers);
         toast({
             title : "Exito",
             description : "Se actualizo correctamente"
@@ -81,6 +85,7 @@ export default function DialogPapers({
             <Input
                 name="title"
                 value={dataPapers?.title}
+                onChange={handleChangeInput}
             />
         </div>
         <div className='my-2'>
@@ -105,6 +110,7 @@ export default function DialogPapers({
                     type="text"
                     name="link"
                     value={dataPapers?.link}
+                    onChange={handleChangeInput}
                 />
             </div>
             <div className='my-2 w-[100px] ml-2'>
@@ -113,6 +119,7 @@ export default function DialogPapers({
                     type="number"
                     name="year"
                     value={dataPapers?.year}
+                    onChange={handleChangeInput}
                 />
             </div>
         </section>

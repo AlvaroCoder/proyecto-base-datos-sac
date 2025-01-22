@@ -9,12 +9,11 @@ import { UPDATE_PROYECTS } from '@/components/commons/apiConnection';
 // Dialog de editar proyectos
 export default function DialogProyectos({
   initialDataDialog,
-  dataDialog : dataDialogProyectos, 
-  handleChangeExistChanges,
-  handleChangeNotExistChanges,
   setDataDialog : setDataDialogProyectos,
   dataCoordinator=[],
-  dataStatus=[]
+  dataStatus=[],
+  dataListAgreements=[],
+  handleClickSaveUpdate
 }) 
 {  
   const {toast} = useToast();
@@ -32,42 +31,75 @@ export default function DialogProyectos({
     period : initialDataDialog?.period
   });
 
-
+  // Funcion de agregar investigador a la lista
   const handleClickAddResearcher=(data)=>{
-    const existeMiembro = dataProjects.researchers_added.some(item=>JSON.stringify(item) === JSON.stringify(data)) || dataProjects.researchers?.some(item=>JSON.stringify(item) === JSON.stringify(data))
-    if (!existeMiembro) {
-      setDataProjects({
-        ...dataProjects,
-        researchers : [...dataProjects.researchers, data ],
-        researchers_added : [...dataProjects.researchers_added, data]
-      })
+    if (!dataProjects.researchers.some(researcher=>researcher.id === data.id)) {
+      setDataProjects(prev=>({
+        ...prev,
+        researchers : [...prev.researchers,data],
+        researchers_added : [...prev.researchers_added, data]
+      }))
     }else{
       toast({
-        variant:"destructive",
-        title : "Error de agregar",
-        description :"No se puede agregar la misma persona 2 veces"
+        variant :"destructive",
+        title : "Error",
+        description : "No se puede agregar el mismo usuario 2 veces"
       })
     }
   }
-  
+  // Funcion de eliminar investigador de la lista
+  const handleClickResearcherClear=(_, data)=>{
+    const existeResearcherAgregado = dataProjects.researchers_added.some(researcher=>researcher.id === data.id);
+    setDataProjects(prev=>{
+      const actualizarResearcher = prev.researchers.filter(research=>research.id!==data.id);
+      const actualizarResearcherAgregado = prev.researchers_added.filter(research=>research.id!==data.id);
+      const actualizarResearchEliminar = existeResearcherAgregado ? prev.researchers_deleted : [...prev.researchers_deleted, data];
+      return {
+        ...prev,
+        researchers : actualizarResearcher,
+        researchers_added : actualizarResearcherAgregado,
+        researchers_deleted : actualizarResearchEliminar
+      }
+    })
+  }
+  // Funcion de eliminar Convenio de la lista en el JSON de actualizar
+  const handleClickClearAgreement=(_,data)=>{
+    const existeConvenioAgregado = dataProjects.agreements_added.some(agreemnt => agreemnt.id === data.id);
+    setDataProjects(prev=>{
+      const actualizarAgreement = prev.agreement.filter(agremnt => agremnt.id !== data.id);
+      const actualizarAgreementAgregados= prev.agreements_added.filter(agremnt => agremnt.id !== data.id);
+      const actualizarAgreementEliminar = existeConvenioAgregado ? prev.agreements_deleted : [...prev.agreements_deleted, data];
+      return {
+        ...prev,
+        agreement : actualizarAgreement,
+        agreements_added : actualizarAgreementAgregados,
+        agreements_deleted : actualizarAgreementEliminar
+      }
+    })
+  }
+  // Funcion de agregar convenio al JSON de actualizar
+  const handleClickAddAgreement=(data)=>{
+    if (!dataProjects.agreement.some(agreemnt => agreemnt.id === data.id)) {
+      setDataProjects(prev=>({
+        ...prev,
+        agreement : [...prev.agreement, data],
+        agreements_added : [...prev.agreements_added, data]
+      }));
+      
+    }else {
+      toast({
+        variant : "destructive",
+        title : "Error",
+        description : "No se puede agregar el mismo convenio 2 veces"
+      })
+    }
+  }
   const handleChangeInput=(evt)=>{
     const target = evt.target;
     setDataProjects({
       ...dataProjects,
       [target.name] : target.value
     })
-  }
-  const handleClickResearcherClear=(id, item)=>{
-    const existeMiembroAgregado=dataProjects.researchers_added.some(obj=>JSON.stringify(obj)===JSON.stringify(item));
-    console.log(existeMiembroAgregado);
-    
-    const nuevaDataMiembrosAgregado=existeMiembroAgregado ? [...dataProjects.researchers_added].filter((obj)=>JSON.stringify(obj)!== JSON.stringify(item)) : [...dataProjects.researchers_added];
-    setDataProjects(prev=>({
-      ...dataProjects,
-      researchers : [...prev.researchers].filter((_,idx)=>idx!==id),
-      researchers_added : nuevaDataMiembrosAgregado,
-      researchers_deleted : [...prev.researchers_deleted, item]
-    }));
   }
 
   const handleClickSave=async()=>{
@@ -81,9 +113,11 @@ export default function DialogProyectos({
       return;
     }
     const responseJSON = await response.json();
-    console.log(responseJSON);
-    
-    console.log(dataProjects); 
+    handleClickSaveUpdate(dataProjects);
+    toast({
+      title : "Exito",
+      description : `${responseJSON?.response}`
+    });
   }
   return (
     <section className='h-[450px] overflow-auto py-2 px-2'>
@@ -124,10 +158,18 @@ export default function DialogProyectos({
       </div>
       <div className='my-2'>
           <h1 className='font-bold'>Convenios</h1>
-          <Input 
-            value={dataProjects?.agreement}
-            disabled={true}
+          <ListCardShort
+            data={dataProjects.agreement}
+            handleClickClear={handleClickClearAgreement}
           />
+          <div className='mt-2'>
+            <PopoverAddList
+              data={dataListAgreements}
+              handleClickAddMember={handleClickAddAgreement}
+              dataMembers={false}
+              textButton='Agregar Convenio'
+            />
+          </div>
       </div>
       <div className='my-2'>
         <h1 className='font-semibold'>Estado</h1>

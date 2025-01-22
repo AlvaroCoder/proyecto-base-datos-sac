@@ -42,6 +42,7 @@ export default function TableLayout({
     dataCoordinator=[],
     dataMembers=[],
     setDataTable,
+    handleClickSaveUpdate,
     deleteElementFunction,
     handleClickSaveRegister,
     dataStatusDialog,
@@ -196,12 +197,15 @@ const elementsSelected = currentData?.filter(data=>data.Seleccionado);
                                                     dataCoordinator={dataCoordinator}
                                                     dataStatus={dataStatusDialog}
                                                     dataCourses={dataCourse}
+                                                    dataAutores={dataAutores}
                                                     dataLocation={dataLocationDialog}
                                                     dataPeopleBorrowTo={dataPeopleBorrowTo}
+                                                    dataListAgreements={dataListAgreements}
                                                     dataType={dataTypeDialog}
                                                     dataOrigin={dataOriginDialog}
                                                     dialogTitle={dialogTitleEdit}
                                                     DialogBody={DialogEditComponent}
+                                                    handleClickSave={handleClickSaveUpdate}
                                                     setDataTable={setDataTable}
                                                     dataMembers={dataMembers}
                                                 />}

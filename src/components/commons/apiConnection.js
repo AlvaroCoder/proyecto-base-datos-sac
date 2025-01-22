@@ -108,7 +108,7 @@ export async function DELETE_PAPER(idPaper) {
 export async function UPDATE_PAPER(data) {
     const session = await getSession();
     return await fetch(BASE_URL+'update/paper',{
-        method : 'UPDATE',
+        method : 'PUT',
         headers : {
             'Content-Type' : 'application/json',
             'Authorization' : `Bearer ${session?.user?.access_token}`

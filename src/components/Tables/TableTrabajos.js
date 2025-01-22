@@ -37,7 +37,6 @@ export default function TableTrabajos({
     const indexLast = currentPage * TRABAJOS_POR_PAGINA;
     const indexFirst = indexLast - TRABAJOS_POR_PAGINA;
 
-    const cursoSinRepetir = extraerDataSinRepetir(trabajosData,"course");    
     const filterData = useMemo(()=>{
         return trabajosData.filter(item=>item?.title?.toUpperCase().includes(query.toUpperCase()))
     },[trabajosData, query]);
@@ -94,17 +93,7 @@ export default function TableTrabajos({
         }
         setCourseData(item)
     }
-    const handleSaveDataEditTable=async(dataDialogComponent)=>{
-        const newDataObj={
-            id : dataDialogComponent?.id,
-            title : dataDialogComponent?.title,
-            course : 1,
-            year : dataDialogComponent?.year,
-            link : dataDialogComponent?.link
-        }
-        const response =  await UPDATE_TRABAJOS(newDataObj);
-        
-    }
+
     // Funcion de eliminar un trabajo de la lista de trabajos
     const handleClickDeleteTrabajo=async(idTrabajo)=>{
         console.log(idTrabajo);
@@ -113,7 +102,10 @@ export default function TableTrabajos({
 
 
     }
-    
+    const handleClickUpdateTrabajos=(data)=>{
+        const newDataTrabajos = [...dataTrabajos].map(item=>item.id === data.id ? data : item);
+        setTrabajosData(newDataTrabajos);
+    }
     const paginate = (pageNumber)=>setCurrentPage(pageNumber);
     const numBooks = trabajosData.length;
 
@@ -139,10 +131,9 @@ export default function TableTrabajos({
             DialogEditComponent={DialogTrabajos}
             DialogDeleteComponent={DialogDeleteTrabajos}
             DialogCreateComponent={DialogCreateTrabajo}
-            dataStatusDialog={cursoSinRepetir}
+            handleClickSaveUpdate={handleClickUpdateTrabajos}
             deleteElementFunction={handleClickDeleteTrabajo}
             handleClickSaveRegister={handleClickSaveRegister}
-            setDataTable={handleSaveDataEditTable}
         />
     </>
   )

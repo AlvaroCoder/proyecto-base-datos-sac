@@ -1,27 +1,19 @@
 "use client"
 import React, { useRef, useState } from 'react'
 import { Input } from '../../ui/input'
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Button } from '../../ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';
 import { ButtonCloseDialog, DropdownMenuComponent, ListCardShort, PopoverAddList } from '@/components';
 import { useToast } from '@/components/ui/use-toast';
 import { UPDATE_BOOKS } from '@/components/commons/apiConnection';
 
 export default function DialogLibros({
   initialDataDialog,
-  dataDialog,
   dataLocation=[],
   dataStatus=[],
   dataMembers=[],
-  dataPeopleBorrowTo=[],
-  handleChangeExistChanges,
-  setDataDialog : setDataDialogLibros,
-}) {  
-  console.log(initialDataDialog);
-  
+  dataAutores=[],
+  handleClickSaveUpdate,
+}) {      
   const {toast }= useToast();
-  const refInputNameAuthor=useRef(null);
   const [dataLibros, setDataLibros] = useState({
     id : initialDataDialog?.id,
     title : initialDataDialog?.title,
@@ -36,47 +28,40 @@ export default function DialogLibros({
     amount : initialDataDialog.amount
   });
 
-  const [showFormNewAuthor, setShowFormNewAuthor] = useState(false);
+  // Funcion de eliminar autor de la lista de autores
+  const handleClickClearAuthor=(_, data)=>{
+    const existeAutorAgregado = dataLibros.authors_added.some(author=>author.id === data.id);
+    setDataLibros(prev=>{
+      const actualizarAutores =prev.authors.filter(author=>author.id!== data.id);
+      const actualizarAutoresAgregados = prev.authors_added.filter(author=>author.id!==data.id);
+      const actualizarAutoresEliminar = existeAutorAgregado? prev.authors_deleted : [...prev.authors_deleted, data];
+      return {
+        ...prev,
+        authors : actualizarAutores,
+        authors_added : actualizarAutoresAgregados,
+        authors_deleted : actualizarAutoresEliminar
+      }
+    })
+  }
 
-  const handleClickClearAuthor=(key)=>{
-    const newDataAuthors = [...dataDialog?.authors].filter((_, idx)=>idx!==key);
-    const newDataLibros = {
-      ...dataDialog,
-      authors : newDataAuthors,
-      authors_deleted : [...dataDialog?.authors_deleted, dataDialog?.authors.filter((_,idx)=>idx==key)[0]]
+  // Funcion de agregar author a la lista de autores
+  const handleClickAddAuthor=(data)=>{
+    if (!dataLibros.authors.some(author=>author.id === data.id)) {
+      setDataLibros(prev=>({
+        ...prev,
+        authors : [...prev.authors, data],
+        authors_added : [...prev.authors_added, data]
+      }))
+    }else{
+      toast({
+        variant : "destructive",
+        title : "Error",
+        description : "No se puede agregar el mismo usuario 2 veces"
+      })
     }
-    setDataDialogLibros(newDataLibros);
-    handleChangeExistChanges()    
-  }
-  const handleClickShowFormNewAuthor=()=>{
-    setShowFormNewAuthor(!showFormNewAuthor);
   }
 
-  const handleClickAddAuthor=(evt)=>{
-    evt.preventDefault();
-    if (refInputNameAuthor.current.value === "") {
-      alert("Debe ingresar un dato");
-      return;
-    }
-    const authorData = refInputNameAuthor.current.value;
-    const newDataAuthors = [...dataDialog?.authors, {value : authorData}]
-    const newDataAdded = [...dataDialog?.authors_added, {name : authorData}]
-    setDataDialogLibros({
-      ...dataDialog,
-      authors : newDataAuthors,
-      authors_added : newDataAdded
-    });
-    handleChangeExistChanges()
-    setShowFormNewAuthor(false)
-    refInputNameAuthor.current.value = null;
-  }
-
-  const handleClickCancelAuthor=(evt)=>{
-    evt.preventDefault();
-    setShowFormNewAuthor(false);
-    refInputNameAuthor.current.value=null;
-  }
-
+  // Funcion que atrapa los cambios en el input de titulo del libro
   const handleChangeTitleDialog=(evt)=>{
     const inputValue = evt.target.value;  
     setDataLibros({
@@ -84,33 +69,42 @@ export default function DialogLibros({
       title : inputValue
     });
   }
-  const handleClickClearBorrowedTo=(id, item)=>{
-    const existeMiembroAgregado = dataLibros.borrowed_to_added.some(obj=>JSON.stringify(obj) === JSON.stringify(item));
-    const nuevaDataMiembrosAgregado = existeMiembroAgregado?[...dataLibros.borrowed_to_added].filter((obj)=>JSON.stringify(obj)!== JSON.stringify(item)) : [...dataLibros.borrowed_to_added];
-    setDataLibros(prev=>({
-      ...dataLibros,
-      borrowed_to : [...prev.borrowed_to].filter((_,idx)=>idx!==id),
-      borrowed_to_added : nuevaDataMiembrosAgregado,
-      borrowed_to_deleted : existeMiembroAgregado ? [...prev.borrowed_to_deleted, item] : [...prev.borrowed_to_deleted]
-    }));
+  
+  // Funcion de eliminar autor de la lista prestado a 
+  const handleClickClearBorrowedTo=(_, data)=>{
+    const existePrestadoAgregado = dataLibros.borrowed_to_added.some(prestado=>prestado.id === data.id);
+    setDataLibros(prev=>{
+      const actualizarPrestado = prev.borrowed_to.filter(prestado=>prestado.id!==data.id);
+      const actualizarPrestadoAgregados = prev.borrowed_to_added.filter(prestado=>prestado.id!==data.id);
+      const actualizarPrestadoEliminar = existePrestadoAgregado ?  prev.borrowed_to_deleted : [...prev.borrowed_to_deleted, data];
+      return {
+        ...prev,
+        borrowed_to : actualizarPrestado,
+        borrowed_to_added : actualizarPrestadoAgregados,
+        borrowed_to_deleted : actualizarPrestadoEliminar
+      }
+    })
   }
+  // Funcion de agregar a la lista prestado a
   const handleClickAddBorrowedTo=(data)=>{
-    const existeMiembro = dataLibros.borrowed_to_added.some(item=>JSON.stringify(data) === JSON.stringify(item)) || dataLibros.borrowed_to?.some(item=>JSON.stringify(item) === JSON.stringify(data)) 
-    if (existeMiembro) {
+    if (!dataLibros.borrowed_to.some(borrow=>borrow.id === data.id)) {
+      setDataLibros(prev=>({
+        ...prev,
+        borrowed_to : [...prev.borrowed_to, data],
+        borrowed_to_added : [...prev.borrowed_to_added, data]
+      }))
+    }else {
       toast({
-        variant : "destructive",
+        variant :"destructive",
         title : "Error",
-        description : "No se puede agregar a la misma persona 2 veces"
-      });
-      return;
+        description : "No se puede agregar el mimo usuario 2 veces"
+      })
     }
-    setDataLibros({
-      ...dataLibros,
-      borrowed_to : [...dataLibros.borrowed_to, data],
-      borrowed_to_added : [...dataLibros.borrowed_to_added, data]
-    });
   }
+  // Funcion de guardar la informacion en el libro
   const handleClickSave=async()=>{
+    console.log(dataLibros);
+    
     const response = await UPDATE_BOOKS(dataLibros);
     if (!response.ok) {
       toast({
@@ -122,12 +116,13 @@ export default function DialogLibros({
     }
     const responseJSON = await response.json();
     console.log(responseJSON);
-    
+    handleClickSaveUpdate(dataLibros);
     toast({
       title : "Exito",
       description : "Se actualizo con exito el libro"
-    })    
+    }) 
   }
+
   return (
     <section>
       <div className='my-2'>
@@ -145,43 +140,12 @@ export default function DialogLibros({
           handleClickClear={handleClickClearAuthor}
         />
         <div className='mt-2'>
-          {
-            showFormNewAuthor ?
-            <section className='p-4 rounded-lg bg-slate-50'>
-              <h1 className='font-bold'>Nuevo Autor</h1>
-              <div className='grid grid-cols-1 gap-2'>
-                <div className='flex-1'>
-                  <label>Nombre</label>
-                  <Input
-                    name="nombreAutor"
-                    ref={refInputNameAuthor}
-                  />
-                </div>
-              </div>
-              <div className='mt-2'>
-                <Button
-                  className="bg-white text-guinda border-2 border-guinda hover:bg-red-50"                                    
-                  onClick={handleClickAddAuthor}
-                >
-                  Agregar
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="mx-2"
-                  onClick={handleClickCancelAuthor}
-                >
-                  Cancelar
-                </Button>
-              </div>
-            </section> :
-            <Button
-              variant="ghost"
-              className="text-guinda underline hover:bg-white hover:text-guinda"
-              onClick={handleClickShowFormNewAuthor}
-            >
-              Agregar autor
-            </Button>
-          }
+          <PopoverAddList
+            handleClickAddMember={handleClickAddAuthor}
+            textButton='Agregar Autor'
+            data={dataAutores}
+            dataMembers={false}
+          />
         </div>
       </div>
       <div className='my-2 flex flex-row items-center'>

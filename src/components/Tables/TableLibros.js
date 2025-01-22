@@ -5,9 +5,8 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 import TableLayout from './Layout/TableLayout'
 import { DropdownFiltersComponent } from './ui'
-import { extraerDataSinRepetir } from '../commons/tableFunctions'
 import { DialogCreateLibros, DialogDeleteLibros, DialogLibros } from '../Dialogs'
-import { DELETE_BOOK, UPDATE_BOOKS } from '../commons/apiConnection';
+import { DELETE_BOOK } from '../commons/apiConnection';
 import { useToast } from '../ui/use-toast';
 
 export default function TableLibros({
@@ -111,48 +110,13 @@ export default function TableLibros({
         setLibrosData(newListBooks);
     }
     // Funcion de actualizar la data de un libro en la tabla
-    const handleAddNewDataToTable=async(dataDialogComponent)=>{
-        const idDialog = dataDialogComponent?.id;
-        const newDataJSONToSend = {
-            id :dataDialogComponent?.id,
-            title : dataDialogComponent?.title,
-            authors_added : dataDialogComponent?.authors_added,
-            authors_deleted : dataDialogComponent?.authors_deleted,
-            location : dataDialogComponent?.location[0]?.id,
-            status : dataDialogComponent?.status?.id,
-            borrowed_to : null,
-            amount : null
-        }        
-        const newDataTable = librosData.map(item=>{
-            if (item.id == idDialog) {
-                return dataDialogComponent
-            }
-            return {
-                ...item
-            }
-        });
-
-        setLibrosData(newDataTable);
-
-        try {
-            
-            const response = await UPDATE_BOOKS(newDataJSONToSend);
-            if (response.ok) {
-                toast({
-                    title : "Exito",
-                    description : "Libro actualizado con exito!"
-                });
-                console.log(await response.json());
-                
-                return
-            }            
-        } catch (error) {
-            console.log(error);
-            
-        }        
+    const handleAddNewDataToTable=(data)=>{
+        const newDataJSON = {...data, borrowed_to : data?.borrowed_to.length <= 0 ? "No prestado" : data?.borrowed_to}
+        const newDataLibros = [...dataLibros].map(item=>item?.id === data?.id ? newDataJSON : item);
+        setLibrosData(newDataLibros);
     }
+    // Funcion de eliminar libro en la tabla
     const handleDeleteBook=async(idBook)=>{
-        
         const response = await DELETE_BOOK(idBook);
         if (!response.ok) {
             toast({
@@ -192,7 +156,7 @@ export default function TableLibros({
         dataStatusDialog={dataStatus}
         dataLocationDialog={dataLocations}
         dataMembers={dataUsers}
-        setDataTable={handleAddNewDataToTable}
+        handleClickSaveUpdate={handleAddNewDataToTable}
         filtersComponents={filterComponents}
         handleChangeInput={onChangeInput}
         handleChangeChecked={handleChangeChecked}
@@ -204,6 +168,7 @@ export default function TableLibros({
         DialogEditComponent={DialogLibros}
         DialogCreateComponent={DialogCreateLibros}  
         handleClickSaveRegister={handleClickSaveRegister}
+        
     />
   )
 }

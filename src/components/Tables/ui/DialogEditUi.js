@@ -2,15 +2,14 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import React, { useState } from 'react'
 import EditIcon from '@mui/icons-material/Edit';
-import { Loader2 } from 'lucide-react';
-
-import SaveIcon from '@mui/icons-material/Save';
 
 export default function DialogEditUi({
     dataDialog,
     dataStatus=[],
     dataLocation=[],
+    dataListAgreements=[],
     dataMembers=[],
+    dataAutores=[],
     dataCoordinator=[],
     dataPeopleBorrowTo=[],
     dataCourses=[],
@@ -19,7 +18,6 @@ export default function DialogEditUi({
     dataOrigin=[],
     handleClickSave,
     handleClickCancel,
-    setDataTable,
     DialogBody=React.Component
 }) {    
     const [openDialog, setOpenDialog] = useState(false);
@@ -32,21 +30,7 @@ export default function DialogEditUi({
         authors_deleted : []
     }
     const [dataDialogComponent, setDataDialogComponent] = useState(initialData);
-    const handleClickSaveData=async()=>{
-        setLoadingData(true);
-        await setDataTable(dataDialogComponent);
-        setLoadingData(false);
-        setOpenDialog(false);
-        setHasChanges(false);        
-    }
-    const handleCliclCancelSave=()=>{
-        if (hasChanges) {
-            setOpenDialogAlert(true);
-            return;
-        }
-        setOpenDialog(false);
-        setHasChanges(false);
-    }
+
     const handleChangeExistChanges=()=>{
         setHasChanges(true);
     }
@@ -85,11 +69,14 @@ export default function DialogEditUi({
                         dataDialog={dataDialogComponent}
                         dataStatus={dataStatus}
                         dataMembers={dataMembers}
+                        dataAutores={dataAutores}
                         dataLocation={dataLocation}
+                        dataListAgreements={dataListAgreements}
                         dataCoordinator={dataCoordinator}
                         initialDataDialog={initialData}
                         dataType={dataType}
                         dataOrigin={dataOrigin}
+                        handleClickSaveUpdate={handleClickSave}
                         setDataDialog={setDataDialogComponent}
                         dataPeopleBorrowTo={dataPeopleBorrowTo}
                         handleChangeExistChanges={handleChangeExistChanges}

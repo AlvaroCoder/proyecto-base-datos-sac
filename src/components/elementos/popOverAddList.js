@@ -39,17 +39,17 @@ export default function popOverAddList({
             </Button>
         </PopoverTrigger>
         <PopoverContent
-            className="w-80"
+            className="w-80 "
         >
             <section>
                 <Input
                     placeholder="Buscar miembro"
                     onChange={handleChangeInput}
                 />
-                <div className='mt-2'>
+                <div className='mt-2 max-h-[220px] overflow-y-auto'>
                     {
                         filterData.length > 0?
-                        filterData?.map((item, idx)=>(idx<5 &&
+                        filterData?.map((item, idx)=>(
                             <Button
                                 variant="ghost"
                                 className="w-full"

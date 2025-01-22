@@ -8,7 +8,7 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { DialogCreateUsuario } from '../Dialogs';
-import { GET_LINK_FORM, REGISTER_MEMBER } from '../commons/apiConnection';
+import { GET_LINK_FORM } from '../commons/apiConnection';
 import DropdownMenuComponent from '../elementos/dropdownComponent';
 import { Loader2, SaveIcon } from 'lucide-react';
 import { useToast } from '../ui/use-toast';
