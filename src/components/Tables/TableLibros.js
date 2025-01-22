@@ -131,8 +131,7 @@ export default function TableLibros({
             description : "Se elimino el libro correctamente!"
         })
         const newDataLibros = librosData.filter(item=>item?.id!==idBook);
-        console.log(newDataLibros);
-        
+        setLibrosData(newDataLibros)
     }
     // Funcion de guardar registro
     const handleClickSaveRegister=(data)=>{

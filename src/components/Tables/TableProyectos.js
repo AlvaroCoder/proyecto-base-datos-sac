@@ -5,6 +5,7 @@ import { DropdownFiltersComponent } from './ui';
 import { DialogCreateProyectos, DialogProyectos } from '../Dialogs';
 import DialogDeleteProyectos from '../Dialogs/Deletes/DialogDeleteProyectos';
 import { DELETE_PROYECT, UPDATE_PROYECTS } from '../commons/apiConnection';
+import { useToast } from '../ui/use-toast';
 
 export default function TableProyectos({
   dataProyectos = [],
@@ -13,6 +14,7 @@ export default function TableProyectos({
   dataStatus=[],
   dataAgreements=[]
 }) {  
+  const {toast} = useToast();
   const newDataProyectos = dataProyectos?.map((item)=>{
     return {
       ...item,
@@ -118,7 +120,19 @@ export default function TableProyectos({
   } 
   // Funcion de eliminar un elemento de la lista de proyectos
   const handleClickDelete=async(idDeletedata)=>{
-    await DELETE_PROYECT(idDeletedata);
+    const response = await DELETE_PROYECT(idDeletedata);
+    if (!response.ok) {
+      toast({
+        variant :"destructive",
+        title : "Error",
+        description :"Algo salio mal!"
+      });
+      return;
+    }
+    toast({
+      title :"Exito",
+      description :"Se elimino el proyecto correctamente!"
+    });
     const newDatProjects = dataProyectos.filter(item=>item?.id !== idDeletedata);     
     setProyectosData(newDatProjects);
   }

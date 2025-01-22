@@ -1,9 +1,5 @@
 "use client"
 import React, { useMemo, useState } from 'react'
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import EmailIcon from '@mui/icons-material/Email';
-import PhoneIcon from '@mui/icons-material/Phone';
-
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '../ui/dialog';
@@ -13,51 +9,7 @@ import DropdownMenuComponent from '../elementos/dropdownComponent';
 import { Loader2, SaveIcon } from 'lucide-react';
 import { useToast } from '../ui/use-toast';
 import { useRouter } from 'next/navigation';
-
-function CardUser({first_name, last_name, email, phone, role}) {
-    const roleValue = role?.value;
-    console.log(role);
-    
-    let backgroundColor="bg-guinda";
-    switch (roleValue) {
-        case "Administrador":
-            backgroundColor = "bg-administrador";
-            break;
-        case "Técnico":
-            backgroundColor = "bg-tecnico";
-            break;
-        case "Asistente":
-            backgroundColor = "bg-asistente";
-            break;
-        case "Alumno":
-            backgroundColor = "bg-estudiante";
-            break;
-        case "Tesista":
-            backgroundColor = "bg-tesista";
-            break;
-        case "Externo":
-            backgroundColor = "bg-externo";
-            break;
-    }
-    return(
-        <div className='shadow-sm rounded-lg p-4 flex flex-row border border-slate-50'>
-            <div>
-                <AccountCircleIcon className='text-5xl text-gray-800 mr-4'/>
-            </div>
-            <div>
-                <h1 className='capitalize font-bold text-xl'>
-                    {first_name}, {last_name}
-                </h1>
-                <h2 className={`px-2 py-1 my-2 text-sm rounded-sm ${backgroundColor} text-white w-fit`}>{role?.value}</h2>
-                <div>
-                    <p className='text-sm cursor-pointer'><EmailIcon/> {email}</p>
-                    <p className='text-sm'><PhoneIcon/> {phone}</p>
-                </div>
-                
-            </div>
-        </div>
-    )
-}
+import { CardUserMiembro } from '@/components';
 
 export default function TableMiembros({
     dataMiembros=[],
@@ -107,6 +59,10 @@ export default function TableMiembros({
         router.push(`/dashboard/miembros/link?link=${responseJSON?.link}`)
         setLoadingDataSaveCategories(false);
     }
+    const handleClickUpdate=(data)=>{
+        const newDataUser = dataMiembros.map(item=>item?.id === data.id);
+        setMiembrosData(newDataUser)
+        }
   return (
     <div className='w-full'>
         <section className='my-4 flex flex-row justify-center'>
@@ -167,7 +123,7 @@ export default function TableMiembros({
         </section>
         <section className='w-full grid grid-cols-3 gap-4 px-2'>
             {
-                filterData.map(miembro=><CardUser {...miembro} />)
+                filterData.map(miembro=><CardUserMiembro handleClickUpdate={handleClickUpdate} dataUser={miembro} dataCategories={dataCargosMiembros} />)
             }
         </section>
     </div>

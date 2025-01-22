@@ -105,15 +105,17 @@ export default function TableEquipos({
             setStatusData("");
             return;
         }
-        setStatusData(item)
+        setStatusData(item?.value)
     }
     const handleCheckedDropdownLocation=(item)=>{
+        console.log(item);
+        
         setQuery("");
         if (item===locationData) {
             setLocationData("");
             return;
         }
-        setLocationData(item)
+        setLocationData(item?.value)
     }
     const handleClickSaveRegister=(data)=>{
         setEquiposData([
@@ -133,7 +135,12 @@ export default function TableEquipos({
         }
         const responseJSON = await response.json();
         console.log(responseJSON);
-        
+        toast({
+            title : "Exito",
+            description : "Se elimino correctamente el equipo"
+        });
+        const newDataEquipos = equiposData.filter(item=>item?.id!==id);
+        setEquiposData(newDataEquipos);
     }
     const handleClickSaveUpdate=(data)=>{
         console.log(data);

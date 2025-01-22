@@ -28,6 +28,20 @@ export async function REGISTER_MEMBER(dataMember) {
         body : JSON.stringify(dataMember)
     })
 }
+
+export async function UPDATE_MEMBER(dataCategoriesUser) {
+    const session = await getSession();
+    return await fetch(BASE_URL+`update/user`,{
+        method : 'PUT',
+        headers : {
+            'Content-Type':'application/json',
+            'Authorization' : `Bearer ${session?.user?.access_token}`
+        },
+        mode : 'cors',
+        body : JSON.stringify(dataCategoriesUser)
+    })
+}
+
 // CRUD EQUIPOS
 export async function CREATE_EQUIPO(data) {
     const session = await getSession();

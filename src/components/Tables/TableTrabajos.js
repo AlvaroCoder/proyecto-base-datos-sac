@@ -6,11 +6,13 @@ import { extraerDataSinRepetir } from '../commons/tableFunctions';
 import { DialogCreateTrabajo, DialogTrabajos } from '../Dialogs';
 import DialogDeleteTrabajos from '../Dialogs/Deletes/DialogDeleteTrabajos';
 import { DELETE_TRABAJOS, UPDATE_TRABAJOS } from '../commons/apiConnection';
+import { useToast } from '../ui/use-toast';
 
 export default function TableTrabajos({
     dataTrabajos=[],
     dataCourses=[],
 }) {
+    const {toast} = useToast();
     const titlesData = [
         {name : "Titulo", className:"w-[400px]"},
         {name: "Curso", className:""},
@@ -95,11 +97,22 @@ export default function TableTrabajos({
     }
 
     // Funcion de eliminar un trabajo de la lista de trabajos
-    const handleClickDeleteTrabajo=async(idTrabajo)=>{
-        console.log(idTrabajo);
-        
-        // const response = await DELETE_TRABAJOS(idTrabajo);
-
+    const handleClickDeleteTrabajo=async(idTrabajo)=>{        
+        const response = await DELETE_TRABAJOS(idTrabajo);
+        if (!response.ok) {
+            toast({
+                variant :"destructive",
+                title : "Error",
+                description :"Algo salio mal!"
+            });
+            return;
+        }
+        toast({
+            title :"Exito",
+            description :"Se elimino correctamente el trabajo!"
+        });
+        const newDataTrabajos = dataTrabajos.filter(item=>item?.id == idTrabajo);
+        setTrabajosData(newDataTrabajos);
 
     }
     const handleClickUpdateTrabajos=(data)=>{

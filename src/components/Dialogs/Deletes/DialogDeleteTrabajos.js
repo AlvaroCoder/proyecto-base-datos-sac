@@ -15,7 +15,7 @@ export default function DialogDeleteTrabajos({
       <section className='flex flex-row'>
         <div className='flex-1'>
         <h1 className='font-bold'>Curso</h1>
-        <p>{course}</p>
+        <p>{course?.value}</p>
         </div>
         <div className='flex-1'>
         <h1 className='font-bold'>Año</h1>

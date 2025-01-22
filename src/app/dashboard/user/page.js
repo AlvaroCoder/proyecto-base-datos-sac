@@ -4,11 +4,13 @@ import { useFetch } from '@/components/hooks/customHooks';
 import React, { useEffect, useState } from 'react'
 import { PersonalProfileCard } from '@/components';
 
-const URL_USERS=process.env.NEXT_PUBLIC_URL_USER;
 
 export default function Page() {
+  const URL_USERS=process.env.NEXT_PUBLIC_URL_USER;
+
   const{dataResponse : user, error, loading} = useFetch(URL_USERS)
-  if (loading) {
+  
+  if (loading || loadingDataCategories) {
     return <span>Cargando</span>
   }
 

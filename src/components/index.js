@@ -29,3 +29,5 @@ export {default as ListCardShort} from "@/components/elementos/listCardShort";
 export {default as PopOverAddButton} from "@/components/elementos/popOverAddButton";
 export {default as FormUploadImage} from "@/components/elementos/formUploadImage";
 export {default as ButtonCloseDialog} from "@/components/elementos/buttonCloseDialog";
+
+export {default as CardUserMiembro} from "@/components/elementos/cardUserMiembro";

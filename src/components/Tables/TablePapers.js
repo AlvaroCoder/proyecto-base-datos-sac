@@ -2,14 +2,15 @@
 import React, { useMemo, useState } from 'react'
 import TableLayout from './Layout/TableLayout';
 import { extraerDataSinRepetir } from '../commons/tableFunctions';
-import { DropdownFiltersComponent } from './ui';
 import { DialogCreatePapers, DialogDeletePapers, DialogPapers } from '../Dialogs';
 import { DELETE_PAPER } from '../commons/apiConnection';
+import { useToast } from '../ui/use-toast';
 
 export default function TablePapers({
     dataPapers=[],
     dataMiembros=[]
 }) {
+    const {toast} = useToast();
     const titlesData=[
         {name : "Titulo", className: "w-[300px]"},
         {name : "Miembros", className: "w-[500px] px-2"},
@@ -77,14 +78,6 @@ export default function TablePapers({
     const handleChangeInput=(e)=>{
         setQuery(e.target.value);
     }
-    const handleCheckedDropdownYear=(item)=>{
-        setQuery("")
-        if (item===yearData) {
-            setYearData("");
-            return;
-        }
-        setYearData(item);
-    }
     const handlePaginate=(pageNumber)=>setCurrentPage(pageNumber);
     const numPapers = papersData.length;
 
@@ -98,7 +91,21 @@ export default function TablePapers({
     }
     // Funcion de eliminar paper
     const handleClickDeletePaper=async(idDeletePaper)=>{
-        await DELETE_PAPER(idDeletePaper)
+        const response = await DELETE_PAPER(idDeletePaper);
+        if (!response.ok) {
+            toast({
+                variant : "destructive",
+                title :"Error",
+                description :"Algo salio mal en el servidor"
+            });
+            return;
+        }
+        toast({
+            title : "Exito",
+            description :"Se elimino correctamente el paper!"
+        });
+        const newDataPaper = papersData.filter(item=>item?.id!==idDeletePaper);
+        setPapersData(newDataPaper);
     }
     const handleSaveUpdate=(data)=>{
         const newDataPapers = dataPapers.map(item=>item.id === data.id ? data : item);

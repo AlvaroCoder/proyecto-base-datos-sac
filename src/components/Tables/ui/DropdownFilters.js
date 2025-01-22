@@ -23,7 +23,7 @@ export default function DropdownFiltersComponents({
                     <DropdownMenuCheckboxItem
                         key={key}
                         className="capitalize"
-                        checked={item==titleData}
+                        checked={item.value==titleData}
                         onCheckedChange={()=>handleCheckedChange(item)}
                     >
                         {item?.value} 
