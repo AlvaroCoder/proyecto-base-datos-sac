@@ -8,9 +8,11 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { DialogCreateUsuario } from '../Dialogs';
-import { REGISTER_MEMBER } from '../commons/apiConnection';
+import { GET_LINK_FORM, REGISTER_MEMBER } from '../commons/apiConnection';
 import DropdownMenuComponent from '../elementos/dropdownComponent';
 import { Loader2, SaveIcon } from 'lucide-react';
+import { useToast } from '../ui/use-toast';
+import { useRouter } from 'next/navigation';
 
 function CardUser({first_name, last_name, email, phone, role}) {
     return(
@@ -37,6 +39,8 @@ export default function TableMiembros({
     dataMiembros=[],
     dataCargosMiembros=[]
 }) {
+    const {toast} = useToast();
+    const router = useRouter();
     const newDataMiembros = dataMiembros?.map((item)=>({...item, Seleccionado : false}))
     const [miembrosData, setMiembrosData] = useState(newDataMiembros);
     const [loadingDataSaveCategories, setLoadingDataSaveCategories] = useState(false);
@@ -64,9 +68,21 @@ export default function TableMiembros({
         ])
     }
     const handleClickSaveCategorieLink=async()=>{
+        setLoadingDataSaveCategories(true);
         const dataSend={role : categorieSelected}
-        console.log(dataSend);
-        
+        const response= await GET_LINK_FORM(dataSend);
+        if (!response.ok) {
+            toast({
+                variant : "destructive",
+                title : "Error",
+                description : "Sucedio un error"
+            });
+            return;
+        }        
+        const responseJSON = await response.json();
+        console.log(responseJSON);
+        router.push(`/dashboard/miembros/link?link=${responseJSON?.link}`)
+        setLoadingDataSaveCategories(false);
     }
   return (
     <div className='w-full'>
