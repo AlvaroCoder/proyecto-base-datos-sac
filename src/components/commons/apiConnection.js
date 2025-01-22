@@ -2,6 +2,20 @@ import { getSession } from "@/authentication/lib"
 
 const BASE_URL = "http://127.0.0.1:8000/"
 
+// CRUD de miembros
+export async function GET_LINK_FORM(data) {
+    const session = await getSession();
+    return await fetch(BASE_URL+`login/get_link_form`,{
+        method : 'POST',
+        headers : {
+            'Content-Type' : 'application/json',
+            'Authorization' : `Bearer ${session?.user?.access_token}`
+        },
+        mode : 'cors',
+        body : JSON.stringify(data)
+    })
+}
+
 export async function REGISTER_MEMBER(dataMember) {
     const session = await getSession();
     return await fetch(BASE_URL+`login/register`,{
@@ -220,16 +234,5 @@ export async function DELETE_PROYECT(idProject) {
     })
 }
 
-// CRUD de miembros
-export async function GET_LINK_FORM(data) {
-    const session = await getSession();
-    return await fetch(BASE_URL+`login/get_link_form`,{
-        method : 'POST',
-        headers : {
-            'Content-Type' : 'application/json',
-            'Authorization' : `Bearer ${session?.user?.access_token}`
-        },
-        mode : 'cors',
-        body : JSON.stringify(data)
-    })
-}
+
+

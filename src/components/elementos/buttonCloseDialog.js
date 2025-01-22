@@ -12,7 +12,7 @@ export default function buttonCloseDialog({
     const handleClick=async()=>{
         setLoadingData(true);
         await handleClickSave();
-        setLoadingData(false)
+        setLoadingData(false);
     }
   return (
     <div>

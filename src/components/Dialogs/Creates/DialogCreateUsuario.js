@@ -1,9 +1,5 @@
 import React, { useState } from 'react'
 import { Input } from '../../ui/input'
-import { DialogClose, DialogFooter } from '../../ui/dialog';
-import { Button } from '../../ui/button';
-import { Loader2 } from 'lucide-react';
-import SaveIcon from '@mui/icons-material/Save';
 import _ from "lodash";
 import { useToast } from '../../ui/use-toast';
 
@@ -14,13 +10,13 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 import DropdownMenuComponent from '@/components/elementos/dropdownComponent';
 import { ButtonCloseDialog } from '@/components';
+import { REGISTER_MEMBER } from '@/components/commons/apiConnection';
 export default function DialogCreateUsuario({
   handleClickAddMember,
   dataCategoriesUser=[]
 }) {
   const {toast} = useToast();
   const [visibilityPassword, setVisibilityPassword] = useState(false);
-
   const [dataDialog, setDataDialog] = useState({
     user_name : "",
     first_name : "",
@@ -34,8 +30,6 @@ export default function DialogCreateUsuario({
     password : "",
     disabled : false
   });
-  const [loadingData, setLoadingData] = useState(false);
-
   const handleChangeInput=(evt)=>{
     const target = evt.target;
     setDataDialog({
@@ -54,8 +48,23 @@ export default function DialogCreateUsuario({
   }
   const handleClickSave=async()=>{
     
-    console.log(dataDialog);
-    
+    const response = await REGISTER_MEMBER(dataDialog);
+    if (!response.ok) {
+      const responseJSON = await response.json();
+      toast({
+        variant : "destructive",
+        title : "Error",
+        description : `Ocurrio un error con el servidor : ${responseJSON?.detail}`
+      });
+      return;
+    }
+    const responseJSON = await response.json();
+    console.log(responseJSON);
+    handleClickAddMember(dataDialog);
+    toast({
+      title : "Exito",
+      description : "Se guardo con exito el Usuario"
+    })
   }
   return (
     <section>

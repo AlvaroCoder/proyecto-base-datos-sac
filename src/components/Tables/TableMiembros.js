@@ -15,6 +15,30 @@ import { useToast } from '../ui/use-toast';
 import { useRouter } from 'next/navigation';
 
 function CardUser({first_name, last_name, email, phone, role}) {
+    const roleValue = role?.value;
+    console.log(role);
+    
+    let backgroundColor="bg-guinda";
+    switch (roleValue) {
+        case "Administrador":
+            backgroundColor = "bg-administrador";
+            break;
+        case "Técnico":
+            backgroundColor = "bg-tecnico";
+            break;
+        case "Asistente":
+            backgroundColor = "bg-asistente";
+            break;
+        case "Alumno":
+            backgroundColor = "bg-estudiante";
+            break;
+        case "Tesista":
+            backgroundColor = "bg-tesista";
+            break;
+        case "Externo":
+            backgroundColor = "bg-externo";
+            break;
+    }
     return(
         <div className='shadow-sm rounded-lg p-4 flex flex-row border border-slate-50'>
             <div>
@@ -24,7 +48,7 @@ function CardUser({first_name, last_name, email, phone, role}) {
                 <h1 className='capitalize font-bold text-xl'>
                     {first_name}, {last_name}
                 </h1>
-                <h2 className='px-2 py-1 my-2 text-sm rounded-sm bg-guindaOpaco text-white w-fit'>{role?.value}</h2>
+                <h2 className={`px-2 py-1 my-2 text-sm rounded-sm ${backgroundColor} text-white w-fit`}>{role?.value}</h2>
                 <div>
                     <p className='text-sm cursor-pointer'><EmailIcon/> {email}</p>
                     <p className='text-sm'><PhoneIcon/> {phone}</p>
@@ -61,10 +85,9 @@ export default function TableMiembros({
         setQuery(e.target.value);
     }
     const handleClickAddMember=async(dataMember)=>{        
-        await REGISTER_MEMBER(dataMember);
         setMiembrosData([
-            ...miembrosData,
-            dataMember
+            dataMember,
+            ...miembrosData
         ])
     }
     const handleClickSaveCategorieLink=async()=>{
