@@ -73,24 +73,22 @@ export default function DialogCreateProyectos({
     }))
   }
   // Funcion de guardar el nuevo proyecto
-  const handleClickSave=async()=>{
-    console.log(dataDialog);
-    
+  const handleClickSave=async()=>{    
     const response = await CREATE_PROYECTS(dataDialog);        
     if (!response.ok) {
+      const responsJSON = await response.json();
       toast({
         variant : "destructive",
         title : "Error",
-        description : "Sucedio un error con el servidor"
+        description : `Ocurrio un error : ${responsJSON?.detail}`
       });
       return;
     }
-    const responseJSON = await response.json();
-    console.log(responseJSON);
-    
+    const responseJSON = await response.json();   
+    handleClickSaveRegister(dataDialog); 
     toast({
       title : "Exito",
-      description : "Se guardo correctamente el proyecto"
+      description : `${responseJSON?.message}`
     })
   }
   // Funcion de agregar miembro nuevo o antiguo a la 
@@ -207,6 +205,7 @@ export default function DialogCreateProyectos({
         </section>
       </div>
       <ButtonCloseDialog
+        textButton='Guardar Registro'
         handleClickSave={handleClickSave}
       />
     </section>

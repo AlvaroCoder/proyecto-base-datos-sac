@@ -174,7 +174,7 @@ export default function TableLibros({
     const handleClickSaveRegister=(data)=>{
         setLibrosData([
             data,
-            ...librosData,
+            ...librosData
         ])
     }
     const filterComponents=[

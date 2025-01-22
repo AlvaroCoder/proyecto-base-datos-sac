@@ -117,6 +117,12 @@ export default function TableEquipos({
         }
         setLocationData(item)
     }
+    const handleClickSaveRegister=(data)=>{
+        setEquiposData([
+            data,
+            ...equiposData
+        ])
+    }
     const handleClickDeleteRegister=async(id)=>{
         const response = await DELETE_EQUIPO(id);
         if (!response.ok) {
@@ -151,6 +157,7 @@ export default function TableEquipos({
         dataOriginDialog={origenSinRepetir}
         filtersComponents={listFiltersEquipos}
         deleteElementFunction={handleClickDeleteRegister}
+        handleClickSaveRegister={handleClickSaveRegister}
         handleCheckedRow={handleChangeRow}
         handleChangeChecked={handleChangeChecked}
         handleChangeInput={onChangeInput}

@@ -24,6 +24,7 @@ export default function DialogCreateTrabajo({
   const semesters=[
     {id : 1, value : "I"},
     {id : 2, value : "II"},
+    {id : 3, value : "VERANO"}
   ]
   const [semesterSelected, setSemesterSelected] = useState(semesters[0]);
 
@@ -53,10 +54,10 @@ export default function DialogCreateTrabajo({
     }
     const responseJSON = await response.json();
     console.log(responseJSON);
-    
+    handleClickSaveRegister(jsonToSend);
     toast({
       title : "Exito",
-      description : "Se guardo con exito el trabajo"
+      description : `Se guardo con exito el trabajo : ${dataDialog.title}`
     })
   }
   const handleChangeDropdownSemester=(idSemester)=>{
@@ -141,7 +142,7 @@ export default function DialogCreateTrabajo({
         </div>
       </div>
       <ButtonCloseDialog
-        textButton='Guardar Trabajo'
+        textButton='Guardar Registro'
         handleClickSave={handleClickSave}
       />
     </section >

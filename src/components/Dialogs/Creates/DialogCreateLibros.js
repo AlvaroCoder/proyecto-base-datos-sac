@@ -14,7 +14,6 @@ export default function DialogCreateLibros({
 }) {  
   
   const {toast} = useToast();
-  const refAuthorName =useRef(null);
   const [dataDialog, setDataDialog] = useState({
     authors : [],
     title : '',
@@ -69,22 +68,22 @@ export default function DialogCreateLibros({
       return;
     }
     const response = await CREATE_BOOK(dataDialog);
-    if (response.ok) {
-      const responseJSON = await response.json();
-      console.log(responseJSON);
-      
+    if (!response.ok) {
       toast({
-        title : "Exito",
-        description : `Se guardo el libro ${dataDialog.title}`
+        variant : "destructive",
+        title : "Error",
+        description : "Ocurrio un error"
       });
-      return
+      return;
     }
-
+    const responseJSON = await response.json();
+    console.log(responseJSON);
+    handleClickSaveRegister(dataDialog);
     toast({
-      variant : "destructive",
-      title : "Error",
-      description : "Ocurrio un error"
-    })
+      title : "Exito",
+      description : `Se guardo el libro ${dataDialog.title}`
+    });
+
   }
   const handleClickAddMember=(data)=>{
     

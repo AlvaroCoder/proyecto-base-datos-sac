@@ -108,14 +108,7 @@ export default function TableProyectos({
     }
     setStatusData(item);
   }
-  const handleCheckedDropdownCoordinate=(item)=>{
-    setQuery("");
-    if (item===coordinatorData) {
-      setCoordinatorData("");
-      return;
-    }
-    setCoordinatorData(item);
-  }
+
   // Funcion de agregar proyectos a la tabla de proyectos
   const handleClickSaveRegister=(data)=>{
     setProyectosData([

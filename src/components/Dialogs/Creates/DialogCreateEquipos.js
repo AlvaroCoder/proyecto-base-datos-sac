@@ -76,7 +76,7 @@ export default function DialogCreateEquipos({
 
     const responseJSON = await response.json();
     console.log(responseJSON);
-    
+    handleClickSave(dataDialog);
     toast({
       title : "Exito",
       description : `Se guardo el equipo ${dataDialog.equipment}`

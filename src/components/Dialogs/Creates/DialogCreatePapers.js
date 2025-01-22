@@ -40,22 +40,23 @@ export default function DialogCreatePapers({
     })
   }
   const handleClickSave=async()=>{
-      console.log(dataDialog);
+    console.log(dataDialog);
     const response = await CREATE_PAPER(dataDialog);
     if (!response.ok) {
+      const responseJSON = await response.json();
       toast({
         variant : "destructive",
         title : "Error",
-        description : "Sucedio un error en el servidor"
+        description : `Ocurrio un error con el servidor : ${responseJSON?.detail}`
       });
       return
     }
     const responseJSON = await response.json();
     console.log(responseJSON);
-    
+    handleClickSaveRegister(dataDialog);
     toast({
       title : "Exito",
-      description : "Se guardo correctamente el paper"
+      description : `Se guardo correctamente el paper : ${dataDialog.title}`
     })
   }
   
@@ -105,6 +106,7 @@ export default function DialogCreatePapers({
         </div>
       </section>
       <ButtonCloseDialog
+        textButton='Guardar Registro'
         handleClickSave={handleClickSave}
       />
     </section>

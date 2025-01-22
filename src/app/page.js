@@ -23,7 +23,7 @@ export default  function Home() {
     {title : "Gestión de Libros", icon : BookIcon},
     {title : "Gestión de Papers", icon : ListAltIcon},
     {title : "Gestión de Equipos", icon : ComputerIcon},
-    {title : "Gestión de Miembros", icon : PersonIcon},
+    {title : "Gestión de Usuarios", icon : PersonIcon},
     {title : "Gestión de Proyectos", icon : LightbulbIcon},
     {title : "Gestión de Trabajos", icon : BookIcon},
   ]

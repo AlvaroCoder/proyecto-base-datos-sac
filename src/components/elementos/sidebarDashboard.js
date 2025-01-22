@@ -33,7 +33,7 @@ export default function SideBarDashboard() {
             selected : false
         },
         {
-            routeName : "Miembros",
+            routeName : "Usuarios",
             routePath : "/dashboard/miembros",
             routeIcon : GroupIcon,
             selected : false

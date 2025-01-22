@@ -94,7 +94,7 @@ export default function TablePapers({
         setPapersData([
             data,
             ...papersData
-        ])
+        ]);
     }
     // Funcion de eliminar paper
     const handleClickDeletePaper=async(idDeletePaper)=>{

@@ -113,6 +113,7 @@ export default function TableTrabajos({
 
 
     }
+    
     const paginate = (pageNumber)=>setCurrentPage(pageNumber);
     const numBooks = trabajosData.length;
 
