@@ -2,7 +2,6 @@
 import React, { useMemo, useState } from 'react'
 import TableLayout from './Layout/TableLayout';
 import { DropdownFiltersComponent } from './ui';
-import { extraerDataSinRepetir } from '../commons/tableFunctions';
 import { DialogCreateProyectos, DialogProyectos } from '../Dialogs';
 import DialogDeleteProyectos from '../Dialogs/Deletes/DialogDeleteProyectos';
 import { DELETE_PROYECT, UPDATE_PROYECTS } from '../commons/apiConnection';
@@ -15,10 +14,8 @@ export default function TableProyectos({
   dataAgreements=[]
 }) {  
   const newDataProyectos = dataProyectos?.map((item)=>{
-    const arrAgreements = item?.agreement?.split(";")
     return {
       ...item,
-      agreement : arrAgreements,
       fullNameCoordinator : item?.coordinator?.first_name + " "+ item?.coordinator?.last_name,
       Seleccionado : false
     }
