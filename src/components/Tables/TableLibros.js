@@ -83,7 +83,7 @@ export default function TableLibros({
             setLocationData("")
             return;
         }
-        setLocationData(item)
+        setLocationData(item?.value)
     }
     const handleChangeChecked=(_)=>{
         const newListBooks = librosData?.map(libro=>({...libro, Seleccionado : !libro.Seleccionado}));
