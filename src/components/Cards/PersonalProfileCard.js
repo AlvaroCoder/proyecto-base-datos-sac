@@ -11,7 +11,8 @@ export default function PersonalProfileCard({
     email,
     phone,
     role,
-    user_name
+    user_name,
+    dataCategories
 }) {
     const URL_IMG_ACCOUNT = "https://www.svgrepo.com/show/345418/account-circle.svg"
   return (

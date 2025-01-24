@@ -1,7 +1,6 @@
 'use client'
 import Link from 'next/link'
-import React, { useState } from 'react'
-
+import React, { useEffect, useState } from 'react'
 import LaptopChromebookIcon from '@mui/icons-material/LaptopChromebook';
 import BookIcon from '@mui/icons-material/Book';
 import GroupIcon from '@mui/icons-material/Group';
@@ -12,12 +11,14 @@ import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrow
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import { Button } from '../ui/button';
-import { logout } from '@/authentication/lib';
+import { getSession, logout } from '@/authentication/lib';
 import { usePathname } from 'next/navigation';
-
+import jwt from "jsonwebtoken";
 export default function SideBarDashboard() {
+    const [loading, setLoading] = useState(true);
+
+  
     const pathname = usePathname();
-    
     const [openSidebar, setOpenSidebar] = useState(true);
     const routes=[
         {
@@ -69,7 +70,23 @@ export default function SideBarDashboard() {
         }
     });
 
-    const [dataRoutes, setDataRoutes] = useState(routes)
+    const [dataRoutes, setDataRoutes] = useState(routes);
+
+    useEffect(()=>{
+        async function fetchCookie() {
+
+            const session = await getSession();
+            const token = session?.user?.access_token;
+            const decode_jwt = jwt.decode(token);
+            const filteredRoutes = session && [5, 6, 7].includes(decode_jwt?.role)
+            ? routes.filter(route => route.routePath !== '/dashboard/miembros')
+            : routes;
+            setDataRoutes(filteredRoutes)
+            setLoading(false);
+        }
+        fetchCookie();
+    },[])
+
     const handleClick = (index)=>{
         const newDataRoutes = dataRoutes.map((item, idx)=>{
             if (index === idx) {
@@ -88,53 +105,56 @@ export default function SideBarDashboard() {
     const handleCLickSignOut=async()=>{
         await logout();        
     }
-  return (
-    <div  className={`${openSidebar ? 'w-48' : 'w-20'} bg-guinda h-screen flex flex-col justify-between relative z-50 duration-300`}>
-       {
-        openSidebar ?  <KeyboardDoubleArrowLeftIcon
-        onClick={()=>setOpenSidebar(false)}
-        className='absolute bg-white text-guinda text-3xl rounded-full top-9 border border-guinda -right-3 cursor-pointer z-50'    
-        />  :
-        <KeyboardDoubleArrowRightIcon
-        className='absolute bg-white text-guinda text-3xl rounded-full top-9 border border-guinda -right-3 cursor-pointer z-50'    
-        onClick={()=>setOpenSidebar(true)}
-        /> 
-       }
-        <div className='mt-12'>
-            <ul className='block mt-6'>
+    if (loading) {
+        return <></>
+    }
+    return (
+        <div  className={`${openSidebar ? 'w-48' : 'w-20'} bg-guinda h-screen flex flex-col justify-between relative z-50 duration-300`}>
+           {
+            openSidebar ?  <KeyboardDoubleArrowLeftIcon
+            onClick={()=>setOpenSidebar(false)}
+            className='absolute bg-white text-guinda text-3xl rounded-full top-9 border border-guinda -right-3 cursor-pointer z-50'    
+            />  :
+            <KeyboardDoubleArrowRightIcon
+            className='absolute bg-white text-guinda text-3xl rounded-full top-9 border border-guinda -right-3 cursor-pointer z-50'    
+            onClick={()=>setOpenSidebar(true)}
+            /> 
+           }
+            <div className='mt-12'>
+                <ul className='block mt-6'>
+                    {
+                        dataRoutes.map((item,idx)=>{
+                            const Icon = item.routeIcon;
+                            return (
+                                <Link 
+                                key={idx} 
+                                href={item.routePath}>
+                                <li 
+                                onClick={()=>handleClick(idx)}
+                                className={`${item.selected && "bg-guindaOpaco"} list-none text-white cursor-pointer p-4 hover:bg-guindaOpaco w-full flex flex-row items-center ${!openSidebar && 'justify-center'}`} >
+                                    <Icon/>
+                                   {
+                                    openSidebar &&  <p className='ml-2'>{item.routeName}</p> 
+                                   }
+                                </li>
+                                </Link>
+                            )
+                        })
+                    }
+                </ul>
+            </div>
+            <div className='w-full h-fit py-4 flex items-center justify-center  text-white'>
+               <Button
+               className="py-6"
+                variant="ghost"
+                onClick={handleCLickSignOut}
+               >
+               <PowerSettingsNewIcon/>
                 {
-                    dataRoutes.map((item,idx)=>{
-                        const Icon = item.routeIcon;
-                        return (
-                            <Link 
-                            key={idx} 
-                            href={item.routePath}>
-                            <li 
-                            onClick={()=>handleClick(idx)}
-                            className={`${item.selected && "bg-guindaOpaco"} list-none text-white cursor-pointer p-4 hover:bg-guindaOpaco w-full flex flex-row items-center ${!openSidebar && 'justify-center'}`} >
-                                <Icon/>
-                               {
-                                openSidebar &&  <p className='ml-2'>{item.routeName}</p> 
-                               }
-                            </li>
-                            </Link>
-                        )
-                    })
+                    openSidebar && <p className='ml-2'>Cerrar Sesión</p>
                 }
-            </ul>
+               </Button>
+            </div>
         </div>
-        <div className='w-full h-fit py-4 flex items-center justify-center  text-white'>
-           <Button
-           className="py-6"
-            variant="ghost"
-            onClick={handleCLickSignOut}
-           >
-           <PowerSettingsNewIcon/>
-            {
-                openSidebar && <p className='ml-2'>Cerrar Sesión</p>
-            }
-           </Button>
-        </div>
-    </div>
-  )
+      )
 }

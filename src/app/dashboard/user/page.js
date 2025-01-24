@@ -1,16 +1,17 @@
 "use client"
-import { getSession } from '@/authentication/lib';
 import { useFetch } from '@/components/hooks/customHooks';
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { PersonalProfileCard } from '@/components';
 
 
 export default function Page() {
   const URL_USERS=process.env.NEXT_PUBLIC_URL_USER;
+  const URL_CATEGORIES = process.env.NEXT_PUBLIC_URL_CATEGORIES_USER;
 
   const{dataResponse : user, error, loading} = useFetch(URL_USERS)
+  const {dataResponse : userDataCategores, error : errorDataCategories, loading  : loadingDataCategories} = useFetch(URL_CATEGORIES);
   
-  if (loading || loadingDataCategories) {
+  if (loading || loadingDataCategories ) {
     return <span>Cargando</span>
   }
 
@@ -22,6 +23,7 @@ export default function Page() {
     
     <PersonalProfileCard
       {...user}
+      dataCategories={userDataCategores?.agreements}
     />
    </section>
   );

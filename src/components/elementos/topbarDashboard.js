@@ -1,7 +1,6 @@
 "use client"
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-import { handleGetCookie } from '../serverComp/addCookie';
 import PersonIcon from '@mui/icons-material/Person';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
