@@ -1,6 +1,6 @@
 "use client"
 import { SkeletonTable, TableTrabajos } from '@/components';
-import { useFetch } from '@/components/hooks/customHooks';
+import { useFetch, useSession } from '@/components/hooks/customHooks';
 import React from 'react'
 
 export default function Page() {
@@ -9,7 +9,8 @@ export default function Page() {
 
   const {loading : loadingDataTrabajos, dataResponse : dataTrabajos, error : errorDataTrabajos} = useFetch(URL_TRABAJOS)
   const {loading : loadingDataCourses, dataResponse : dataCourses, error : errorDataCourses} = useFetch(URL_COURSES);
-  
+  const {loading : loadingDataSession, dataSession, error : errorDataSession} = useSession();
+
   const headersTrabajos=[
     "Titulo",
     "Curso",
@@ -22,10 +23,11 @@ export default function Page() {
         <h1 className='text-guinda font-bold text-2xl'>
             Trabajos
         </h1>
-        {(loadingDataTrabajos || loadingDataCourses) ? <SkeletonTable headers={headersTrabajos} />:
+        {(loadingDataTrabajos || loadingDataCourses || loadingDataSession) ? <SkeletonTable headers={headersTrabajos} />:
           <TableTrabajos
             dataTrabajos={dataTrabajos}
             dataCourses={dataCourses.locations}
+            dataSession={dataSession}
           />
         }
     </div>

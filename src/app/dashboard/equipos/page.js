@@ -1,6 +1,6 @@
 "use client"
 import { SkeletonTable, TableEquipos } from '@/components';
-import { useFetch } from '@/components/hooks/customHooks';
+import { useFetch, useSession } from '@/components/hooks/customHooks';
 import React from 'react'
 
 export default function Page() {
@@ -13,7 +13,8 @@ export default function Page() {
   const {loading : loadingDataStatusEquipos, dataResponse : dataStatusEquipos} = useFetch(URL_STATUS_EQUIPOS);
   const {loading : loadingDataLocationEquipos, dataResponse : dataLocationEquipos} = useFetch(URL_LOCATION_EQUIPOS);
   const {loading : loadingDataTypeEquipos, dataResponse :dataTypeEquipos} = useFetch(URL_TYPE_LOCATIONS);
-  
+  const {loading : loadingDataSession, dataSession : dataSession} = useSession();
+
   const headersEquipos = [
     "Descripcion",
     "Tipo",
@@ -29,13 +30,14 @@ export default function Page() {
             Equipos
         </h1>
         {
-          (loadingDataEquipos || loadingDataStatusEquipos || loadingDataLocationEquipos || loadingDataTypeEquipos) ? 
+          (loadingDataEquipos || loadingDataStatusEquipos || loadingDataLocationEquipos || loadingDataTypeEquipos || loadingDataSession) ? 
           <SkeletonTable headers={headersEquipos}/> : 
           <TableEquipos
             dataEquipos={dataEquipos}
             dataLocationEquipos={dataLocationEquipos?.locations}
             dataStatusEquipos={dataStatusEquipos?.status}
             dataTypeEquipos={dataTypeEquipos?.equipment_types}
+            dataSession={dataSession}
           />
         }
 

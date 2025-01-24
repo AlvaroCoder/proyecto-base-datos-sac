@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React from 'react'
 import { Input } from '../../ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table'
 import { Checkbox } from '../../ui/checkbox'
@@ -10,9 +10,6 @@ import { DialogCreateUi, DialogDeleteUi, DialogEditUi, DropdownUiTable } from '.
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { DialogDeleteMultiplesElements } from '@/components/Dialogs'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-
-
-
 
 export default function TableLayout({
     currentData=[],
@@ -47,6 +44,7 @@ export default function TableLayout({
     handleClickSaveRegister,
     dataStatusDialog,
     dataListAgreements=[],
+    isAdmin=false
 }) 
 {       
 const elementsSelected = currentData?.filter(data=>data.Seleccionado);
@@ -59,7 +57,9 @@ const elementsSelected = currentData?.filter(data=>data.Seleccionado);
                 onChange={handleChangeInput}
             />
 
-            <DialogCreateUi
+            {
+                isAdmin && 
+                <DialogCreateUi
                 dialogTitle={dialogTitleCreate}
                 DialogBody={
                 <DialogCreateComponent
@@ -75,8 +75,10 @@ const elementsSelected = currentData?.filter(data=>data.Seleccionado);
                     handleClickSaveRegister={handleClickSaveRegister}
                 />}  
             />
+            }
             {
-                elementsSelected.length > 0 && 
+
+                (isAdmin && elementsSelected.length > 0) && 
                 <DialogDeleteMultiplesElements elements={elementsSelected} />
             }
             {
@@ -189,7 +191,9 @@ const elementsSelected = currentData?.filter(data=>data.Seleccionado);
                                                 )
                                             })
                                         }
-                                        <TableCell>
+                                        {
+                                            isAdmin &&
+                                            <TableCell>
                                             <DropdownUiTable
                                                 DialogEditComponent={
                                                 <DialogEditUi
@@ -218,7 +222,8 @@ const elementsSelected = currentData?.filter(data=>data.Seleccionado);
                                                 </DialogDeleteUi>}
                                             />
 
-                                        </TableCell>
+                                            </TableCell>
+                                        }
                                     </TableRow>
                                 )
                             })

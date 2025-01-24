@@ -13,8 +13,13 @@ import { CardUserMiembro } from '@/components';
 
 export default function TableMiembros({
     dataMiembros=[],
-    dataCargosMiembros=[]
+    dataCargosMiembros=[],
+    dataSession =null,
 }) {
+    // Id restringidos de acuerdo a los privilegios establecidos
+    const restrictedIds=[5,6,7];
+    const userID = dataSession?.role;
+
     const {toast} = useToast();
     const router = useRouter();
     const newDataMiembros = dataMiembros?.map((item)=>({...item, Seleccionado : false}))

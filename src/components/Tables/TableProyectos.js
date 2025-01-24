@@ -12,8 +12,14 @@ export default function TableProyectos({
   dataMiembros = [],
   dataCargosUsuarios=[],
   dataStatus=[],
-  dataAgreements=[]
+  dataAgreements=[],
+  dataSession=null,
 }) {  
+
+  // Id restringidos de acuerdo a los privilegios establecidos
+  const restrictedIds=[5,6,7];
+  const userID = dataSession?.role;
+
   const {toast} = useToast();
   const newDataProyectos = dataProyectos?.map((item)=>{
     return {
@@ -179,6 +185,7 @@ export default function TableProyectos({
       DialogDeleteComponent={DialogDeleteProyectos}
       DialogCreateComponent={DialogCreateProyectos}
       dialogTitleEdit='Editar Proyecto'
+      isAdmin={!restrictedIds.includes(userID)}
     />
   )
 }

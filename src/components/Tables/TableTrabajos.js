@@ -2,7 +2,6 @@
 import React, { useMemo, useState } from 'react'
 import TableLayout from './Layout/TableLayout';
 import { DropdownFiltersComponent } from './ui';
-import { extraerDataSinRepetir } from '../commons/tableFunctions';
 import { DialogCreateTrabajo, DialogTrabajos } from '../Dialogs';
 import DialogDeleteTrabajos from '../Dialogs/Deletes/DialogDeleteTrabajos';
 import { DELETE_TRABAJOS, UPDATE_TRABAJOS } from '../commons/apiConnection';
@@ -11,7 +10,12 @@ import { useToast } from '../ui/use-toast';
 export default function TableTrabajos({
     dataTrabajos=[],
     dataCourses=[],
+    dataSession=null
 }) {
+    // Id restringidos de acuerdo a los privilegios establecidos
+    const restrictedIds = [5,6,7];
+    const userID = dataSession?.role;
+
     const {toast} = useToast();
     const titlesData = [
         {name : "Titulo", className:"w-[400px]"},
@@ -147,6 +151,7 @@ export default function TableTrabajos({
             handleClickSaveUpdate={handleClickUpdateTrabajos}
             deleteElementFunction={handleClickDeleteTrabajo}
             handleClickSaveRegister={handleClickSaveRegister}
+            isAdmin={!restrictedIds.includes(userID)}
         />
     </>
   )

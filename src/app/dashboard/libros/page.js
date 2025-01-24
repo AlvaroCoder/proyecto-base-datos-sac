@@ -1,6 +1,6 @@
 "use client"
 import { TableLibros, SkeletonTable } from '@/components';
-import { useFetch } from '@/components/hooks/customHooks';
+import { useFetch, useSession } from '@/components/hooks/customHooks';
 import React from 'react'
 
 
@@ -17,7 +17,8 @@ export default function Page() {
   const {loading : loadingDataLocations, dataResponse : dataLocations, error : errorDataLocations} = useFetch(URL_LOCATIONS);
   const {loading : loadingDataUsuarios, dataResponse : dataUsuarios, error : errorDataUsuarios} = useFetch(URL_USUARIOS);
   const {loading : loadingDataAutores, dataResponse : dataAutores, error : errorDataAutores} = useFetch(URL_AUTORES);
-    
+  const {loading : loadingDataSession, dataSession, error : errorDataSession} = useSession();  
+
   const headersLibros = [
     "#",
     "Titulo",
@@ -31,13 +32,14 @@ export default function Page() {
         <h1 className='text-guinda font-bold text-2xl'>
             Libros
         </h1>
-        {(loadingDataLibros || loadingDataStatus || loadingDataLocations || loadingDataUsuarios || loadingDataAutores)? 
+        {(loadingDataLibros || loadingDataStatus || loadingDataLocations || loadingDataUsuarios || loadingDataAutores || loadingDataSession)? 
         <SkeletonTable headers={headersLibros}/> : <TableLibros 
         dataLibros={dataLibros} 
         dataLocations={dataLocations?.locations} 
         dataStatus={dataStatus?.status}
         dataUsers={dataUsuarios?.users}
         dataAutores={dataAutores?.authors}
+        dataSession={dataSession}
         />}
     </div>
   )

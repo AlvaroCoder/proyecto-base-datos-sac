@@ -8,8 +8,14 @@ import { useToast } from '../ui/use-toast';
 
 export default function TablePapers({
     dataPapers=[],
-    dataMiembros=[]
+    dataMiembros=[],
+    dataSession=null
 }) {
+    
+    // Id restringidos de acuerdo a los privilegios establecidos
+    const restrictedIds=[5,6,7];
+    const userID = dataSession?.role;
+    
     const {toast} = useToast();
     const titlesData=[
         {name : "Titulo", className: "w-[300px]"},
@@ -131,6 +137,7 @@ export default function TablePapers({
             DialogEditComponent={DialogPapers}
             handleClickSaveUpdate={handleSaveUpdate}
             handleClickSaveRegister={handleClickSaveRegister}
+            isAdmin={!restrictedIds.includes(userID)}
         />
     </>
   )

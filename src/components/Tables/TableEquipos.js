@@ -3,7 +3,6 @@
 import React, { useMemo, useState } from 'react'
 import TableLayout from './Layout/TableLayout';
 import { DropdownFiltersComponent } from './ui';
-import { extraerDataSinRepetir } from '../commons/tableFunctions';
 import { DialogDeleteEquipos, DialogEquipos } from '../Dialogs';
 import DialogCreateEquipos from '../Dialogs/Creates/DialogCreateEquipos';
 import { DELETE_EQUIPO } from '../commons/apiConnection';
@@ -13,7 +12,7 @@ export default function TableEquipos({
     dataEquipos=[], 
     dataStatusEquipos=[],
     dataTypeEquipos=[],
-    
+    dataSession=null,
     dataLocationEquipos=[]
 }) {
     
@@ -37,6 +36,9 @@ export default function TableEquipos({
         "location",
         "status"
     ]
+    // Id restringidos de acuerdo a los privilegios establecidos
+    const restrictedIds = [5,6,7];
+    const userID = dataSession?.role;
 
     const newDataEquipos = dataEquipos?.map((item)=>({...item, Seleccionado : false}));
     
@@ -179,6 +181,7 @@ export default function TableEquipos({
         DialogEditComponent={DialogEquipos}
         DialogCreateComponent={DialogCreateEquipos}
         DialogDeleteComponent={DialogDeleteEquipos}
+        isAdmin={!restrictedIds.includes(userID)}
     />
   )
 }

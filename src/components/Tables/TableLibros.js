@@ -14,8 +14,10 @@ export default function TableLibros({
     dataStatus=[], 
     dataLocations=[],
     dataUsers=[],
-    dataAutores=[]
+    dataAutores=[],
+    dataSession=null
 }) {        
+
     const titlesData=[
         {name:"Titulo",className:"w-[800px] px-2"},
         {name:"Autor",className:"w-[500px]"},
@@ -30,6 +32,10 @@ export default function TableLibros({
         "location",
         "borrowed_to",
     ]
+    // Id restringidos de acuerdo a los privilegios establecidos
+    const restrictedIds=[5,6,7];
+    const userID = dataSession?.role;
+    
     const {toast} = useToast();
     const newDataLibros = dataLibros?.map((item)=>({...item, Seleccionado : false}));
 
@@ -167,7 +173,7 @@ export default function TableLibros({
         DialogEditComponent={DialogLibros}
         DialogCreateComponent={DialogCreateLibros}  
         handleClickSaveRegister={handleClickSaveRegister}
-        
+        isAdmin={!restrictedIds.includes(userID)}
     />
   )
 }

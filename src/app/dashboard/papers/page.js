@@ -1,6 +1,6 @@
 "use client"
 import { SkeletonTable, TablePapers } from '@/components';
-import { useFetch } from '@/components/hooks/customHooks'
+import { useFetch, useSession } from '@/components/hooks/customHooks'
 import React from 'react'
 
 export default function Page() {
@@ -8,7 +8,8 @@ export default function Page() {
   const URL_MIEMBROS= process.env.NEXT_PUBLIC_URL_MIEMBROS;
   const {loading : loadingDataPapers, dataResponse : dataPapers, error : errorDataPapers} = useFetch(URL_PAPERS);
   const {loading : loadingDataMiembros, dataResponse : dataMiembros, error : errorMiembros} = useFetch(URL_MIEMBROS);
-  
+  const {loading : loadingDataSession, dataSession, error : errorDataSession} = useSession();
+
   const headerPapers = [
     "Titulo",
     "Miembros",
@@ -21,8 +22,9 @@ export default function Page() {
             Papers
         </h1>
         {
-          (loadingDataPapers || loadingDataMiembros) ? <SkeletonTable headers={headerPapers} /> :
+          (loadingDataPapers || loadingDataMiembros || loadingDataSession) ? <SkeletonTable headers={headerPapers} /> :
           <TablePapers
+            dataSession={dataSession}
             dataPapers={dataPapers}
             dataMiembros={dataMiembros}
           />
