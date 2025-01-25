@@ -14,10 +14,9 @@ import { Button } from '../ui/button';
 import { getSession, logout } from '@/authentication/lib';
 import { usePathname } from 'next/navigation';
 import jwt from "jsonwebtoken";
+
 export default function SideBarDashboard() {
     const [loading, setLoading] = useState(true);
-
-  
     const pathname = usePathname();
     const [openSidebar, setOpenSidebar] = useState(true);
     const routes=[

@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const secretKey=process.env.SECRET_TOKEN;
 const URL_REGISTER_USER=process.env.REGISTER_USER;
-const URL_LOGIN_USER="http://127.0.0.1:8000/login";
+const URL_LOGIN_USER=process.env.LOGIN_USER;
 
 const key=new TextEncoder().encode(secretKey);
 const timeExpiration =  30 * 60 * 1000;

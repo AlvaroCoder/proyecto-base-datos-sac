@@ -3,7 +3,6 @@ import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import PersonIcon from '@mui/icons-material/Person';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import { getSession, logout } from '@/authentication/lib';
 import { Button } from '../ui/button';
@@ -14,9 +13,10 @@ const URL_IMG_UDEP = "https://res.cloudinary.com/ddcb3fk7s/image/upload/v1723319
 const URL_IMG_LABSAC = "https://res.cloudinary.com/ddcb3fk7s/image/upload/v1723319348/logo_lab_sac_guinda_xefpo1.png";
 const URL_RECORDS = process.env.NEXT_PUBLIC_URL_RECORDS
 
-export default function TopBarDashboard({historial}) {
+export default function TopBarDashboard() {
     const router = useRouter();
     const [userData, setUserData] = useState(null);
+    
     useEffect(()=>{
         async function fetchCookie() {
             const session = await getSession();
@@ -25,9 +25,11 @@ export default function TopBarDashboard({historial}) {
         }
         fetchCookie();
     },[]);
+
     const handleClickLogout=async()=>{
         await logout();
     }
+
     const handleClickPerfil=async()=>{
         router.push("/dashboard/user")
     }
@@ -89,9 +91,7 @@ export default function TopBarDashboard({historial}) {
                 </DropdownMenuContent>
             </DropdownMenu>
             <div>
-                <NotificationsIcon
-                    className='text-guinda'
-                />
+                
             </div>
         </div>
     </div>
