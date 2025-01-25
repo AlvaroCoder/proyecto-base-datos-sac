@@ -45,7 +45,6 @@ export default function TableEquipos({
     const [equiposData, setEquiposData] = useState(newDataEquipos);
     const [locationData, setLocationData] = useState("");
     const [statusData, setStatusData] = useState("");
-    const [typeData, setTypeData] = useState("");
     const [currentPage, setCurrentPage]=useState(1);
     const [query, setQuery] = useState("");       
 
@@ -65,13 +64,9 @@ export default function TableEquipos({
         return filterDataStatus.filter(item=>item?.location?.value.toUpperCase().includes(locationData.toUpperCase()))  
     },[filterDataStatus, locationData])
 
-    const filterDataType=useMemo(()=>{
-        return filterDataLocation.filter(item=>item?.type?.value.toUpperCase().includes(typeData.toUpperCase()))
-    },[filterDataLocation, typeData])
-
     const currentData = useMemo(()=>{
-        return filterDataType.slice(indexFirst, indexLast)
-    },[filterDataType, indexFirst, indexLast]);
+        return filterDataLocation.slice(indexFirst, indexLast)
+    },[filterDataLocation, indexFirst, indexLast]);
 
     const onChangeInput=(e)=>{
         setQuery(e.target.value);
@@ -144,12 +139,8 @@ export default function TableEquipos({
         const newDataEquipos = equiposData.filter(item=>item?.id!==id);
         setEquiposData(newDataEquipos);
     }
-    const handleClickSaveUpdate=(data)=>{
-        console.log(data);
-        
-        const newDataEquipos = [...dataEquipos].map(item=>item?.id === data.id);
-        console.log(newDataEquipos);
-        
+    const handleClickSaveUpdate=(data)=>{        
+        const newDataEquipos = [...equiposData].map(item=>item?.id === data.id ? data : item);                
         setEquiposData(newDataEquipos);
     }
     const paginate=(pageNumber) => setCurrentPage(pageNumber);

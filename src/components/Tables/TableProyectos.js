@@ -33,8 +33,8 @@ export default function TableProyectos({
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState("");
   const [statusData, setStatusData] = useState("");
-  const [coordinatorData, setCoordinatorData] = useState("");
 
+  // Indica cuantos elementos se muestran en la tabla por pagina
   const PROYECTOS_POR_PAGINA = 10;
   const indexLast = currentPage * PROYECTOS_POR_PAGINA;
   const indexFirst = indexLast - PROYECTOS_POR_PAGINA;
@@ -47,13 +47,9 @@ export default function TableProyectos({
     return filterData.filter(item=>item?.status?.value.toUpperCase().includes(statusData.toUpperCase()))
   },[filterData, statusData]);
 
-  const filterDataButtonCoordinator=useMemo(()=>{
-    return filterDataButtonStatus.filter(item=>item.fullNameCoordinator?.toUpperCase().includes(coordinatorData.toUpperCase()) )
-  },[filterDataButtonStatus, coordinatorData]);
-
   const currentData = useMemo(()=>{
-    return filterDataButtonCoordinator.slice(indexFirst, indexLast);
-  },[filterDataButtonCoordinator, indexFirst, indexLast]);
+    return filterDataButtonStatus.slice(indexFirst, indexLast);
+  },[filterDataButtonStatus, indexFirst, indexLast]);
 
   
   const handlePaginate=(pageNumber)=>setCurrentPage(pageNumber);
@@ -154,8 +150,7 @@ export default function TableProyectos({
     newDataJSON['fullNameCoordinator']=data.coordinator.first_name + " " + data.coordinator.last_name;
     newDataJSON['Seleccionado']=false
     
-    const newDataProyectos = [...dataProyectos].map(item=>item?.id === data?.id ? newDataJSON : item);
-    
+    const newDataProyectos = [...proyectosData].map(item=>item?.id === data?.id ? newDataJSON : item);    
     setProyectosData(newDataProyectos);
   }
   const listFilterComponents=[

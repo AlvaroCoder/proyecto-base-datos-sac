@@ -61,9 +61,7 @@ export default function DialogCreateEquipos({
     const newJSONToSend={
       ...dataDialog,
       evidence : responseImageJSON?.url
-    }
-    console.log(newJSONToSend);
-    
+    }    
     const response = await CREATE_EQUIPO(newJSONToSend);
     if (!response.ok) {
       toast({

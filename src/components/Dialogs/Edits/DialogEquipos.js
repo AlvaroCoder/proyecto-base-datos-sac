@@ -7,7 +7,6 @@ import { useToast } from '@/components/ui/use-toast';
 
 export default function DialogEquipos({
     initialDataDialog,
-    dataDialog,
     handleChangeExistChanges,
     setDataDialog : setDataDialogEquipos,
     handleClickSaveUpdate,
