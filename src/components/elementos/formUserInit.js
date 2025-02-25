@@ -74,7 +74,7 @@ export default function FormElement() {
           <div className=' flex flex-row items-center justify-center bg-white rounded-lg px-4 py-2'>
             <PersonIcon
               className='text-guinda mr-2 '
-
+      
             />
             <input
               className="w-full p-2 bg-transparent outline-none shadow-none text-guinda border-none rounded-none border-b-2"

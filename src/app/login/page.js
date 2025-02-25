@@ -1,9 +1,6 @@
 "use client"
 import { FormularioUsuario } from "@/components";
-import { handleAddCookie, handleExistCookie } from "@/components/serverComp/addCookie";
 import Image from "next/image";
-import { redirect } from "next/navigation";
-import { useEffect, useState } from "react";
 
 const URL_IMG_UDEP = "https://res.cloudinary.com/ddcb3fk7s/image/upload/v1723319328/udep_logo_eqcizp.png";
 const URL_IMG_LABSAC = "https://res.cloudinary.com/ddcb3fk7s/image/upload/v1723319348/logo_lab_sac_guinda_xefpo1.png";

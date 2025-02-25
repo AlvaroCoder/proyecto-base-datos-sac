@@ -48,6 +48,8 @@ export function useSession() {
             try {
                 const session = await getSession();
                 const token = session?.user?.access_token;
+                
+            
                 const decode_jwt = jwt.decode(token);
 
                 setDataSession(decode_jwt);

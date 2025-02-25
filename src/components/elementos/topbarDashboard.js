@@ -19,9 +19,7 @@ const URL_RECORDS = process.env.NEXT_PUBLIC_URL_RECORDS;
 export default function TopBarDashboard() {
     const router = useRouter();
     const {loading : loadingDataRecords, dataResponse : dataRecords } = useFetch(URL_RECORDS);
-    const {loading : loadingDataSession , dataSession} = useSession();
-    console.log(dataRecords);
-    
+    const {loading : loadingDataSession , dataSession} = useSession();    
 
     const handleClickLogout=async()=>{
         await logout();
@@ -113,13 +111,17 @@ export default function TopBarDashboard() {
                         <DropdownMenuContent>
                             {
                                 dataRecords && 
+                                (dataRecords.length > 0 ?
                                 dataRecords?.data.map((item, key)=>
                                     key < 5 &&
                                     (
                                     <div className='p-4'>
                                         <p>{item?.user?.userName}</p>
                                     </div>
-                                ))
+                                )) : 
+                                <div className='p-4 flex min-h-24 justify-center items-center'>
+                                    <p className='text-sm w-24 text-center'>No hay notificaciones</p>
+                                </div>)
                             }
                         </DropdownMenuContent>
                     </DropdownMenu>

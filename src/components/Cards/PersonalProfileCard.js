@@ -17,7 +17,7 @@ export default function PersonalProfileCard({
     const URL_IMG_ACCOUNT = "https://www.svgrepo.com/show/345418/account-circle.svg"
   return (
     <section 
-        className='w-full  shadow-lg rounded-lg p-4 mt-4'
+        className='w-full  shadow-lg rounded-lg p-4 mt-4 border border-neutral-500'
     >
         <div className='flex flex-row items-center gap-4' >
             <div>
