@@ -11,6 +11,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import DropdownMenuComponent from '@/components/elementos/dropdownComponent';
 import { ButtonCloseDialog } from '@/components';
 import { REGISTER_MEMBER } from '@/components/commons/apiConnection';
+
 export default function DialogCreateUsuario({
   handleClickAddMember,
   dataCategoriesUser=[]
