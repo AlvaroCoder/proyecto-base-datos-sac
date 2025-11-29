@@ -16,7 +16,6 @@ export default function TableMiembros({
     dataCargosMiembros=[],
     dataSession =null,
 }) {
-    // Id restringidos de acuerdo a los privilegios establecidos
     const restrictedIds=[5,6,7];
     const userID = dataSession?.role;
 
